@@ -8,8 +8,10 @@
 </head>
 <body>
     <a href="cadastro/cadprof.php"><button>Cadastro</button></a>
+    <a href="cadastro/cadprof.php"><button>Login</button></a>
     
-    <button>Login</button>
+    
+    
     
 </body>
 </html>
