@@ -7,47 +7,174 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="css/style.css">
-    <title>Cadastro</title>
+
+    <title>Login</title>
+
+    <style>
+        /* BASE*/
+
+        body {
+            margin: 0;
+        }
+
+        #cadastroClinica,
+        #cadastroProfissional,
+        #loginProfissional,
+        #loginClinica,
+        #esqueciForm,
+        #codigoForm {
+            display: none;
+        }
+
+        h1 {
+            font-weight: 600;
+        }
+
+        p {
+            color: #555;
+            max-width: 400px;
+            margin: auto;
+        }
+
+
+        .vh-100 {
+            min-height: 100vh;
+        }
+
+        #imgBox {
+            display: none;
+        }
+
+        #imgBox img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #colForm {
+            width: 100%;
+            padding: 1.5rem;
+        }
+
+
+        .logo-titulo {
+            width: 40%;
+            object-fit: contain;
+        }
+
+        .avatar-container {
+            width: 120px;
+            height: 120px;
+            margin: auto;
+        }
+
+        .avatar-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        #img_perfil {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* TABLET+ (≥ 768px)*/
+
+        @media (min-width: 768px) {
+
+            #cadastroProfissional,
+            #loginProfissional {
+                width: 100%;
+                max-width: 420px;
+            }
+
+            #imgBox {
+                display: block;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 50%;
+                height: 100vh;
+                z-index: 1;
+            }
+
+            #colForm {
+                margin-left: 50%;
+                height: 100vh;
+                overflow-y: auto;
+                padding: 2rem;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .logo-titulo {
+                width: 70%;
+            }
+        }
+
+        /* DESKTOP (≥ 1200px)*/
+
+        @media (min-width: 1200px) {
+
+            #cadastroProfissional,
+            #loginProfissional {
+                width: 100%;
+                max-width: 420px;
+            }
+
+            .logo-titulo {
+                width: 40%;
+            }
+        }
+
+
+        .form-esquerda {
+            margin-left: 0 !important;
+        }
+    </style>
 
 </head>
 
 <body>
+    <div class="container-fluid">
 
-    <div class="container-fluid p-0">
-        <nav>
-            <div class="d-flex flex-row-reverse bg-success mt-0">
-                <div class="p-2 text-light">Login</div>
-            </div>
-        </nav>
-        <div class="row g-0 vh-100">
-            <div id="imgBox" class="col-12 col-sm-6 col-md-6 d-none d-sm-block d-md-block bg-success">
-                <img src="img/logo.png">
+        <div class="row g-0 min-vh-100">
+
+            <div id="imgBox" class="col-12 col-md-6">
+                <img src="img/bannerVertical.jpg">
             </div>
 
-            <div id="colForm" class="col-12 col-sm-6 col-md-6 d-flex justify-content-center">
+            <div id="colForm" class="col-12 col-md-6 d-flex justify-content-center align-items-start">
+                <div style="width: 80%;">
 
-                <div style="width: 80%">
-
-                    <!-- CADASTRO -->
-                    <div id="cadastroForm">
-
-                        <div class="d-flex justify-content-between mt-4">
-                            <h1>Seja Bem-Vindo!</h1>
-                            <img class="logo" src="img/logo_verde.png">
+                    <!-- CADASTRO PROFISSIONAL -->
+                    <div id="cadastroProfissional">
+                        <div class="text-center mt-4">
+                            <div class="d-flex align-items-start justify-content-center gap-2">
+                                <img src="img/logo_verde.png" class="logo-titulo">
+                                <h1 class="m-0">Seja Bem-Vindo!</h1>
+                            </div>
+                            <p class="text-muted mt-2 mx-auto" style="max-width: 400px;">
+                                Faça um cadastro como profissional para que os clientes possam encontrar seus serviços.
+                            </p>
                         </div>
 
                         <div class="avatar-container">
-
-                            <img id="preview" src="img/logo_user.png" alt="Foto de perfil"  class="mx-auto d-block" style="width:50%">
-
+                            <img id="preview" src="img/logo_user.png" alt="Foto de perfil">
                             <input type="file" id="img_perfil" accept="image/*">
-
                         </div>
 
                         <p class="text-center mt-2" style="font-size: 12px;">
                             Clique na imagem para adicionar foto
                         </p>
+
 
 
                         <form>
@@ -66,7 +193,7 @@
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input id="email" class="form-control" type="email" placeholder="E-mail">
+                                <input id="emailCadastro" class="form-control" type="email" placeholder="E-mail">
                                 <label>E-mail</label>
                             </div>
 
@@ -80,7 +207,6 @@
                                 <label>Senha</label>
                             </div>
 
-                            <!-- Profissional -->
                             <div class="form-floating mb-3">
                                 <select id="categoria" class="form-select">
                                     <option value="" selected disabled>Selecione uma opção</option>
@@ -102,13 +228,12 @@
                             </div>
 
                         </form>
-
                         <div class="d-grid mb-3">
                             <button id="btnCadastrar" class="btn btn-success">Cadastrar</button>
                         </div>
 
                         <p>
-                            Já tem uma conta? <a class="linkLogar" href="#">Faça login</a>
+                            Já tem uma conta? <a class="logarProfissional" href="#">Faça login</a>
                         </p>
 
                         <div id="alertCadastro" class="alert alert-danger">E-mail
@@ -116,180 +241,326 @@
 
                     </div>
 
-                </div>
 
+                    <!--LOGIN PROFISSIONAL-->
+                    <div id="loginProfissional">
+                        <div class="text-center mt-4">
+                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                <img src="img/logo_verde.png" class="logo-titulo">
+                                <h1 class="m-0">Seja Bem-Vindo!</h1>
+                            </div>
+                            <p class="text-muted mt-2 mx-auto" style="max-width: 400px;">
+                                Faça um cadastro como profissional para que os clientes possam encontrar seus serviços.
+                            </p>
+                        </div>
+
+                        <form class="mt-4">
+
+                            <div class="form-floating mt-4 mb-3">
+                                <input id="emailLogin" class="form-control" type="text" placeholder="Email">
+                                <label>E-mail</label>
+                            </div>
+
+                            <div class="form-floating mt-4 mb-3">
+                                <input class="form-control" type="password" placeholder="Senha">
+                                <label>Senha</label>
+                            </div>
+
+                            <!-- <a id="linkEsqueci" href="#">Esqueci a senha</a> -->
+
+                        </form>
+
+                        <div class="d-grid mt-4 mb-3">
+                            <button id="btnLogar" class="btn btn-success">Logar</button>
+                        </div>
+
+                        <p> Não tem conta? <a class="cadastrarProfissional" href="#">Cadastre-se</a></p>
+
+                        <div id="alertLogin" class="alert alert-danger">E-mail inválido!</div>
+
+                    </div>
+
+
+                    <!--CLINICA-->
+                    <div id="cadastroClinica">
+                        <h1>Cadastro Clínica</h1>
+
+                        <form>
+                            <div class="form-floating mb-3">
+                                <input id="nomeClinica" class="form-control" type="text" placeholder="Nome">
+                                <label>Nome da clínica</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input id="cnpj" class="form-control" type="text" placeholder="CNPJ">
+                                <label>CNPJ</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input id="emailCadClinica" class="form-control" type="email" placeholder="E-mail">
+                                <label>E-mail</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input class="form-control" type="password" placeholder="Senha">
+                                <label>Senha</label>
+                            </div>
+                        </form>
+
+                        <div class="d-grid mb-3">
+                            <button id="btnCadClinica" class="btn btn-success">Cadastrar</button>
+                        </div>
+
+                        <p>Já tem conta? <a class="logarClinica" href="#">Faça login</a></p>
+                    </div>
+
+
+
+                    <!--LOGIN CLINICA-->
+                    <div id="loginClinica">
+                        <h1>Login Clínica</h1>
+
+                        <form>
+                            <div class="form-floating mb-3">
+                                <input id="emailLogClinica" class="form-control" type="text">
+                                <label>E-mail</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input class="form-control" type="password">
+                                <label>Senha</label>
+                            </div>
+                        </form>
+
+                        <div class="d-grid mb-3">
+                            <button id="btnLogClinica" class="btn btn-success">Logar</button>
+                        </div>
+
+                        <p>Não tem conta? <a class="cadastrarClinica" href="#">Cadastre-se</a></p>
+                    </div>
+                </div>
             </div>
 
+
         </div>
+
 
     </div>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <script>
-        //expressão regular (RegEx)
-        $(document)
-            .ready(
-                function () {
+        document.addEventListener("DOMContentLoaded", function () {
 
-                    function limpa_formulário() {
-                        $("#emailCadastro").val("");
+
+            const params = new URLSearchParams(window.location.search);
+            const tipo = params.get("tipo");
+
+            const cadastroProfissional = document.getElementById("cadastroProfissional");
+            const cadastroClinica = document.getElementById("cadastroClinica");
+
+            let tipoAtual = tipo === "clinica" ? "clinica" : "profissional";
+
+            if (tipoAtual === "clinica") {
+                cadastroClinica.style.display = "block";
+            } else {
+                cadastroProfissional.style.display = "block";
+            }
+
+
+
+
+
+
+            const inputImgProfissional = document.getElementById("img_perfil");
+            const previewProfissional = document.getElementById("preview");
+
+            const inputImgClinica = document.getElementById("img_perfil_Clinica");
+            const previewClinica = document.getElementById("previewClinica");
+
+            const btnCadastrar = document.getElementById("btnCadastrar");
+            const btnLogar = document.getElementById("btnLogar");
+
+            const alertCadastro = document.getElementById("alertCadastro");
+            const alertLogin = document.getElementById("alertLogin");
+
+            const emailCadastro = document.getElementById("emailCadastro");
+            const emailLogin = document.getElementById("emailLogin");
+
+            const cadastroForm = document.getElementById("cadastroProfissional");
+            const loginForm = document.getElementById("loginProfissional");
+
+            const linkLogin = document.querySelector(".logarProfissional");
+            const linkCadastro = document.querySelector(".cadastrarProfissional");
+
+            const btnCadClinica = document.getElementById("btnCadClinica");
+            const btnLogClinica = document.getElementById("btnLogClinica");
+
+            const emailCadClinica = document.getElementById("emailCadClinica");
+            const emailLogClinica = document.getElementById("emailLogClinica");
+
+            const cadFormClinica = document.getElementById("cadastroClinica");
+            const logFormClinica = document.getElementById("loginClinica");
+
+            const linkLogClinica = document.querySelector(".logarClinica");
+            const linkCadClinica = document.querySelector(".cadastrarClinica");
+
+
+            // FUNÇÃO GLOBAL
+            function emailValido(email) {
+                const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return regex.test(email);
+            }
+
+            // ESCONDER ALERTAS
+            if (alertCadastro) alertCadastro.style.display = "none";
+            if (alertLogin) alertLogin.style.display = "none";
+
+
+            // TROCAR TELAS
+            if (linkLogin) {
+                linkLogin.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    cadastroForm.style.display = "none";
+                    loginForm.style.display = "block";
+                });
+            }
+
+            if (linkCadastro) {
+                linkCadastro.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    loginForm.style.display = "none";
+                    cadastroForm.style.display = "block";
+                });
+            }
+
+            // PREVIEW DE IMAGEM
+            if (inputImgProfissional && previewProfissional) {
+                previewProfissional.addEventListener("click", () => inputImgProfissional.click());
+
+                inputImgProfissional.addEventListener("change", function () {
+                    const arquivo = this.files[0];
+
+                    if (arquivo && arquivo.type.startsWith("image/")) {
+                        const reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            previewProfissional.src = e.target.result;
+                        };
+
+                        reader.readAsDataURL(arquivo);
+                    } else {
+                        alert("Selecione uma imagem válida!");
+                    }
+                });
+            }
+
+            // CADASTRO
+            if (btnCadastrar) {
+                btnCadastrar.addEventListener("click", function () {
+                    const email = emailCadastro.value;
+
+                    if (emailValido(email)) {
+                        alertCadastro.className = "alert alert-success";
+                        alertCadastro.textContent = "Cadastro realizado!";
+                    } else {
+                        alertCadastro.className = "alert alert-danger";
+                        alertCadastro.textContent = "E-mail inválido!";
                     }
 
-                    $("#alertCadastro")
-                        .hide()
+                    alertCadastro.style.display = "block";
+                });
+            }
 
-                    function emailValido(email) {
-                        let regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-                        return regex.test(email)
+            // LOGIN
+            if (btnLogar) {
+                btnLogar.addEventListener("click", function () {
+                    const email = emailLogin.value;
+
+                    if (emailValido(email)) {
+                        alertLogin.className = "alert alert-success";
+                        alertLogin.textContent = "Login realizado!";
+                    } else {
+                        alertLogin.className = "alert alert-danger";
+                        alertLogin.textContent = "E-mail inválido!";
                     }
 
-/*                    document.getElementById("trabalhaClinica").addEventListener("change", function () {
-                        const container = document.getElementById("clinicasContainer");
+                    alertLogin.style.display = "block";
+                });
+            }
 
-                        if (this.value === "sim") {
-                            container.style.display = "block";
-                        } else {
-                            container.style.display = "none";
-                        }
-                    });
-                    document.getElementById("addServico").addEventListener("click", function () {
-                        const container = document.getElementById("servicosContainer");
+            // TROCAR TELAS
+            if (linkLogClinica) {
+                linkLogClinica.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    cadFormClinica.style.display = "none";
+                    logFormClinica.style.display = "block";
+                });
+            }
 
-                        const div = document.createElement("div");
-                        div.classList.add("servico", "mb-3", "border", "p-3", "rounded");
+            if (linkCadClinica) {
+                linkCadClinica.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    logFormClinica.style.display = "none";
+                    cadFormClinica.style.display = "block";
+                });
+            }
 
-                        div.innerHTML = `
-                            <input type="text" class="form-control mb-2" placeholder="Nome do serviço">
-                            <input type="text" class="form-control mb-2" placeholder="Descrição">
+            // preview Clinica DE IMAGEM
+            if (inputImgClinica && previewClinica) {
+                previewClinica.addEventListener("click", () => inputImgClinica.click());
 
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <input type="number" class="form-control mb-2" placeholder="Duração (min)">
-                                </div>
+                inputImgClinica.addEventListener("change", function () {
+                    const arquivo = this.files[0];
 
-                                <div class="col-md-4">
-                                    <input type="number" class="form-control mb-2" placeholder="Valor (R$)">
-                                </div>
+                    if (arquivo && arquivo.type.startsWith("image/")) {
+                        const reader = new FileReader();
 
-                                <div class="col-md-4">
-                                    <input type="text" class="form-control mb-2" placeholder="Categoria (opcional)">
-                                </div>
-                            </div>
-                        `;
+                        reader.onload = function (e) {
+                            previewClinica.src = e.target.result;
+                        };
 
-                        container.appendChild(div);
-                    });
-*/
+                        reader.readAsDataURL(arquivo);
+                    } else {
+                        alert("Selecione uma imagem válida!");
+                    }
+                });
+            }
 
-                    const input = document.getElementById("img_perfil");
-                    const preview = document.getElementById("preview");
-                    const cameraIcon = document.querySelector(".camera-icon");
+            // CADASTRO CLINICA
+            if (btnCadClinica) {
+                btnCadClinica.addEventListener("click", function () {
+                    const email = emailCadClinica.value;
 
-                    preview.addEventListener("click", () => input.click());
-                    cameraIcon.addEventListener("click", () => input.click());
+                    if (emailValido(email)) {
+                        alertCadastro.className = "alert alert-success";
+                        alertCadastro.textContent = "Cadastro realizado!";
+                    } else {
+                        alertCadastro.className = "alert alert-danger";
+                        alertCadastro.textContent = "E-mail inválido!";
+                    }
 
-                    input.addEventListener("change", function () {
-                        const arquivo = this.files[0];
+                    alertCadastro.style.display = "block";
+                });
+            }
 
-                        if (arquivo && arquivo.type.startsWith("image/")) {
-                            const reader = new FileReader();
+            // LOGIN CLINICA
+            if (btnLogClinica) {
+                btnLogClinica.addEventListener("click", function () {
+                    const email = emailLogClinica.value;
 
-                            reader.onload = function (e) {
-                                preview.src = e.target.result;
-                            };
+                    if (emailValido(email)) {
+                        alertLogin.className = "alert alert-success";
+                        alertLogin.textContent = "Login realizado!";
+                    } else {
+                        alertLogin.className = "alert alert-danger";
+                        alertLogin.textContent = "E-mail inválido!";
+                    }
 
-                            reader.readAsDataURL(arquivo);
-                        }
-                    });
+                    alertLogin.style.display = "block";
+                });
+            }
 
-                    //VERIFICAR E-MAIL
-                    $("#btnCadastrar").click(
-                        function () {
-
-                            let email = $("#email").val()
-
-                            if (emailValido(email)) {
-                                $("#alertCadastro").removeClass(
-                                    "alert-danger").addClass(
-                                        "alert-success").text(
-                                            "Cadastro realizado!")
-                                    .show()
-
-                            } else {
-                                $("#alertCadastro").removeClass(
-                                    "alert-success").addClass(
-                                        "alert-danger").text(
-                                            "E-mail inválido!").show()
-                            }
-                        })
-
-
-
-
-                })
+        });
     </script>
-
 </body>
-
-</html>
