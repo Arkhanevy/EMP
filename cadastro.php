@@ -22,7 +22,8 @@
         #loginProfissional,
         #loginClinica,
         #esqueciForm,
-        #codigoForm {
+        #codigoForm,
+        .cadastro {
             display: none;
         }
 
@@ -88,7 +89,9 @@
         @media (min-width: 768px) {
 
             #cadastroProfissional,
-            #loginProfissional {
+            #cadastroClinica,
+            #loginProfissional,
+            #loginClinica {
                 width: 100%;
                 max-width: 420px;
             }
@@ -124,7 +127,9 @@
         @media (min-width: 1200px) {
 
             #cadastroProfissional,
-            #loginProfissional {
+            #cadastroClinica,
+            #loginProfissional,
+            #loginClinica {
                 width: 100%;
                 max-width: 420px;
             }
@@ -144,6 +149,8 @@
 
 <body>
     <div class="container-fluid">
+        <div id="alertContainer" class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 9999;">
+        </div>
 
         <div class="row g-0 min-vh-100">
 
@@ -155,7 +162,7 @@
                 <div style="width: 80%;">
 
                     <!-- CADASTRO PROFISSIONAL -->
-                    <div id="cadastroProfissional">
+                    <div id="cadastroProfissional" class="cadastro">
                         <div class="text-center mt-4">
                             <div class="d-flex align-items-start justify-content-center gap-2">
                                 <img src="img/logo_verde.png" class="logo-titulo">
@@ -179,7 +186,8 @@
 
                         <form>
                             <div class="form-floating mb-3">
-                                <input id="nome" class="form-control" type="text" placeholder="Nome"> <label>Nome
+                                <input id="nomeProfissional" class="form-control" type="text" placeholder="Nome">
+                                <label>Nome
                                     completo</label>
                             </div>
                             <div class="form-floating mb-3">
@@ -198,12 +206,12 @@
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input id="telefone" class="form-control" type="tel" placeholder="Telfone">
+                                <input id="telefoneProfissional" class="form-control" type="tel" placeholder="Telfone">
                                 <label>Telefone</label>
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input id="senha" class="form-control" type="password" placeholder="Senha">
+                                <input id="senhaProfissional" class="form-control" type="password" placeholder="Senha">
                                 <label>Senha</label>
                             </div>
 
@@ -236,13 +244,11 @@
                             Já tem uma conta? <a class="logarProfissional" href="#">Faça login</a>
                         </p>
 
-                        <div id="alertCadastro" class="alert alert-danger">E-mail
-                            inválido!</div>
 
                     </div>
 
 
-                    <!--LOGIN PROFISSIONAL-->
+                    <!-- LOGIN PROFISSIONAL-->
                     <div id="loginProfissional">
                         <div class="text-center mt-4">
                             <div class="d-flex align-items-center justify-content-center gap-2">
@@ -280,17 +286,32 @@
 
                     </div>
 
+                    <!-- CADASTRO CLINICA-->
+                    <div id="cadastroClinica" class="cadastro">
+                        <div class="text-center mt-4">
+                            <div class="d-flex align-items-start justify-content-center gap-2">
+                                <img src="img/logo_verde.png" class="logo-titulo">
+                                <h1 class="m-0">Seja Bem-Vindo!</h1>
+                            </div>
+                            <p class="text-muted mt-2 mx-auto" style="max-width: 400px;">
+                                Cadastro a clinica em Elmo para que clientes consigam encontra-las!
+                            </p>
+                        </div>
 
-                    <!--CLINICA-->
-                    <div id="cadastroClinica">
-                        <h1>Cadastro Clínica</h1>
+                        <div class="avatar-container">
+                            <img id="previewClinica" src="img/logo_user.png" alt="Foto de perfil">
+                            <input type="file" id="img_perfil_Clinica" accept="image/*">
+                        </div>
+
+                        <p class="text-center mt-2" style="font-size: 12px;">
+                            Clique na imagem para adicionar logo da clinica.
+                        </p>
 
                         <form>
                             <div class="form-floating mb-3">
                                 <input id="nomeClinica" class="form-control" type="text" placeholder="Nome">
                                 <label>Nome da clínica</label>
                             </div>
-
                             <div class="form-floating mb-3">
                                 <input id="cnpj" class="form-control" type="text" placeholder="CNPJ">
                                 <label>CNPJ</label>
@@ -302,7 +323,7 @@
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input class="form-control" type="password" placeholder="Senha">
+                                <input id="senhaClinica" class="form-control" type="password" placeholder="Senha">
                                 <label>Senha</label>
                             </div>
                         </form>
@@ -313,8 +334,6 @@
 
                         <p>Já tem conta? <a class="logarClinica" href="#">Faça login</a></p>
                     </div>
-
-
 
                     <!--LOGIN CLINICA-->
                     <div id="loginClinica">
@@ -340,11 +359,7 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
-
-
     </div>
 
 
@@ -353,30 +368,42 @@
         document.addEventListener("DOMContentLoaded", function () {
 
 
+            //QUAL FORMULARI ABRIR
             const params = new URLSearchParams(window.location.search);
             const tipo = params.get("tipo");
 
-            const cadastroProfissional = document.getElementById("cadastroProfissional");
-            const cadastroClinica = document.getElementById("cadastroClinica");
-
-            let tipoAtual = tipo === "clinica" ? "clinica" : "profissional";
-
-            if (tipoAtual === "clinica") {
-                cadastroClinica.style.display = "block";
+            if (tipo === "clinica") {
+                mostrarFormulario('cadastroClinica');
+            } else if (tipo === "profissional") {
+                mostrarFormulario('cadastroProfissional');
             } else {
-                cadastroProfissional.style.display = "block";
+                mostrarFormulario('cadastroProfissional');
+            }
+
+            function mostrarFormulario(cadastroId) {
+                var cadastros = document.querySelectorAll('.cadastro');
+
+                cadastros.forEach(function (form) {
+                    form.style.display = 'none';
+                });
+
+                var formParaMostrar = document.getElementById(cadastroId);
+
+                if (formParaMostrar) {
+                    formParaMostrar.style.display = 'block';
+                } else {
+                    console.error("Formulário não encontrado:", cadastroId);
+                }
             }
 
 
 
 
 
-
+            //VARIAVEIS
+            //PROFISSIONAL
             const inputImgProfissional = document.getElementById("img_perfil");
             const previewProfissional = document.getElementById("preview");
-
-            const inputImgClinica = document.getElementById("img_perfil_Clinica");
-            const previewClinica = document.getElementById("previewClinica");
 
             const btnCadastrar = document.getElementById("btnCadastrar");
             const btnLogar = document.getElementById("btnLogar");
@@ -393,6 +420,18 @@
             const linkLogin = document.querySelector(".logarProfissional");
             const linkCadastro = document.querySelector(".cadastrarProfissional");
 
+            //DADOS PROFISSIONAL
+            const nomeProfissionalInput = document.getElementById("nomeProfissional");
+            const cpfInput = document.getElementById("CPF");
+            const dataNascimentoInput = document.getElementById("dataNascimento");
+            const emailCadastroInput = document.getElementById("emailCadastro");
+            const telefoneProfissionalInput = document.getElementById("telefoneProfissional");
+            const senhaProfissionalInput = document.getElementById("senhaProfissional");
+
+            //CLINICA
+            const inputImgClinica = document.getElementById("img_perfil_Clinica");
+            const previewClinica = document.getElementById("previewClinica");
+
             const btnCadClinica = document.getElementById("btnCadClinica");
             const btnLogClinica = document.getElementById("btnLogClinica");
 
@@ -406,15 +445,92 @@
             const linkCadClinica = document.querySelector(".cadastrarClinica");
 
 
+            //DADOS CLINICA
+            const nomeClinicaInput = document.getElementById("nomeClinica");
+            const cnpjInput = document.getElementById("cnpj");
+            const emailCadClinicaInput = document.getElementById("emailCadClinica");
+            const telefoneClinicaInput = document.getElementById("telefoneClinica");
+            const senhaClinicaInput = document.getElementById("senhaClinica");
+
+
             // FUNÇÃO GLOBAL
             function emailValido(email) {
                 const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 return regex.test(email);
             }
+            function cpfValido(cpf) {
+                cpf = cpf.replace(/\D/g, "");
 
-            // ESCONDER ALERTAS
-            if (alertCadastro) alertCadastro.style.display = "none";
-            if (alertLogin) alertLogin.style.display = "none";
+                if (cpf.length !== 11) return false;
+
+                if (/^(\d)\1+$/.test(cpf)) return false;// Elimina CPFs inválidos conhecidos
+
+                // Validação do primeiro dígito
+                let soma = 0;
+                for (let i = 0; i < 9; i++) {
+                    soma += parseInt(cpf[i]) * (10 - i);
+                }
+
+                let resto = (soma * 10) % 11;
+                if (resto === 10 || resto === 11) resto = 0;
+
+                if (resto !== parseInt(cpf[9])) return false;
+
+                // Validação do segundo dígito
+                soma = 0;
+                for (let i = 0; i < 10; i++) {
+                    soma += parseInt(cpf[i]) * (11 - i);
+                }
+
+                resto = (soma * 10) % 11;
+                if (resto === 10 || resto === 11) resto = 0;
+
+                if (resto !== parseInt(cpf[10])) return false;
+
+                return true;
+            }
+            function cnpjValido(cnpj) {
+                cnpj = cnpj.replace(/\D/g, "");
+
+                if (cnpj.length !== 14) return false;
+
+                if (/^(\d)\1+$/.test(cnpj)) return false;// Elimina CNPJs inválidos conhecidos
+
+                let tamanho = cnpj.length - 2;
+                let numeros = cnpj.substring(0, tamanho);
+                let digitos = cnpj.substring(tamanho);
+
+                let soma = 0;
+                let pos = tamanho - 7;
+
+                for (let i = tamanho; i >= 1; i--) {
+                    soma += numeros.charAt(tamanho - i) * pos--;
+                    if (pos < 2) pos = 9;
+                }
+
+                let resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+                if (resultado != digitos.charAt(0)) return false;
+
+                tamanho = tamanho + 1;
+                numeros = cnpj.substring(0, tamanho);
+
+                soma = 0;
+                pos = tamanho - 7;
+
+                for (let i = tamanho; i >= 1; i--) {
+                    soma += numeros.charAt(tamanho - i) * pos--;
+                    if (pos < 2) pos = 9;
+                }
+
+                resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+                if (resultado != digitos.charAt(1)) return false;
+
+                return true;
+            }
+
+
+
+
 
 
             // TROCAR TELAS
@@ -455,17 +571,31 @@
                 });
             }
 
+
             // CADASTRO
             if (btnCadastrar) {
                 btnCadastrar.addEventListener("click", function () {
-                    const email = emailCadastro.value;
 
-                    if (emailValido(email)) {
-                        alertCadastro.className = "alert alert-success";
-                        alertCadastro.textContent = "Cadastro realizado!";
+                    const nomeProfissional = nomeProfissionalInput.value;
+                    const CPF = cpfInput.value;
+                    const dataNascimento = dataNascimentoInput.value;
+                    const email = emailCadastroInput.value;
+                    const telefone = telefoneProfissionalInput.value;
+                    const senha = senhaProfissionalInput.value;
+
+                    if (nomeProfissional && CPF && dataNascimento && email && telefone && senha) {
+
+                        if (!emailValido(email)) {
+                            mostrarAlert("E-mail inválido!", "danger");
+
+                        } else if (!cpfValido(CPF)) {
+                            mostrarAlert("CPF inválido!", "danger");
+                        } else {
+                            mostrarAlert("Cadastro realizado!", "success");
+                        }
+
                     } else {
-                        alertCadastro.className = "alert alert-danger";
-                        alertCadastro.textContent = "E-mail inválido!";
+                        mostrarAlert("Preencha todos os campos!", "danger");
                     }
 
                     alertCadastro.style.display = "block";
@@ -530,19 +660,33 @@
             // CADASTRO CLINICA
             if (btnCadClinica) {
                 btnCadClinica.addEventListener("click", function () {
-                    const email = emailCadClinica.value;
+                    const email = emailCadClinicaInput.value;
+                    const nomeClinica = nomeClinicaInput.value;
+                    const cnpj = cnpjInput.value;
+                    const senha = senhaClinicaInput.value;
 
-                    if (emailValido(email)) {
-                        alertCadastro.className = "alert alert-success";
-                        alertCadastro.textContent = "Cadastro realizado!";
+
+                    if (nomeClinica && cnpj && email && senha) {
+
+                        if (!cnpjValido(cnpj)) {
+                            mostrarAlert("CNPJ inválido!", "danger");
+
+                        }
+                        else if (!emailValido(email)) {
+                            mostrarAlert("E-mail inválido!", "danger");
+                        }
+                        else {
+                            mostrarAlert("Cadastro realizado!", "success");
+                        }
+
                     } else {
-                        alertCadastro.className = "alert alert-danger";
-                        alertCadastro.textContent = "E-mail inválido!";
+                        mostrarAlert("Preencha todos os campos!", "danger");
                     }
 
                     alertCadastro.style.display = "block";
                 });
             }
+
 
             // LOGIN CLINICA
             if (btnLogClinica) {
@@ -561,6 +705,32 @@
                 });
             }
 
+
+            //ALERTAS
+            function mostrarAlert(mensagem, tipo = "success") {
+                const container = document.getElementById("alertContainer");
+
+                const alert = document.createElement("div");
+                alert.className = `alert alert-${tipo} alert-dismissible fade show`;
+                alert.role = "alert";
+
+                alert.innerHTML = `
+        ${mensagem}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+
+                container.appendChild(alert);
+
+                // Remove automaticamente depois de 3 segundos
+                setTimeout(() => {
+                    alert.classList.remove("show");
+                    alert.classList.add("hide");
+                    setTimeout(() => alert.remove(), 500);
+                }, 3000);
+            }
+
         });
     </script>
 </body>
+
+</html>
