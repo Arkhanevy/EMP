@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-    <title>Login</title>
+    <title>Cadastro</title>
 
     <style>
         /* BASE*/
@@ -52,9 +52,15 @@
             object-fit: cover;
         }
 
-        #colForm {
+        #colForm > div {
+    max-width: 420px;
+    width: 100%;
+}
+
+        textarea {
             width: 100%;
-            padding: 1.5rem;
+            height: 250px;
+            align-self: center;
         }
 
 
@@ -77,7 +83,8 @@
             cursor: pointer;
         }
 
-        #img_perfil {
+        #img_perfil,
+        #img_perfil_Clinica {
             position: absolute;
             opacity: 0;
             width: 0;
@@ -98,29 +105,23 @@
 
             #imgBox {
                 display: block;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 50%;
                 height: 100vh;
-                z-index: 1;
+            }
+
+            #imgBox img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
             }
 
             #colForm {
-                margin-left: 50%;
                 height: 100vh;
                 overflow-y: auto;
-                padding: 2rem;
-            }
-
-            h1 {
-                font-size: 25px;
-            }
-
-            .logo-titulo {
-                width: 70%;
             }
         }
+
+
+
 
         /* DESKTOP (≥ 1200px)*/
 
@@ -151,15 +152,14 @@
     <div class="container-fluid">
         <div id="alertContainer" class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 9999;">
         </div>
-
         <div class="row g-0 min-vh-100">
 
-            <div id="imgBox" class="col-12 col-md-6">
-                <img src="img/bannerVertical.jpg">
+            <div id="imgBox" class="d-none d-md-block col-md-6">
+                <img src="img/bannerVertical.jpg" class="img-fluid h-100 w-100 object-fit-cover">
             </div>
 
-            <div id="colForm" class="col-12 col-md-6 d-flex justify-content-center align-items-start">
-                <div style="width: 80%;">
+            <div id="colForm" class="col-12 col-md-6 d-flex justify-content-center align-items-center">
+                <div class="w-75">
 
                     <!-- CADASTRO PROFISSIONAL -->
                     <div id="cadastroProfissional" class="cadastro">
@@ -175,7 +175,7 @@
 
                         <div class="avatar-container">
                             <img id="preview" src="img/logo_user.png" alt="Foto de perfil">
-                            <input type="file" id="img_perfil" accept="image/*">
+                            <input name="cxproFoto" type="file" id="img_perfil" accept="image/*" required>
                         </div>
 
                         <p class="text-center mt-2" style="font-size: 12px;">
@@ -186,55 +186,104 @@
 
                         <form>
                             <div class="form-floating mb-3">
-                                <input id="nomeProfissional" class="form-control" type="text" placeholder="Nome">
-                                <label>Nome
-                                    completo</label>
+                                <input name="cxproNome" id="nomeProfissional" class="form-control" type="text"
+                                    placeholder="Nome" required>
+                                <label>Nome completo</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input id="CPF" class="form-control" type="text" placeholder="CPF"> <label>CPF</label>
-                            </div>
-
-                            <div class="form-floating mb-3">
-                                <input id="dataNascimento" class="form-control" type="date"
-                                    placeholder="Data de nascimento">
-                                <label>Data de nascimento</label>
-                            </div>
-
-                            <div class="form-floating mb-3">
-                                <input id="emailCadastro" class="form-control" type="email" placeholder="E-mail">
+                                <input name="cxproEmail" id="emailCadastro" class="form-control" type="email"
+                                    placeholder="E-mail" required>
                                 <label>E-mail</label>
                             </div>
-
                             <div class="form-floating mb-3">
-                                <input id="telefoneProfissional" class="form-control" type="tel" placeholder="Telfone">
+                                <input name="cxproTelefone" id="telProfissional" class="form-control" type="tel"
+                                    placeholder="Telfone" required>
                                 <label>Telefone</label>
                             </div>
+                            <div class="form-floating mb-3">
+                                <input name="cxproUsername" id="userProfissional" class="form-control" type="text"
+                                    placeholder="Username" required>
+                                <label>Username</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <select name="cxgeneroProfissional" id="generoProfissional" class="form-select">
+                                    <option value="" selected disabled>Selecione uma opção</option>
+                                    <option value="feminino">Feminino</option>
+                                    <option value="masculino">Masculino</option>
+                                    <option value="naoBinario">Não Binario</option>
+                                    <option value="naoIdentificado">Prefiro não dizer</option>
+                                </select>
+                                <label for="especialidade">Gênero</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <label>Biografia</label> <br />
+                                <br /><textarea name="cxproBiografia" id="bioProfissional"
+                                    placeholder="Escreva sua biografia aqui."></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input name="cep" class="form-control" type="text" id="cep" value=""
+                                            placeholder="cep" required> <label>Cep</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input name="rua" class="form-control" type="text" id="rua" placeholder="rua"
+                                            required>
+                                        <label>Rua</label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input name="bairro" class="form-control" type="text" id="bairro"
+                                            placeholder="bairro" required> <label>Bairro</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input name="cidade" class="form-control" type="text" id="cidade"
+                                            placeholder="cidade" required> <label>Cidade</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input name="uf" class="form-control" type="text" id="uf" placeholder="uf"
+                                            required>
+                                        <label>Estado</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input name="ibge" class="form-control" type="text" id="ibge" placeholder="ibge"
+                                            required> <label>IBGE</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input name="cxproRegistro" id="registroProfissional" class="form-control" type="file"
+                                    placeholder="Registro" required>
+                                <label>Registro profissional</label>
+                            </div>
 
                             <div class="form-floating mb-3">
-                                <input id="senhaProfissional" class="form-control" type="password" placeholder="Senha">
+                                <input name="cxproCPF" id="CPF" class="form-control" type="text" placeholder="CPF"
+                                    required>
+                                <label>CPF</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input name="cxproSenha" id="senhaProfissional" class="form-control" type="password"
+                                    placeholder="Senha" required>
                                 <label>Senha</label>
                             </div>
-
-                            <div class="form-floating mb-3">
-                                <select id="categoria" class="form-select">
-                                    <option value="" selected disabled>Selecione uma opção</option>
-                                    <option value="Podologiageral">Podologia geral</option>
-                                    <option value="Unhaencravada">Unha encravada</option>
-                                    <option value="Micose">Micose</option>
-                                    <option value="Calosecalosidades">Calos e calosidades</option>
-                                    <option value="Fissuras">Fissuras nos pés</option>
-                                    <option value="PeDiabetico">Pé diabético</option>
-                                    <option value="Podologiaesportiva">Podologia esportiva</option>
-                                    <option value="Podologiageriatrica">Podologia geriátrica</option>
-                                    <option value="Podologiainfantil">Podologia infantil</option>
-                                    <option value="Ortopodologia">Ortopodologia</option>
-                                    <option value="Verrugasplantares">Verrugas plantares</option>
-                                    <option value="Unhasdeformadas">Unhas deformadas</option>
-                                    <option value="Esteticadospes">Estética dos pés</option>
-                                </select>
-                                <label for="especialidade">Especialidade</label>
-                            </div>
-
                         </form>
                         <div class="d-grid mb-3">
                             <button id="btnCadastrar" class="btn btn-success">Cadastrar</button>
@@ -300,7 +349,7 @@
 
                         <div class="avatar-container">
                             <img id="previewClinica" src="img/logo_user.png" alt="Foto de perfil">
-                            <input type="file" id="img_perfil_Clinica" accept="image/*">
+                            <input name="cxclinFoto" type="file" id="img_perfil_Clinica" accept="image/*" required>
                         </div>
 
                         <p class="text-center mt-2" style="font-size: 12px;">
@@ -309,23 +358,41 @@
 
                         <form>
                             <div class="form-floating mb-3">
-                                <input id="nomeClinica" class="form-control" type="text" placeholder="Nome">
+                                <input name="cxclinicaNome" id="nomeClinica" class="form-control" type="text"
+                                    placeholder="Nome" required>
                                 <label>Nome da clínica</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input id="cnpj" class="form-control" type="text" placeholder="CNPJ">
-                                <label>CNPJ</label>
-                            </div>
-
-                            <div class="form-floating mb-3">
-                                <input id="emailCadClinica" class="form-control" type="email" placeholder="E-mail">
+                                <input name="exclinEmail" id="emailCadClinica" class="form-control" type="email"
+                                    placeholder="E-mail" required>
                                 <label>E-mail</label>
                             </div>
-
                             <div class="form-floating mb-3">
-                                <input id="senhaClinica" class="form-control" type="password" placeholder="Senha">
+                                <input name="cxclinTelefone" id="telClinica" class="form-control" type="tel"
+                                    placeholder="Telfone" required>
+                                <label>Telefone</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input name="cxclinUsername" id="userClinica" class="form-control" type="text"
+                                    placeholder="Username" required>
+                                <label>Username da clínica</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input name="cxclinBiografia" id="bioClinica" class="form-control" type="text"
+                                    placeholder="Biografia" required>
+                                <label>Biografia</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input name="cxclinCnpj" id="cnpj" class="form-control" type="text" placeholder="CNPJ"
+                                    required>
+                                <label>CNPJ</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input name="cxclinSenha" id="senhaClinica" class="form-control" type="password"
+                                    placeholder="Senha" required>
                                 <label>Senha</label>
                             </div>
+
                         </form>
 
                         <div class="d-grid mb-3">
@@ -408,7 +475,6 @@
             const btnCadastrar = document.getElementById("btnCadastrar");
             const btnLogar = document.getElementById("btnLogar");
 
-            const alertCadastro = document.getElementById("alertCadastro");
             const alertLogin = document.getElementById("alertLogin");
 
             const emailCadastro = document.getElementById("emailCadastro");
@@ -422,11 +488,20 @@
 
             //DADOS PROFISSIONAL
             const nomeProfissionalInput = document.getElementById("nomeProfissional");
-            const cpfInput = document.getElementById("CPF");
-            const dataNascimentoInput = document.getElementById("dataNascimento");
             const emailCadastroInput = document.getElementById("emailCadastro");
-            const telefoneProfissionalInput = document.getElementById("telefoneProfissional");
+            const telProfissionalInput = document.getElementById("telProfissional");
+            const userProfissionalInput = document.getElementById("userProfissional");
+            const generoProfissionalInput = document.getElementById("generoProfissional");
+            const bioProfissionalInput = document.getElementById("bioProfissional");
+            const cepProfissionalInput = document.getElementById("cep");
+            const ruaProfissionalInput = document.getElementById("rua");
+            const bairroProfissionalInput = document.getElementById("bairro");
+            const ufProfissionalInput = document.getElementById("uf");
+            const ibgeProfissionalInput = document.getElementById("ibge");
+            const registroProfissionalInput = document.getElementById("registroProfissional");
+            const CPFInput = document.getElementById("CPF");
             const senhaProfissionalInput = document.getElementById("senhaProfissional");
+
 
             //CLINICA
             const inputImgClinica = document.getElementById("img_perfil_Clinica");
@@ -447,13 +522,25 @@
 
             //DADOS CLINICA
             const nomeClinicaInput = document.getElementById("nomeClinica");
-            const cnpjInput = document.getElementById("cnpj");
             const emailCadClinicaInput = document.getElementById("emailCadClinica");
-            const telefoneClinicaInput = document.getElementById("telefoneClinica");
+            const telClinicaInput = document.getElementById("telClinica");
+            const userClinicaInput = document.getElementById("userClinica");
+            const bioClinicaInput = document.getElementById("bioClinica");
+            const CNPJInput = document.getElementById("cnpj");
             const senhaClinicaInput = document.getElementById("senhaClinica");
 
-
             // FUNÇÃO GLOBAL
+            function limpa_formulário() {
+                $("#emailCadastro").val("");
+                $("#nome").val("");
+                $("#senha").val("");
+                $("#rua").val("");
+                $("#bairro").val("");
+                $("#cidade").val("");
+                $("#uf").val("");
+                $("#ibge").val("");
+            }
+
             function emailValido(email) {
                 const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 return regex.test(email);
@@ -533,6 +620,8 @@
 
 
 
+
+
             // TROCAR TELAS
             if (linkLogin) {
                 linkLogin.addEventListener("click", function (e) {
@@ -572,18 +661,19 @@
             }
 
 
-            // CADASTRO
+            // CADASTRO PROFISSIONAL
             if (btnCadastrar) {
                 btnCadastrar.addEventListener("click", function () {
-
                     const nomeProfissional = nomeProfissionalInput.value;
-                    const CPF = cpfInput.value;
-                    const dataNascimento = dataNascimentoInput.value;
                     const email = emailCadastroInput.value;
-                    const telefone = telefoneProfissionalInput.value;
+                    const telefone = telProfissionalInput.value;
+                    const username = userProfissionalInput.value;
+                    const biografia = bioProfissionalInput.value;
+                    const CEP = cepProfissionalInput.value;
+                    const CPF = CPFInput.value;
                     const senha = senhaProfissionalInput.value;
 
-                    if (nomeProfissional && CPF && dataNascimento && email && telefone && senha) {
+                    if (nomeProfissional && email && telefone && username && biografia && CEP && CPF && senha) {
 
                         if (!emailValido(email)) {
                             mostrarAlert("E-mail inválido!", "danger");
@@ -597,8 +687,6 @@
                     } else {
                         mostrarAlert("Preencha todos os campos!", "danger");
                     }
-
-                    alertCadastro.style.display = "block";
                 });
             }
 
@@ -660,13 +748,15 @@
             // CADASTRO CLINICA
             if (btnCadClinica) {
                 btnCadClinica.addEventListener("click", function () {
-                    const email = emailCadClinicaInput.value;
                     const nomeClinica = nomeClinicaInput.value;
-                    const cnpj = cnpjInput.value;
+                    const email = emailCadClinicaInput.value;
+                    const telefone = telClinicaInput.value;
+                    const username = userClinicaInput.value;
+                    const bio = bioClinicaInput.value;
+                    const cnpj = CNPJInput.value;
                     const senha = senhaClinicaInput.value;
 
-
-                    if (nomeClinica && cnpj && email && senha) {
+                    if (nomeClinica && email && telefone && username && bio && cnpj && senha) {
 
                         if (!cnpjValido(cnpj)) {
                             mostrarAlert("CNPJ inválido!", "danger");
@@ -728,6 +818,84 @@
                     setTimeout(() => alert.remove(), 500);
                 }, 3000);
             }
+
+
+
+            //CEP
+            $("#cep").blur(function () {
+
+                //Nova variável "cep" somente com dígitos.
+                var cep = $(this).val()
+                    .replace(/\D/g, '');
+
+                //Verifica se campo cep possui valor informado.
+                if (cep != "") {
+
+                    //Expressão regular para validar o CEP.
+                    var validacep = /^[0-9]{8}$/;
+
+                    //Valida o formato do CEP.
+                    if (validacep.test(cep)) {
+
+                        //Preenche os campos com "..." enquanto consulta webservice.
+                        $("#rua").val("...");
+                        $("#bairro").val("...");
+                        $("#cidade").val("...");
+                        $("#uf").val("...");
+                        $("#ibge").val("...");
+
+                        //Consulta o webservice viacep.com.br/
+                        $
+                            .getJSON(
+                                "https://viacep.com.br/ws/"
+                                + cep
+                                + "/json/?callback=?",
+                                function (
+                                    dados) {
+
+                                    if (!("erro" in dados)) {
+                                        //Atualiza os campos com os valores da consulta.
+                                        $(
+                                            "#rua")
+                                            .val(
+                                                dados.logradouro);
+                                        $(
+                                            "#bairro")
+                                            .val(
+                                                dados.bairro);
+                                        $(
+                                            "#cidade")
+                                            .val(
+                                                dados.localidade);
+                                        $(
+                                            "#uf")
+                                            .val(
+                                                dados.uf);
+                                        $(
+                                            "#ibge")
+                                            .val(
+                                                dados.ibge);
+                                    } //end if.
+                                    else {
+                                        //CEP pesquisado não foi encontrado.
+                                        limpa_formulário();
+                                        alert("CEP não encontrado.");
+                                    }
+                                });
+                    } //end if.
+                    else {
+                        //cep é inválido.
+                        limpa_formulário();
+                        alert("Formato de CEP inválido.");
+                    }
+                } //end if.
+                else {
+                    //cep sem valor, limpa formulário.
+                    limpa_formulário();
+                }
+            });
+
+
 
         });
     </script>
