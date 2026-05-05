@@ -53,9 +53,9 @@
         }
 
         #colForm > div {
-    max-width: 420px;
-    width: 100%;
-}
+            max-width: 420px;
+            width: 100%;
+        }
 
         textarea {
             width: 100%;
