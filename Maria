@@ -1,0 +1,45 @@
+Mudar todos os arquivos e caminhos para php
+
+
+Padrão profissional jQuery
+$linkLogin.on("click", ...)
+$linkCadastro.on("click", ...)
+$element.hide()
+$element.show()
+$element.fadeIn()
+$element.slideDown()
+
+
+CLIENTE
+Nome completo
+E-mail
+Telefone
+Username
+Gênero
+Biografia
+CPF
+Senha
+
+
+
+
+PROFISSIONAL
+Nome completo
+E-mail
+Telefone
+Username
+Gênero
+Biografia
+CEP
+Registro profissional
+CPF
+Senha
+
+CLINICA
+Nome da clínica
+E-mail
+Telefone
+Username da clínica
+Biografia
+CNPJ
+Senha
