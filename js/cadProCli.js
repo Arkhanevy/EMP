@@ -1,38 +1,33 @@
+$(document).ready(function () {
 
-document.addEventListener("DOMContentLoaded", function () {
-
-
-    //QUAL FORMULARI ABRIR
+    // QUAL FORMULÁRIO ABRIR
     const params = new URLSearchParams(window.location.search);
     const tipo = params.get("tipo");
 
     if (tipo === "clinica") {
-        mostrarFormulario('cadastroClinica');
+        mostrarFormulario("cadastroClinica");
+        limpa_formulário();
+
     } else if (tipo === "profissional") {
-        mostrarFormulario('cadastroProfissional');
+        mostrarFormulario("cadastroProfissional");
+        limpa_formulário();
+
     } else {
-        mostrarFormulario('cadastroProfissional');
+        mostrarFormulario("cadastroProfissional");
+        limpa_formulário();
     }
 
     function mostrarFormulario(cadastroId) {
-        var cadastros = document.querySelectorAll('.cadastro');
 
-        cadastros.forEach(function (form) {
-            form.style.display = 'none';
-        });
+        $(".cadastro").hide();
 
-        var formParaMostrar = document.getElementById(cadastroId);
-
-        if (formParaMostrar) {
-            formParaMostrar.style.display = 'block';
-        } else {
-            console.error("Formulário não encontrado:", cadastroId);
-        }
+        $("#" + cadastroId).show();
     }
 
 
+});
 
-
+document.addEventListener("DOMContentLoaded", function () {
 
     //VARIAVEIS
     // PROFISSIONAL
@@ -100,18 +95,49 @@ document.addEventListener("DOMContentLoaded", function () {
     const $bioClinica = $("#bioClinica");
     const $cnpj = $("#cnpj");
     const $senhaClinica = $("#senhaClinica");
+    const $cepClinica = $("#cepClinica");
+    const $ruaClinica = $("#ruaClinica");
+    const $bairroClinica = $("#bairroClinica");
+    const $ufClinica = $("#ufClinica");
+    const $ibgeClinica = $("#ibgeClinica");
+    const ruaClinica = $ruaClinica.val().trim();
+    const bairroClinica = $bairroClinica.val().trim();
+    const cidadeClinica = $("#cidadeClinica").val().trim();
+    const estadoClinica = $ufClinica.val().trim();
+    const ibgeClinica = $ibgeClinica.val().trim();
+    const $parteCEPClinica = $(".parteCEPClinica");
 
 
     // FUNÇÃO GLOBAL
     function limpa_formulário() {
         $("#emailCadastro").val("");
-        $("#nome").val("");
-        $("#senha").val("");
+        $("#nomeProfissional").val("");
+        $("#senhaProfissional").val("");
+        $("#telProfissional").val("");
+        $("#userProfissional").val("");
+        $("#CPF").val("");
+        $("#generoProfissional").val("");
+        $("#bioProfissional").val("");
+        $("#registroProfissional").val("");
+        $("#img_perfil").val("");
         $("#rua").val("");
         $("#bairro").val("");
         $("#cidade").val("");
         $("#uf").val("");
         $("#ibge").val("");
+        $("#emailCadClinica").val("");
+        $("#nomeClinica").val("");
+        $("#senhaClinica").val("");
+        $("#telClinica").val("");
+        $("#userClinica").val("");
+        $("#bioClinica").val("");
+        $("#img_perfil_Clinica").val("");
+        $("#cnpj").val("");
+        $("#ruaClinica").val("");
+        $("#bairroClinica").val("");
+        $("#cidadeClinica").val("");
+        $("#ufClinica").val("");
+        $("#ibgeClinica").val("");
     }
 
     function emailValido(email) {
@@ -189,6 +215,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+    //PROFISSIONAL
     // TROCAR TELAS
     if ($linkLogin.length) {
         $linkLogin.on("click", function (e) {
@@ -257,7 +284,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const senha = $senhaProfissional.val().trim();
         let erro = false;
 
-        
+
 
         // VÊ OS CAMPOS VAZIOS
         if (!nomeProfissional) {
@@ -283,7 +310,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!biografia) {
             $bioProfissional.addClass("is-invalid");
             erro = true;
-        }        
+        }
         if (!CPF) {
             $cpf.addClass("is-invalid");
             erro = true;
@@ -330,8 +357,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (!$generoProfissional.val()) {
-             $generoProfissional.addClass("is-invalid");
-             erro = true;
+            $generoProfissional.addClass("is-invalid");
+            erro = true;
         }
 
 
@@ -435,7 +462,104 @@ document.addEventListener("DOMContentLoaded", function () {
         $(this).removeClass("is-invalid");
     });
 
-    // TROCAR TELAS CLÍNICA
+
+        // CEP 
+    $cepProfissional.on("blur", function () {
+
+        let cep = $(this).val().replace(/\D/g, "");
+
+        // se vazio
+        if (cep === "") {
+            limpa_formulário();
+            return;
+        }
+
+        // valida formato
+        const validaCep = /^[0-9]{8}$/;
+
+        if (!validaCep.test(cep)) {
+
+            $cepProfissional.addClass("is-invalid");
+
+            limpa_formulário();
+            mostrarAlert("Formato de CEP inválido!", "danger");
+            return;
+        }
+
+        // loading nos campos
+        $ruaProfissional.val("...");
+        $bairroProfissional.val("...");
+        $("#cidade").val("...");
+        $ufProfissional.val("...");
+        $ibgeProfissional.val("...");
+
+        $ruaClinica.val("...");
+        $bairroClinica.val("...");
+        $("#cidadeClinica").val("...");
+        $ufClinica.val("...");
+        $ibgeClinica.val("...");
+
+        // consulta API ViaCEP
+        $.getJSON(
+            "https://viacep.com.br/ws/" + cep + "/json/?callback=?",
+            function (dados) {
+
+                if (!("erro" in dados)) {
+
+                    $cepProfissional.removeClass("is-invalid");
+
+                    $ruaProfissional.val(dados.logradouro);
+                    $bairroProfissional.val(dados.bairro);
+                    $("#cidade").val(dados.localidade);
+                    $ufProfissional.val(dados.uf);
+                    $ibgeProfissional.val(dados.ibge);
+                    
+                    
+                    $cepClinica.removeClass("is-invalid");
+
+                    $ruaClinica.val(dados.logradouro);
+                    $bairroClinica.val(dados.bairro);
+                    $("#cidadeClinica").val(dados.localidade);
+                    $ufClinica.val(dados.uf);
+                    $ibgeClinica.val(dados.ibge);
+
+                    $($parteCEPClinica).removeClass("is-invalid");
+
+                } else {
+
+                    limpa_formulário();
+
+                    $cepProfissional.addClass("is-invalid");
+                    $cepClinica.addClass("is-invalid");
+
+
+                    mostrarAlert("CEP não encontrado!", "danger");
+                }
+
+            }
+        );
+
+    });
+
+    $cepProfissional.on("input", function () {
+        $(this).removeClass("is-invalid");
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //CLINICAS
+    // TROCAR TELAS
     if ($linkLogClinica.length) {
 
         $linkLogClinica.on("click", function (e) {
@@ -488,118 +612,139 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // CADASTRO CLÍNICA
-    if ($btnCadClinica.length) {
+    $btnCadClinica.on("click", function () {
+        let botao = $(this);
+        botao.prop("disabled", true);
+        botao.html(`
+                    <span class="spinner-border spinner-border-sm"></span>
+                    Cadastrando..
+                `);
 
-        $btnCadClinica.on("click", function () {
+        // limpa erros anteriores
+        $(".form-control, .form-select, textarea").removeClass("is-invalid");
+        const nomeClinica = $nomeClinica.val().trim();
+        const email = $emailCadClinicaInput.val().trim();
+        const telefone = $telClinica.val().trim();
+        const username = $userClinica.val().trim();
+        const bio = $bioClinica.val().trim();
+        const CEP = $cepClinica.val().trim();
+        const cnpj = $cnpj.val().trim();
+        const senha = $senhaClinica.val().trim();
+        let erro = false;
 
-            let botao = $(this);
 
-            botao.prop("disabled", true);
-            botao.html(`
-        <span class="spinner-border spinner-border-sm"></span>
-        Cadastrando...
-    `);
+        // VÊ OS CAMPOS VAZIOS
+        if (!nomeClinica) {
+            $nomeClinica.addClass("is-invalid");
+            erro = true;
+        }
 
-            // limpa erros anteriores
-            $(".form-control").removeClass("is-invalid");
+        if (!email) {
+            $emailCadClinicaInput.addClass("is-invalid");
+            erro = true;
+        }
 
-            const nomeClinica = $nomeClinica.val().trim();
-            const email = $emailCadClinicaInput.val().trim();
-            const telefone = $telClinica.val().trim();
-            const username = $userClinica.val().trim();
-            const bio = $bioClinica.val().trim();
-            const cnpj = $cnpj.val().trim();
-            const senha = $senhaClinica.val().trim();
+        if (!telefone) {
+            $telClinica.addClass("is-invalid");
+            erro = true;
+        }
 
-            let erro = false;
+        if (!username) {
+            $userClinica.addClass("is-invalid");
+            erro = true;
+        }
 
-            // CAMPOS VAZIOS
-            if (!nomeClinica) {
-                $nomeClinica.addClass("is-invalid");
-                erro = true;
-            }
+        if (!bio) {
+            $bioClinica.addClass("is-invalid");
+            erro = true;
+        }
+        
+        if (!CEP) {
+            $cepClinica.addClass("is-invalid");
+            erro = true;
+        }
 
-            if (!email) {
-                $emailCadClinicaInput.addClass("is-invalid");
-                erro = true;
-            }
+        if (!cnpj) {
+            $cnpj.addClass("is-invalid");
+            erro = true;
+        }
 
-            if (!telefone) {
-                $telClinica.addClass("is-invalid");
-                erro = true;
-            }
+        if (!ruaClinica) {
+            $ruaClinica.addClass("is-invalid");
+            erro = true;
+        }
 
-            if (!username) {
-                $userClinica.addClass("is-invalid");
-                erro = true;
-            }
+        if (!bairroClinica) {
+            $bairroClinica.addClass("is-invalid");
+            erro = true;
+        }
 
-            if (!bio) {
-                $bioClinica.addClass("is-invalid");
-                erro = true;
-            }
+        if (!cidadeClinica) {
+            $("#cidadeClinica").addClass("is-invalid");
+            erro = true;
+        }
 
-            if (!cnpj) {
-                $cnpj.addClass("is-invalid");
-                erro = true;
-            }
+        if (!estadoClinica) {
+            $ufClinica.addClass("is-invalid");
+            erro = true;
+        }
 
-            if (!senha) {
-                $senhaClinica.addClass("is-invalid");
-                erro = true;
-            }
+        if (!ibgeClinica) {
+            $ibgeClinica.addClass("is-invalid");
+            erro = true;
+        }
 
-            if (erro) {
-                botao.prop("disabled", false);
-                botao.html("Cadastrar");
+        if (!senha) {
+            $senhaClinica.addClass("is-invalid");
+            erro = true;
+        }
 
-                mostrarAlert("Preencha todos os campos!", "danger");
-                return;
-            }
+        if (erro) {
+            botao.prop("disabled", false);
+            botao.html("Cadastrar");
 
-            // EMAIL
-            if (!emailValido(email)) {
+            mostrarAlert("Preencha todos os campos!", "danger");
+            return;
+        }
 
-                $emailCadClinicaInput.addClass("is-invalid");
+        // EMAIL
+        if (!emailValido(email)) {
 
-                botao.prop("disabled", false);
-                botao.html("Cadastrar");
+            $emailCadClinicaInput.addClass("is-invalid");
 
-                mostrarAlert("E-mail inválido!", "danger");
-                return;
-            }
+            botao.prop("disabled", false);
+            botao.html("Cadastrar");
 
-            // CNPJ
-            if (!cnpjValido(cnpj)) {
+            mostrarAlert("E-mail inválido!", "danger");
+            return;
+        }
 
-                $cnpj.addClass("is-invalid");
+        // CNPJ
+        if (!cnpjValido(cnpj)) {
 
-                botao.prop("disabled", false);
-                botao.html("Cadastrar");
+            $cnpj.addClass("is-invalid");
 
-                mostrarAlert("CNPJ inválido!", "danger");
-                return;
-            }
+            botao.prop("disabled", false);
+            botao.html("Cadastrar");
 
-            // SUCESSO
-            setTimeout(function () {
+            mostrarAlert("CNPJ inválido!", "danger");
+            return;
+        }
 
-                botao.prop("disabled", false);
-                botao.html("Cadastrar");
+        setTimeout(function () {
 
-                mostrarAlert("Cadastro realizado!", "success");
+            botao.prop("disabled", false);
+            botao.html("Cadastrar");
 
-            }, 2000);
+            mostrarAlert("Cadastro realizado!", "success");
 
-        });
+        }, 2000);
 
-    }
+    });
 
 
     // remove vermelho ao digitar
-    $(
-        "#nomeClinica, #emailCadClinica, #telClinica, #userClinica, #bioClinica, #cnpj, #senhaClinica"
-    ).on("input", function () {
+    $(".form-control, .form-select, textarea").on("input change", function () {
         $(this).removeClass("is-invalid");
     });
 
@@ -652,37 +797,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-
-    // ALERTAS
-    function mostrarAlert(mensagem, tipo = "success") {
-
-        const $container = $("#alertContainer");
-
-        const $alert = $(`
-    <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
-        ${mensagem}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-`);
-
-        $container.append($alert);
-
-        // remove automaticamente depois de 3 segundos
-        setTimeout(function () {
-
-            $alert.removeClass("show").addClass("hide");
-
-            setTimeout(function () {
-                $alert.remove();
-            }, 500);
-
-        }, 3000);
-    }
-
-
-
-    // CEP
-    $cepProfissional.on("blur", function () {
+    // CEP 
+    $cepClinica.on("blur", function () {
 
         let cep = $(this).val().replace(/\D/g, "");
 
@@ -697,7 +813,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!validaCep.test(cep)) {
 
-            $cepProfissional.addClass("is-invalid");
+            $cepClinica.addClass("is-invalid");
 
             limpa_formulário();
             mostrarAlert("Formato de CEP inválido!", "danger");
@@ -705,11 +821,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // loading nos campos
-        $ruaProfissional.val("...");
-        $bairroProfissional.val("...");
-        $("#cidade").val("...");
-        $ufProfissional.val("...");
-        $ibgeProfissional.val("...");
+        $ruaClinica.val("...");
+        $bairroClinica.val("...");
+        $("#cidadeClinica").val("...");
+        $ufClinica.val("...");
+        $ibgeClinica.val("...");
 
         // consulta API ViaCEP
         $.getJSON(
@@ -717,23 +833,23 @@ document.addEventListener("DOMContentLoaded", function () {
             function (dados) {
 
                 if (!("erro" in dados)) {
+                    $cepClinica.removeClass("is-invalid");
 
-                    $cepProfissional.removeClass("is-invalid");
+                    $ruaClinica.val(dados.logradouro);
+                    $bairroClinica.val(dados.bairro);
+                    $("#cidadeClinica").val(dados.localidade);
+                    $ufClinica.val(dados.uf);
+                    $ibgeClinica.val(dados.ibge);
 
-                    $ruaProfissional.val(dados.logradouro);
-                    $bairroProfissional.val(dados.bairro);
-                    $("#cidade").val(dados.localidade);
-                    $ufProfissional.val(dados.uf);
-                    $ibgeProfissional.val(dados.ibge);
-
-
-                    $($parteCEP).removeClass("is-invalid");
+                    $($parteCEPClinica).removeClass("is-invalid");
 
                 } else {
 
                     limpa_formulário();
+                    $cepClinica.addClass("is-invalid");
+                    botao.prop("disabled", false);
+                    botao.html("Cadastrar");
 
-                    $cepProfissional.addClass("is-invalid");
 
                     mostrarAlert("CEP não encontrado!", "danger");
                 }
@@ -742,12 +858,38 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
     });
-
-
-    // remove vermelho ao digitar
-    $cepProfissional.on("input", function () {
+    $cepClinica.on("input", function () {
         $(this).removeClass("is-invalid");
     });
+
+
+
+
+
+
+    // ALERTAS
+    function mostrarAlert(mensagem, tipo = "success") {
+
+        const $container = $("#alertContainer");
+
+        const $alert = $(` <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
+            ${mensagem}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+            `);
+
+        $container.append($alert);
+
+        setTimeout(function () {
+
+            $alert.removeClass("show").addClass("hide");
+
+            setTimeout(function () {
+                $alert.remove();
+            }, 500);
+
+        }, 3000);
+    }
+
 
 
     mostrarFormulario("cadastroProfissional");
