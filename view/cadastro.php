@@ -36,7 +36,7 @@
                         </div>
 
                         
-                        <form action="../model/caduser.php" method="POST">
+                        <form action="../model/caduser.php" method="POST" enctype="multipart/form-data">
                             <div class="avatar-container">
                                 <img id="preview" src="../img/logo_user.png" alt="Foto de perfil">
                                 <input name="cxproFoto" type="file" id="img_perfil" accept="image/*" required>
@@ -52,6 +52,11 @@
                                     <label>Nome completo</label>
                                 </div>
                                 <div class="form-floating mb-3">
+                                    <input name="cxproUsername" id="userProfissional" class="form-control" type="text"
+                                        placeholder="Username" required>
+                                    <label>Username</label>
+                                </div>
+                                <div class="form-floating mb-3">
                                     <input name="cxproEmail" id="emailCadastro" class="form-control" type="email"
                                         placeholder="E-mail" required>
                                     <label>E-mail</label>
@@ -62,9 +67,8 @@
                                     <label>Telefone</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input name="cxproUsername" id="userProfissional" class="form-control" type="text"
-                                        placeholder="Username" required>
-                                    <label>Username</label>
+                                    <input name="cxdtnPro" id="dtnPro" class="form-control" type="date" placeholder="Data de Nascimento" required>
+                                    <label>Data de Nascimento</label>
                                 </div>
                                 <div class="form-floating mb-3">
                                     <select name="cxgeneroProfissional" id="generoProfissional" class="form-select">

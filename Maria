@@ -76,3 +76,111 @@ Username da clínica
 Biografia
 CNPJ
 Senha
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TENTAR TORNAR ESSA PARTE MENOS NUMEROSO (Case, this ou função)
+        if (!nomeProfissional) {
+            $nomeProfissional.addClass("is-invalid");
+            erro = true;
+        }
+
+        if (!email) {
+            $emailCadastroInput.addClass("is-invalid");
+            erro = true;
+        }
+
+        if (!telefone) {
+            $telProfissional.addClass("is-invalid");
+            erro = true;
+        }
+
+        if (!username) {
+            $userProfissional.addClass("is-invalid");
+            erro = true;
+        }
+
+        if (!biografia) {
+            $bioProfissional.addClass("is-invalid");
+            erro = true;
+        }
+        if (!CPF) {
+            $cpf.addClass("is-invalid");
+            erro = true;
+        }
+
+        if (!registro) {
+            $registroProfissional.addClass("is-invalid");
+            erro = true;
+        }
+
+        if (!CEP) {
+            $cepProfissional.addClass("is-invalid");
+            erro = true;
+        }
+
+        if (!rua) {
+            $ruaProfissional.addClass("is-invalid");
+            erro = true;
+        }
+
+        if (!bairro) {
+            $bairroProfissional.addClass("is-invalid");
+            erro = true;
+        }
+
+        if (!cidade) {
+            $("#cidade").addClass("is-invalid");
+            erro = true;
+        }
+
+        if (!estado) {
+            $ufProfissional.addClass("is-invalid");
+            erro = true;
+        }
+
+        if (!ibge) {
+            $ibgeProfissional.addClass("is-invalid");
+            erro = true;
+        }
+
+        if (!senha) {
+            $senhaProfissional.addClass("is-invalid");
+            erro = true;
+        }
+
+        if (!$generoProfissional.val()) {
+            $generoProfissional.addClass("is-invalid");
+            erro = true;
+        }
+
+
+        if (erro) {
+            botao.prop("disabled", false);
+            botao.html("Cadastrar");
+
+            mostrarAlert("Preencha todos os campos!", "danger");
+            return;
+        }

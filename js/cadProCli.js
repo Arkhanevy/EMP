@@ -6,15 +6,12 @@ $(document).ready(function () {
 
     if (tipo === "clinica") {
         mostrarFormulario("cadastroClinica");
-        limpa_formulário();
 
     } else if (tipo === "profissional") {
         mostrarFormulario("cadastroProfissional");
-        limpa_formulário();
 
     } else {
         mostrarFormulario("cadastroProfissional");
-        limpa_formulário();
     }
 
     function mostrarFormulario(cadastroId) {
@@ -70,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const ibge = $ibgeProfissional.val().trim();
     const $senhaProfissional = $("#senhaProfissional");
     const $parteCEP = $(".parteCEP");
-
+/*
     // CLÍNICA
     const $inputImgClinica = $("#img_perfil_Clinica");
     const $previewClinica = $("#previewClinica");
@@ -106,10 +103,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const estadoClinica = $ufClinica.val().trim();
     const ibgeClinica = $ibgeClinica.val().trim();
     const $parteCEPClinica = $(".parteCEPClinica");
-
+*/
 
     // FUNÇÃO GLOBAL
-    function limpa_formulário() {
+    /*function limpa_formulário() {
         $("#emailCadastro").val("");
         $("#nomeProfissional").val("");
         $("#senhaProfissional").val("");
@@ -138,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
         $("#cidadeClinica").val("");
         $("#ufClinica").val("");
         $("#ibgeClinica").val("");
-    }
+    }*/
 
     function emailValido(email) {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -261,7 +258,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-
+    /*
     // CADASTRO PROFISSIONAL
     $btnCadastrar.on("click", function () {
         let botao = $(this);
@@ -462,7 +459,7 @@ document.addEventListener("DOMContentLoaded", function () {
         $(this).removeClass("is-invalid");
     });
 
-
+*/
         // CEP 
     $cepProfissional.on("blur", function () {
 
@@ -470,7 +467,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // se vazio
         if (cep === "") {
-            limpa_formulário();
+            //limpa_formulário();
             return;
         }
 
@@ -481,7 +478,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             $cepProfissional.addClass("is-invalid");
 
-            limpa_formulário();
+            //limpa_formulário();
             mostrarAlert("Formato de CEP inválido!", "danger");
             return;
         }
@@ -527,7 +524,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 } else {
 
-                    limpa_formulário();
+                    //limpa_formulário();
 
                     $cepProfissional.addClass("is-invalid");
                     $cepClinica.addClass("is-invalid");
@@ -556,7 +553,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-
+/*
 
     //CLINICAS
     // TROCAR TELAS
@@ -804,7 +801,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // se vazio
         if (cep === "") {
-            limpa_formulário();
+            //limpa_formulário();
             return;
         }
 
@@ -815,7 +812,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             $cepClinica.addClass("is-invalid");
 
-            limpa_formulário();
+            //limpa_formulário();
             mostrarAlert("Formato de CEP inválido!", "danger");
             return;
         }
@@ -845,7 +842,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 } else {
 
-                    limpa_formulário();
+                    //limpa_formulário();
                     $cepClinica.addClass("is-invalid");
                     botao.prop("disabled", false);
                     botao.html("Cadastrar");
@@ -865,7 +862,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-
+*/
 
     // ALERTAS
     function mostrarAlert(mensagem, tipo = "success") {

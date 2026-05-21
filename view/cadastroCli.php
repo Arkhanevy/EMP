@@ -24,41 +24,46 @@
         background-attachment: fixed;
     }
 
-    #cadastroCliente {
-        width: 280px;
-        height: 390px;
-        border-radius: 10%;
-        overflow-y: auto;
-        padding: 20px;
-        box-sizing: border-box;
-        font-size: 15px;
-    }
+    /* CARD DO CADASTRO */
+#cadastroCliente {
+    width: 100%;
+    max-width: 500px;
 
-    h1 {
-        text-align: center;
-    }
+    max-height: 90vh;
 
-    img {
-        height: 100px;
-        width: 100px;
-    }
+    overflow-y: auto;
 
-    textarea {
-        width: 100%;
-        height: 250px;
-        align-self: center;
-    }
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+/* FOTO */
+#preview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+/* BIOGRAFIA */
+textarea {
+    width: 100%;
+    min-height: 150px;
+    resize: none;
+}
 </style>
 
 <body>
-    <nav class="navbar navbar-expand-sm navbar-expand-md navbar-expand-lg navbar-expand-xl navbar-expand-xxl bg-success navbar-dark">
+    <nav
+        class="navbar navbar-expand-sm navbar-expand-md navbar-expand-lg navbar-expand-xl navbar-expand-xxl bg-success navbar-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Logo</a>
         </div>
     </nav>
 
-    <div class="container-sm container-md container-lg container-xl container-xxl border border-success my-4 bg-light"
-        id="cadastroCliente">
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+    
+        <div class="img-thumbnail bg-light border border-success p-4 rounded-4 shadow"
+             id="cadastroCliente">
         <h1>Seja Bem-Vindo!</h1>
         <p class="text-muted mt-2 mx-auto"> Cadastre-se para poder agendar suas consultas.</p>
 
@@ -90,8 +95,8 @@
                 <label>Telefone</label>
             </div>
             <div class="form-floating mb-3">
-                <input name="cxdtnCliCli" id="dtnCli" class="form-control" type="date"
-                    placeholder="Data de Nascimento" required>
+                <input name="cxdtnCliCli" id="dtnCli" class="form-control" type="date" placeholder="Data de Nascimento"
+                    required>
                 <label>Data de Nascimento</label>
             </div>
             <div class="form-floating mb-3">
@@ -126,6 +131,7 @@
 
         <p>Já tem uma conta? <a class="logarCliente" href="#">Faça login</a></p>
 
+    </div>
     </div>
 
     <script src="../js/cadCli.js"></script>
