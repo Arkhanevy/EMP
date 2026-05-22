@@ -247,6 +247,53 @@
                                     placeholder="Biografia" required>
                                 <label>Biografia</label>
                             </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input name="cxCEPClinica" class="form-control" type="text" id="cepClinica" value=""
+                                            placeholder="cep" required> <label>Cep</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input name="cxRuaClinica" class="parteCEPClinica form-control" type="text" id="ruaClinica" placeholder="rua"
+                                            required>
+                                        <label>Rua</label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input name="cxBairroClinica" class="parteCEPClinica form-control" type="text" id="bairroClinica"
+                                            placeholder="bairro" required> <label>Bairro</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input name="cxCidadeClinica" class="parteCEPClinica form-control" type="text" id="cidadeClinica"
+                                            placeholder="cidade" required> <label>Cidade</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input name="cxUFClinica" class=" parteCEPClinica form-control" type="text" id="ufClinica" placeholder="uf"
+                                            required>
+                                        <label>Estado</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input name="cxIBGEClinica" class="parteCEPClinica form-control" type="text" id="ibgeClinica" placeholder="ibge"
+                                            required> <label>IBGE</label>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="form-floating mb-3">
                                 <input name="cxclinCnpj" id="cnpj" class="form-control" type="text" placeholder="CNPJ"
                                     required>
