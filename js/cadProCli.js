@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const ibge = $ibgeProfissional.val().trim();
     const $senhaProfissional = $("#senhaProfissional");
     const $parteCEP = $(".parteCEP");
-/*
+
     // CLÍNICA
     const $inputImgClinica = $("#img_perfil_Clinica");
     const $previewClinica = $("#previewClinica");
@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const estadoClinica = $ufClinica.val().trim();
     const ibgeClinica = $ibgeClinica.val().trim();
     const $parteCEPClinica = $(".parteCEPClinica");
-*/
+
 
     // FUNÇÃO GLOBAL
     /*function limpa_formulário() {
@@ -258,7 +258,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    /*
+    
     // CADASTRO PROFISSIONAL
     $btnCadastrar.on("click", function () {
         let botao = $(this);
@@ -459,7 +459,7 @@ document.addEventListener("DOMContentLoaded", function () {
         $(this).removeClass("is-invalid");
     });
 
-*/
+
         // CEP 
     $cepProfissional.on("blur", function () {
 
@@ -553,7 +553,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-/*
+
 
     //CLINICAS
     // TROCAR TELAS
@@ -862,7 +862,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-*/
+
 
     // ALERTAS
     function mostrarAlert(mensagem, tipo = "success") {
