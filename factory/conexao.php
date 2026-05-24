@@ -1,16 +1,16 @@
 <?php
-class Banco {
+class conexao {
     public static $usuario = "root";
     public static $senha = "";
     public static $connect = null;
 
     private static function Conectar() {
         try {
-            if (self::$connect == null) {
-                self::$connect = new PDO(
+            if (conexao::$connect == null) {
+                conexao::$connect = new PDO(
                     'mysql:host=localhost;dbname=dbelmo;charset=utf8mb4',
-                    self::$usuario,
-                    self::$senha,
+                    conexao::$usuario,
+                    conexao::$senha,
                     [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
                 );
             }
@@ -18,11 +18,11 @@ class Banco {
             echo 'Erro na conexão: ' . $ex->getMessage();
             die;
         }
-        return self::$connect;
+        return conexao::$connect;
     }
 
     public function getConn() {
-        return self::Conectar();
+        return conexao::Conectar();
     }
 }
 ?>

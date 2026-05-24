@@ -13,7 +13,8 @@ create table clinica( -- tabela com os dados do perifil da clinica
 	Clin_DtCad datetime default current_timestamp, 
 	Clin_DtDell datetime, -- data do soft delete 
 	Clin_Status varchar(8), -- se o perfil está ativo ou desativado
-	Clin_Cnpj varchar(14) unique, 
+	Clin_Cnpj varchar(14) unique,
+	Clin_cep varchar(8), 
 	Clin_Telefone varchar(11),
 	Clin_notificacao text
 );
