@@ -2,21 +2,21 @@ create database dbelmo character set utf8mb4 collate utf8mb4_general_ci;
 use dbelmo;
 
 create table clinica( -- tabela com os dados do perifil da clinica
-	Clin_id int auto_increment primary key, 
-	Clin_Nome varchar(90), 
-	Clin_Email varchar(90) unique not null,
-	Clin_Username varchar(20) unique not null,
-	Clin_Senha varchar(255),
-	Clin_Biografia text, 
-	Clin_Foto varchar(100), -- vai guardar o nome do do arquivo ao inves do arquivo em si
-	Clin_CodVali int null, -- codigo de validação da conta
-	Clin_DtCad datetime default current_timestamp, 
-	Clin_DtDell datetime, -- data do soft delete 
-	Clin_Status varchar(8), -- se o perfil está ativo ou desativado
-	Clin_Cnpj varchar(14) unique,
-	Clin_cep varchar(8), 
-	Clin_Telefone varchar(11),
-	Clin_notificacao text
+	clin_id int auto_increment primary key, 
+	clin_nome varchar(90), 
+	clin_email varchar(90) unique not null,
+	clin_username varchar(20) unique not null,
+	clin_senha varchar(255),
+	clin_Biografia text, 
+	clin_Foto varchar(100), -- vai guardar o nome do do arquivo ao inves do arquivo em si
+	clin_CodVali int null, -- codigo de validação da conta
+	clin_DtCad datetime default current_timestamp, 
+	clin_DtDell datetime, -- data do soft delete 
+	clin_Status varchar(8), -- se o perfil está ativo ou desativado
+	clin_Cnpj varchar(14) unique,
+	clin_cep varchar(8), 
+	clin_Telefone varchar(11),
+	clin_notificacao text
 );
 
 
@@ -28,38 +28,38 @@ create table profissional ( -- tabela do perfil do profissional
     pro_senha varchar(255),
     pro_biografia text,
     pro_foto varchar(100),
-    Pro_CodVali int,
-    Pro_DtNasc date,
-    Pro_DtCad datetime default current_timestamp,
-    Pro_DtDell datetime null,
-    Pro_Status varchar(8),
-    Pro_CPF varchar(11) unique,
-    Pro_CEP varchar(8),
-    Pro_Telefone varchar(11),
-    Pro_Genero varchar(6),
-    Pro_Registro_Pro varchar(20), -- ainda não vi mas deve ter algum documento pra podologa poder atuar dps tem que ver tbm como verifica
-    Pro_documentos varchar(90), -- aqui tbm vai ser só o nome que nem em foto
-    Pro_notificacao text
+    pro_CodVali int,
+    pro_DtNasc date,
+    pro_DtCad datetime default current_timestamp,
+    pro_DtDell datetime null,
+    pro_Status varchar(8),
+    pro_CPF varchar(11) unique,
+    pro_CEP varchar(8),
+    pro_Telefone varchar(11),
+    pro_Genero varchar(6),
+    pro_Registro_Pro varchar(20), -- ainda não vi mas deve ter algum documento pra podologa poder atuar dps tem que ver tbm como verifica
+    pro_documentos varchar(90), -- aqui tbm vai ser só o nome que nem em foto
+    pro_notificacao text
 );
 
 create table cliente ( -- tabela do cliente
-    Cli_id int auto_increment primary key,
-    Cli_Nome varchar(90),
-    Cli_Email varchar(90) unique,
-    Cli_Username varchar(20) unique not null,
-    Cli_Senha varchar(255),
-    Cli_Biografia text,
-    Cli_Foto varchar(100),
-    Cli_CodVali int,
-    Cli_DtNasc date,
-    Cli_DtCad datetime default current_timestamp,
-    Cli_DtDell datetime,
-    Cli_Status varchar(8),
-    Cli_CPF varchar(11) unique,
-    Cli_Telefone varchar(11),
-    Cli_Genero varchar(6),
-    Cli_Documentos varchar(100),
-    Cli_notificacao text
+    cli_id int auto_increment primary key,
+    cli_nome varchar(90),
+    cli_email varchar(90) unique,
+    cli_username varchar(20) unique not null,
+    cli_senha varchar(255),
+    cli_Biografia text,
+    cli_Foto varchar(100),
+    cli_CodVali int,
+    cli_DtNasc date,
+    cli_DtCad datetime default current_timestamp,
+    cli_DtDell datetime,
+    cli_Status varchar(8),
+    cli_CPF varchar(11) unique,
+    cli_Telefone varchar(11),
+    cli_Genero varchar(6),
+    cli_Documentos varchar(100),
+    cli_notificacao text
 );
 
 create table servico (
@@ -96,13 +96,13 @@ create table menu_permissao ( -- tabela que vai associar as permissoes e clinica
 );
 
 create table relatorio (-- como queremos guardar os relatorios e que as clinicas possam acessar ela então criamos uma tabela pra isso
-    Rel_id int auto_increment primary key,
-    Pro_id int null,
+    rel_id int auto_increment primary key,
+    pro_id int null,
     clin_id int null,
     dt_relatorio datetime,
     ttl_atendimentos int, -- total de atentimentos
     ttl_gnh decimal(10,2), -- ganho. Provavelmente vou ter que acrecentrar coisas 
-    constraint fk_rel_pro foreign key (Pro_id) references profissional(pro_id) on delete set null on update cascade,
+    constraint fk_rel_pro foreign key (pro_id) references profissional(pro_id) on delete set null on update cascade,
     constraint fk_rel_clin foreign key (clin_id) references clinica(clin_id) on delete set null on update cascade
 );
 
