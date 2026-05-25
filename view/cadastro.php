@@ -67,16 +67,16 @@
                                     <label>Telefone</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input name="cxdtnPro" id="dtnPro" class="form-control" type="date" placeholder="Data de Nascimento" required>
+                                    <input name="cxprodtNasc" id="dtnPro" class="form-control" type="date" placeholder="Data de Nascimento" required>
                                     <label>Data de Nascimento</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <select name="cxgeneroProfissional" id="generoProfissional" class="form-select">
+                                    <select name="cxproGenero" id="generoProfissional" class="form-select">
                                         <option value="" selected disabled>Selecione uma opção</option>
-                                        <option value="feminino">Feminino</option>
-                                        <option value="masculino">Masculino</option>
-                                        <option value="naoBinario">Não Binario</option>
-                                        <option value="naoIdentificado">Prefiro não dizer</option>
+                                        <option value="F">Feminino</option>
+                                        <option value="M">Masculino</option>
+                                        <option value="O">Não Binario</option>
+                                        <option value="I">Prefiro não dizer</option>
                                     </select>
                                     <label for="especialidade">Gênero</label>
                                 </div> 
@@ -88,13 +88,13 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating mb-3">
-                                            <input name="cep" class="form-control" type="text" id="cep" value=""
-                                                placeholder="cep" required> <label>Cep</label>
+                                            <input name="cxproCEP" class="form-control" type="text" id="cep" value=""
+                                                placeholder="cep" required> <label>CEP</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating mb-3">
-                                            <input name="rua" class="parteCEP form-control" type="text" id="rua" placeholder="rua"
+                                            <input name="" class="parteCEP form-control" type="text" id="rua" placeholder="rua"
                                                 required>
                                             <label>Rua</label>
                                         </div>
@@ -105,13 +105,13 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating mb-3">
-                                            <input name="bairro" class="parteCEP form-control" type="text" id="bairro"
+                                            <input name="" class="parteCEP form-control" type="text" id="bairro"
                                                 placeholder="bairro" required> <label>Bairro</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating mb-3">
-                                            <input name="cidade" class="parteCEP form-control" type="text" id="cidade"
+                                            <input name="" class="parteCEP form-control" type="text" id="cidade"
                                                 placeholder="cidade" required> <label>Cidade</label>
                                         </div>
                                     </div>
@@ -120,14 +120,14 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating mb-3">
-                                            <input name="uf" class=" parteCEP form-control" type="text" id="uf" placeholder="uf"
+                                            <input name="" class=" parteCEP form-control" type="text" id="uf" placeholder="uf"
                                                 required>
                                             <label>Estado</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating mb-3">
-                                            <input name="ibge" class="parteCEP form-control" type="text" id="ibge" placeholder="ibge"
+                                            <input name="" class="parteCEP form-control" type="text" id="ibge" placeholder="ibge"
                                                 required> <label>IBGE</label>
                                         </div>
                                     </div>
@@ -223,7 +223,7 @@
 
                         <form>
                             <div class="form-floating mb-3">
-                                <input name="cxclinicaNome" id="nomeClinica" class="form-control" type="text"
+                                <input name="cxclinNome" id="nomeClinica" class="form-control" type="text"
                                     placeholder="Nome" required>
                                 <label>Nome da clínica</label>
                             </div>
@@ -243,20 +243,20 @@
                                 <label>Username da clínica</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input name="cxclinBiografia" id="bioClinica" class="form-control" type="text"
-                                    placeholder="Biografia" required>
-                                <label>Biografia</label>
+                                <label>Biografia</label> <br />
+                                    <br /><textarea name="cxclinBiografia" id="bioClinica"
+                                        placeholder="Escreva sua biografia aqui." required></textarea>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <input name="cxCEPClinica" class="form-control" type="text" id="cepClinica" value=""
+                                        <input name="cxclinCEP" class="form-control" type="text" id="cepClinica" value=""
                                             placeholder="cep" required> <label>Cep</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <input name="cxRuaClinica" class="parteCEPClinica form-control" type="text" id="ruaClinica" placeholder="rua"
+                                        <input name="" class="parteCEPClinica form-control" type="text" id="ruaClinica" placeholder="rua"
                                             required>
                                         <label>Rua</label>
                                     </div>
@@ -267,13 +267,13 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <input name="cxBairroClinica" class="parteCEPClinica form-control" type="text" id="bairroClinica"
+                                        <input name="" class="parteCEPClinica form-control" type="text" id="bairroClinica"
                                             placeholder="bairro" required> <label>Bairro</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <input name="cxCidadeClinica" class="parteCEPClinica form-control" type="text" id="cidadeClinica"
+                                        <input name="" class="parteCEPClinica form-control" type="text" id="cidadeClinica"
                                             placeholder="cidade" required> <label>Cidade</label>
                                     </div>
                                 </div>
@@ -282,14 +282,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <input name="cxUFClinica" class=" parteCEPClinica form-control" type="text" id="ufClinica" placeholder="uf"
+                                        <input name="" class=" parteCEPClinica form-control" type="text" id="ufClinica" placeholder="uf"
                                             required>
                                         <label>Estado</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <input name="cxIBGEClinica" class="parteCEPClinica form-control" type="text" id="ibgeClinica" placeholder="ibge"
+                                        <input name="" class="parteCEPClinica form-control" type="text" id="ibgeClinica" placeholder="ibge"
                                             required> <label>IBGE</label>
                                     </div>
                                 </div>

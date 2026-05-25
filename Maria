@@ -1,4 +1,6 @@
 
+/*
+GERADOR: https://www.4devs.com.br/gerador_de_cep
 .navbar-expand-xxl|xl|lg|md|sm
 
 Margin top 
@@ -184,3 +186,36 @@ TENTAR TORNAR ESSA PARTE MENOS NUMEROSO (Case, this ou função)
             mostrarAlert("Preencha todos os campos!", "danger");
             return;
         }
+*/
+
+
+
+    //VARIAVEIS
+    const $inputImgCliente = $("#img_perfil");
+    const $previewCliente = $("#preview");
+
+    const $btnCadastrar = $("#btnCadastrar");
+    const $btnLogar = $("#btnLogar");
+
+    //const $alertLogin = $("#alertLogin");
+
+    const $emailCadastro = $("#emailCadastro");
+    const $emailLogin = $("#emailLogin");
+
+    const $cadastroForm = $("#cadastroCliente");
+    const $loginForm = $("#loginCliente");
+
+    const $linkLogin = $(".logarCliente");
+    const $linkCadastro = $(".cadastrarCliente");
+
+
+    //dados
+    const $nomeCliente = $("#nomeCliente");
+    const $userCliente = $("#userCliente");
+    const $emailCadastroInput = $("#emailCadastro");
+    const $telCliente = $("#telCliente");
+    const $dataNascimetnoCli = $("dtnCli");
+    const $generoCliente = $("#generoCliente");
+    const $bioCliente = $("#bioCliente");
+    const $cpf = $("#CPF");
+    const $senhaCliente = $("#senhaCliente");

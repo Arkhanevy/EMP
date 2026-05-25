@@ -7,15 +7,15 @@ create table clinica( -- tabela com os dados do perifil da clinica
 	clin_email varchar(90) unique not null,
 	clin_username varchar(20) unique not null,
 	clin_senha varchar(255),
-	clin_Biografia text, 
-	clin_Foto varchar(100), -- vai guardar o nome do do arquivo ao inves do arquivo em si
-	clin_CodVali int null, -- codigo de validação da conta
-	clin_DtCad datetime default current_timestamp, 
-	clin_DtDell datetime, -- data do soft delete 
-	clin_Status varchar(8), -- se o perfil está ativo ou desativado
-	clin_Cnpj varchar(14) unique,
+	clin_biografia text, 
+	clin_foto varchar(100), -- vai guardar o nome do do arquivo ao inves do arquivo em si
+	clin_vodVali int null, -- codigo de validação da conta
+	clin_dtCad datetime default current_timestamp, 
+	clin_dtDell datetime, -- data do soft delete 
+	clin_status varchar(8), -- se o perfil está ativo ou desativado
+	clin_cnpj varchar(14) unique,
 	clin_cep varchar(8), 
-	clin_Telefone varchar(11),
+	clin_telefone varchar(11),
 	clin_notificacao text
 );
 
@@ -28,16 +28,16 @@ create table profissional ( -- tabela do perfil do profissional
     pro_senha varchar(255),
     pro_biografia text,
     pro_foto varchar(100),
-    pro_CodVali int,
-    pro_DtNasc date,
-    pro_DtCad datetime default current_timestamp,
-    pro_DtDell datetime null,
-    pro_Status varchar(8),
+    pro_codVali int,
+    pro_dtNasc date,
+    pro_dtCad datetime default current_timestamp,
+    pro_dtDell datetime null,
+    pro_status varchar(8),
     pro_CPF varchar(11) unique,
     pro_CEP varchar(8),
-    pro_Telefone varchar(11),
-    pro_Genero varchar(6),
-    pro_Registro_Pro varchar(20), -- ainda não vi mas deve ter algum documento pra podologa poder atuar dps tem que ver tbm como verifica
+    pro_telefone varchar(11),
+    pro_genero varchar(1),
+    pro_registro varchar(20), -- ainda não vi mas deve ter algum documento pra podologa poder atuar dps tem que ver tbm como verifica
     pro_documentos varchar(90), -- aqui tbm vai ser só o nome que nem em foto
     pro_notificacao text
 );
@@ -48,17 +48,17 @@ create table cliente ( -- tabela do cliente
     cli_email varchar(90) unique,
     cli_username varchar(20) unique not null,
     cli_senha varchar(255),
-    cli_Biografia text,
-    cli_Foto varchar(100),
-    cli_CodVali int,
-    cli_DtNasc date,
-    cli_DtCad datetime default current_timestamp,
-    cli_DtDell datetime,
-    cli_Status varchar(8),
+    cli_biografia text,
+    cli_foto varchar(100),
+    cli_codVali int,
+    cli_dtNasc date,
+    cli_dtCad datetime default current_timestamp,
+    cli_dtDell datetime,
+    cli_status varchar(8),
     cli_CPF varchar(11) unique,
-    cli_Telefone varchar(11),
-    cli_Genero varchar(6),
-    cli_Documentos varchar(100),
+    cli_telefone varchar(11),
+    cli_genero varchar(6),
+    cli_documentos varchar(100),
     cli_notificacao text
 );
 

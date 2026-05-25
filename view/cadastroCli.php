@@ -25,31 +25,28 @@
     }
 
     /* CARD DO CADASTRO */
-#cadastroCliente {
-    width: 100%;
-    max-width: 500px;
+    #cadastroCliente {
+        width: 100%;
+        max-width: 500px;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 30px;
+        box-sizing: border-box;
+    }
 
-    max-height: 90vh;
+    /* FOTO */
+    #preview {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+    }
 
-    overflow-y: auto;
-
-    padding: 30px;
-    box-sizing: border-box;
-}
-
-/* FOTO */
-#preview {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-}
-
-/* BIOGRAFIA */
-textarea {
-    width: 100%;
-    min-height: 150px;
-    resize: none;
-}
+    /* BIOGRAFIA */
+    textarea {
+        width: 100%;
+        min-height: 150px;
+        resize: none;
+    }
 </style>
 
 <body>
@@ -60,7 +57,7 @@ textarea {
         </div>
     </nav>
 
-    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="container d-flex justify-content-center mt-3 min-vh-100">
     
         <div class="img-thumbnail bg-light border border-success p-4 rounded-4 shadow"
              id="cadastroCliente">
@@ -70,37 +67,47 @@ textarea {
         <form action="../model/caduser.php" method="POST">
             <div class="text-center">
                 <img class="img-fluid rounded-circle" id="preview" src="../img/logo_user.png" alt="Foto de perfil">
-                <input name="cxCliFoto" class="form-control" type="file" id="img_perfil" accept="image/*" required>
+                <input name="cxcliFoto" class="form-control" type="file" id="img_perfil" accept="image/*" required>
             </div>
 
             <p class="text-center mt-2" style="font-size: 12px;">Clique na imagem para adicionar foto</p>
 
             <div class="form-floating mb-3">
-                <input name="cxCliNome" id="nomeCliente" class="form-control" type="text" placeholder="Nome" required>
+                <input name="cxcliNome" id="nomeCliente" class="form-control" type="text" placeholder="Nome" required>
                 <label>Nome completo</label>
             </div>
             <div class="form-floating mb-3">
-                <input name="cxCliUsername" id="userCliente" class="form-control" type="text" placeholder="Username"
+                <input name="cxcliUsername" id="userCliente" class="form-control" type="text" placeholder="Username"
                     required>
                 <label>Username</label>
             </div>
             <div class="form-floating mb-3">
-                <input name="cxCliEmail" id="emailCadastro" class="form-control" type="email" placeholder="E-mail"
+                <input name="cxcliEmail" id="emailCadastro" class="form-control" type="email" placeholder="E-mail"
                     required>
                 <label>E-mail</label>
             </div>
             <div class="form-floating mb-3">
-                <input name="cxCliTelefone" id="telCliente" class="form-control" type="tel" placeholder="Telfone"
+                 <select name="cxcliGenero" id="generoCliente" class="form-select">
+                    <option value="" selected disabled>Selecione uma opção</option>
+                    <option value="feminino">Feminino</option>
+                    <option value="masculino">Masculino</option>
+                    <option value="naoBinario">Não Binario</option>
+                    <option value="naoIdentificado">Prefiro não dizer</option>
+                </select>
+                <label for="especialidade">Gênero</label>
+            </div> 
+            <div class="form-floating mb-3">
+                <input name="cxcliTelefone" id="telCliente" class="form-control" type="tel" placeholder="Telfone"
                     required>
                 <label>Telefone</label>
             </div>
             <div class="form-floating mb-3">
-                <input name="cxdtnCliCli" id="dtnCli" class="form-control" type="date" placeholder="Data de Nascimento"
+                <input name="cxcliDtn" id="dtnCli" class="form-control" type="date" placeholder="Data de Nascimento"
                     required>
                 <label>Data de Nascimento</label>
             </div>
             <div class="form-floating mb-3">
-                <select name="cxgeneroCliente" id="generoCliente" class="form-select">
+                <select name="cxcliGenero" id="generoCliente" class="form-select">
                     <option value="" selected disabled>Selecione uma opção</option>
                     <option value="feminino">Feminino</option>
                     <option value="masculino">Masculino</option>
@@ -111,16 +118,16 @@ textarea {
             </div>
             <div class="form-floating mb-3">
                 <label>Biografia</label> <br />
-                <br /><textarea name="cxCliBiografia" id="bioCliente"
+                <br /><textarea name="cxcliBiografia" id="bioCliente"
                     placeholder="Escreva sua biografia aqui."></textarea>
             </div>
             <div class="form-floating mb-3">
-                <input name="cxCliCPF" id="CPF" class="form-control" type="text" placeholder="CPF" required>
+                <input name="cxcliCPF" id="CPF" class="form-control" type="text" placeholder="CPF" required>
                 <label>CPF</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input name="cxCliSenha" id="senhaCliente" class="form-control" type="password" placeholder="Senha"
+                <input name="cxcliSenha" id="senhaCliente" class="form-control" type="password" placeholder="Senha"
                     required>
                 <label>Senha</label>
             </div>

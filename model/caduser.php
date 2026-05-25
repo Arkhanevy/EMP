@@ -14,18 +14,22 @@ if (isset($_POST['cxproNome'])) {
     
     $campos = [
         'cxproNome'           => $_POST['cxproNome']           ?? '',
-        'cxproemail'          => $_POST['cxproemail']          ?? '',
+        'cxproEmail'          => $_POST['cxproEmail']          ?? '',
         'cxproUsername'       => $_POST['cxproUsername']       ?? '',
         'cxproSenha'          => $_POST['cxproSenha']          ?? '',
         'cxproBiografia'      => $_POST['cxproBiografia']      ?? '',
+        'cxprodtNasc'            => $_POST['cxprodtNasc']            ?? '',
         'cxproCPF'            => $_POST['cxproCPF']            ?? '',
-        'cep'                 => $_POST['cep']                 ?? '',
+        'cxproCEP'            => $_POST['cxproCEP']            ?? '',
         'cxproTelefone'       => $_POST['cxproTelefone']       ?? '',
-        'cxgeneroProfissional'=> $_POST['cxgeneroProfissional']?? '',
+        'cxproGenero'         => $_POST['cxproGenero']         ?? '',
         'cxproRegistro'       => $_POST['cxproRegistro']       ?? '',
     ];
     
-    
+
+
+
+
     // array_filter remove tudo que for vazio/null/false
     $vazios = array_filter($campos, fn($valor) => trim($valor) === '');
     
@@ -43,13 +47,15 @@ if (isset($_POST['cxproNome'])) {
         pro_username,
         pro_senha,
         pro_biografia,
+        pro_dtNasc,
         pro_foto,
-        Pro_CPF,
-        Pro_CEP,
-        Pro_Telefone,
-        Pro_Genero,
-        Pro_Registro_Pro
+        pro_CPF,
+        pro_CEP,
+        pro_telefone,
+        pro_genero,
+        pro_registro
     )
+
 
     VALUES
     (
@@ -58,6 +64,7 @@ if (isset($_POST['cxproNome'])) {
         :username,
         sha1(:senha),
         :biografia,
+        :dtNasc,
         :foto,
         :CPF,
         :CEP,
@@ -120,15 +127,16 @@ if (isset($_POST['cxproNome'])) {
                 $cadastrar = $conn->getConn()->prepare($query);
     
                 $cadastrar->bindParam(':nome', $_POST['cxproNome'], PDO::PARAM_STR);
-                $cadastrar->bindParam(':email', $_POST['cxproemail'], PDO::PARAM_STR);
+                $cadastrar->bindParam(':email', $_POST['cxproEmail'], PDO::PARAM_STR);
                 $cadastrar->bindParam(':username', $_POST['cxproUsername'], PDO::PARAM_STR);
                 $cadastrar->bindParam(':senha', $_POST['cxproSenha'], PDO::PARAM_STR);
                 $cadastrar->bindParam(':biografia', $_POST['cxproBiografia'], PDO::PARAM_STR);
+                $cadastrar->bindParam(':dtNasc', $_POST['cxprodtNasc'], PDO::PARAM_STR);
                 $cadastrar->bindParam(':foto', $nome_imagem, PDO::PARAM_STR);
                 $cadastrar->bindParam(':CPF', $_POST['cxproCPF'], PDO::PARAM_STR);
-                $cadastrar->bindParam(':CEP', $_POST['cep'], PDO::PARAM_STR);
+                $cadastrar->bindParam(':CEP', $_POST['cxproCEP'], PDO::PARAM_STR);
                 $cadastrar->bindParam(':telefone', $_POST['cxproTelefone'], PDO::PARAM_STR);
-                $cadastrar->bindParam(':genero', $_POST['cxgeneroProfissional'], PDO::PARAM_STR);
+                $cadastrar->bindParam(':genero', $_POST['cxproGenero'], PDO::PARAM_STR);
                 $cadastrar->bindParam(':registro', $_POST['cxproRegistro'], PDO::PARAM_STR);
     
                 // ALTERAÇÃO:
@@ -175,15 +183,15 @@ if (isset($_POST['cxproNome'])) {
 
 }
 
-elseif (isset($_POST['cxclinicaNome'])){
+elseif (isset($_POST['cxclinNome'])){
     
     $campos = [
-        'cxclinicaNome'     => $_POST['cxclinicaNome']     ?? '',
-        'cxclinemail'       => $_POST['cxclinemail']       ?? '',
+        'cxclinNome'        => $_POST['cxclinNome']     ?? '',
+        'cxclinEmail'       => $_POST['cxclinEmail']       ?? '',
         'cxclinTelefone'    => $_POST['cxclinTelefone']    ?? '',
         'cxclinUsername'    => $_POST['cxclinUsername']    ?? '',
         'cxclinBiografia'   => $_POST['cxclinBiografia']   ?? '',
-        'cxclinCEP'      => $_POST['cxCEPClinica']      ?? '',
+        'cxclinCEP'         => $_POST['cxclinCEP']      ?? '',
         'cxclinCnpj'        => $_POST['cxclinCnpj']        ?? '',
         'cxclinSenha'       => $_POST['cxclinSenha']       ?? '',
     ];
@@ -201,14 +209,14 @@ elseif (isset($_POST['cxclinicaNome'])){
     
     $query = "INSERT INTO clinica
     (
-        Clin_Nome,
-        Clin_email,
-        Clin_Username,
-        Clin_Senha,
-        Clin_Biografia,
-        Clin_Cnpj,
-        Clin_cep,
-        Clin_Telefone
+        clin_Nome,
+        clin_Email,
+        clin_Username,
+        clin_Senha,
+        clin_Biografia,
+        clin_Cnpj,
+        clin_CEP,
+        clin_Telefone
     )
         
     VALUES
@@ -276,14 +284,14 @@ elseif (isset($_POST['cxclinicaNome'])){
             // Prepara query*/
             $cadastrar = $conn->getConn()->prepare($query);
             
-            $cadastrar->bindParam(':nome', $_POST['cxclinicaNome'], PDO::PARAM_STR);
+            $cadastrar->bindParam(':nome', $_POST['cxclinNome'], PDO::PARAM_STR);
             $cadastrar->bindParam(':email', $_POST['cxclinemail'], PDO::PARAM_STR);
             $cadastrar->bindParam(':username', $_POST['cxclinUsername'], PDO::PARAM_STR);
             $cadastrar->bindParam(':senha', $_POST['cxclinSenha'], PDO::PARAM_STR);
             $cadastrar->bindParam(':biografia', $_POST['cxclinBiografia'], PDO::PARAM_STR);
             //$cadastrar->bindParam(':foto', $nome_imagem, PDO::PARAM_STR);
             $cadastrar->bindParam(':CNPJ', $_POST['cxclinCnpj'], PDO::PARAM_STR);
-            $cadastrar->bindParam(':CEP', $_POST['cxCEPClinica'], PDO::PARAM_STR);
+            $cadastrar->bindParam(':CEP', $_POST['cxclinCEP'], PDO::PARAM_STR);
             $cadastrar->bindParam(':telefone', $_POST['cxproTelefone'], PDO::PARAM_STR);
             
             try{
