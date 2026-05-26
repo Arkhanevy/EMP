@@ -36,7 +36,7 @@
                         </div>
 
                         
-                        <form action="../model/caduser.php" method="POST" enctype="multipart/form-data">
+                        <form id="formProfissional" action="../model/caduser.php" method="POST" enctype="multipart/form-data">
                             <div class="avatar-container">
                                 <img id="preview" src="../img/logo_user.png" alt="Foto de perfil">
                                 <input name="cxproFoto" type="file" id="img_perfil" accept="image/*" required>
@@ -212,7 +212,10 @@
                             </p>
                         </div>
 
-                        <div class="avatar-container">
+
+
+                        <form id="formClinica" action="../model/cadclinica.php"  method="POST" enctype="multipart/form-data">>
+                            <div class="avatar-container">
                             <img id="previewClinica" src="../img/logo_user.png" alt="Foto de perfil">
                             <input name="cxclinFoto" type="file" id="img_perfil_Clinica" accept="image/*" required>
                         </div>
@@ -220,8 +223,6 @@
                         <p class="text-center mt-2" style="font-size: 12px;">
                             Clique na imagem para adicionar logo da clinica.
                         </p>
-
-                        <form>
                             <div class="form-floating mb-3">
                                 <input name="cxclinNome" id="nomeClinica" class="form-control" type="text"
                                     placeholder="Nome" required>
@@ -304,12 +305,12 @@
                                     placeholder="Senha" required>
                                 <label>Senha</label>
                             </div>
-
+                            <div class="d-grid mb-3">
+                                <button type="submit" id="btnCadClinica" class="btn btn-success">Cadastrar</button>
+                            </div>
                         </form>
 
-                        <div class="d-grid mb-3">
-                            <button id="btnCadClinica" class="btn btn-success">Cadastrar</button>
-                        </div>
+                        
 
                         <p>Já tem conta? <a class="logarClinica" href="#">Faça login</a></p>
                     </div>
