@@ -766,12 +766,60 @@ $(document).ready(function () {
             return;
         }
 
+        let formData = new FormData();
+
+        formData.append("nome", nomeClinica);
+        formData.append("email", email);
+        formData.append("telefone", telefone);
+        formData.append("username", username);
+        formData.append("bio", bio);
+        formData.append("CEP", CEP);
+        formData.append("cnpj", cnpj);
+        formData.append("senha", senha);
+        formData.append( "cxproFoto",$("#img_perfil_Clinica")[0].files[0]);
+
+        $.ajax({
+            url: "/EMP/model/caduser.php",
+            method: "POST",
+
+            data: formData,
+
+            processData: false,
+            contentType: false,
+            dataType: "json",
+
+            success: function (resposta) {
+
+                console.log(resposta);
+
+                botao.prop("disabled", false);
+                botao.html("Cadastrar");
+                
+
+                if (resposta.trim() == "sucesso") {
+
+                    mostrarAlert("Cadastro realizado!", "success");
+                    mostrarFormulario("ativacaoPro");
+
+                } else {
+                    mostrarAlert("Erro ao cadastrar!" + resposta, "danger");
+
+                }
+
+            },
+
+            error: function () {
+
+                botao.prop("disabled", false);
+                botao.html("Cadastrar");
+
+                mostrarAlert("Erro na requisição!", "danger");
+
+            }
+        });
+
         setTimeout(function () {
 
-            botao.prop("disabled", false);
-            botao.html("Cadastrar");
-
-            mostrarAlert("Cadastro realizado!", "success");
 
         }, 2000);
 
