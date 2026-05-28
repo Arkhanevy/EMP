@@ -246,11 +246,11 @@ $(document).ready(function () {
         });
     }
 
-    
+
     // CADASTRO PROFISSIONAL
     $btnCadastrar.on("click", function () {
-    /*$("#formProfissional").on("submit", function (e) {
-        e.preventDefault();*/
+        /*$("#formProfissional").on("submit", function (e) {
+            e.preventDefault();*/
         let botao = $(this);
         botao.prop("disabled", true);
         botao.html(`
@@ -266,13 +266,15 @@ $(document).ready(function () {
         const telefone = $telProfissional.val().trim();
         const username = $userProfissional.val().trim();
         const biografia = $bioProfissional.val().trim();
+        const generoPro = $generoProfissional.val();
         const dtnPro = $dtnPro.val().trim();
         const CEP = $cepProfissional.val().trim();
+        const cepLimpo = CEP.replace(/\D/g, "");
+        const validaCep = /^[0-9]{8}$/;
         const registro = $registroProfissional.val().trim();
         const CPF = $cpf.val().trim();
         const senha = $senhaProfissional.val().trim();
         let erro = false;
-
 
 
         // VÊ OS CAMPOS VAZIOS
@@ -301,7 +303,7 @@ $(document).ready(function () {
             erro = true;
         }
 
-        if(!dtnPro){
+        if (!dtnPro) {
             $dtnPro.addClass("is-invalid");
             erro = true;
         }
@@ -315,13 +317,16 @@ $(document).ready(function () {
             erro = true;
         }
 
-        if (!CEP) {
+        if (!CEP || !validaCep.test(cepLimpo)) {
             $cepProfissional.addClass("is-invalid");
             $ruaProfissional.addClass("is-invalid");
             $bairroProfissional.addClass("is-invalid");
             $("#cidade").addClass("is-invalid");
             $ufProfissional.addClass("is-invalid");
             $ibgeProfissional.addClass("is-invalid");
+            if (!validaCep.test(cepLimpo)) {
+                mostrarAlert("Formato de CEP inválido!", "danger");
+            }
 
             erro = true;
         }
@@ -335,8 +340,9 @@ $(document).ready(function () {
             $generoProfissional.addClass("is-invalid");
             erro = true;
         }
-        
-        
+
+
+
         if (erro) {
             botao.prop("disabled", false);
             botao.html("Cadastrar");
@@ -345,7 +351,7 @@ $(document).ready(function () {
         }
 
         //IMAGEM
-        if(!imgPerfil){
+        if (!imgPerfil) {
             botao.prop("disabled", false);
             botao.html("Cadastrar");
             mostrarAlert("A imagem de perfil é obrigatoria.", "danger");
@@ -377,13 +383,66 @@ $(document).ready(function () {
             return;
         }
 
+        const cpfLimpo = CPF.replace(/\D/g, "");
+        const telLimpo = telefone.replace(/\D/g, "");
+
+        let formData = new FormData();
+
+        formData.append("nome", nomeProfissional);
+        formData.append("email", email);
+        formData.append("telefone", telLimpo);
+        formData.append("username", username);
+        formData.append("bio", biografia);
+        formData.append("dtNas", dtnPro);
+        formData.append("CEP", cepLimpo);
+        formData.append("registro", registro);
+        formData.append("CPF", cpfLimpo);
+        formData.append("senha", senha);
+        formData.append("genero", generoPro);
+        formData.append( "cxproFoto",$("#img_perfil")[0].files[0]);
+
+        $.ajax({
+            url: "/EMP/model/caduser.php",
+            method: "POST",
+
+            data: formData,
+
+            processData: false,
+            contentType: false,
+            dataType: "json",
+
+            success: function (resposta) {
+
+                console.log(resposta);
+
+                botao.prop("disabled", false);
+                botao.html("Cadastrar");
+                
+
+                if (resposta.trim() == "sucesso") {
+
+                    mostrarAlert("Cadastro realizado!", "success");
+                    mostrarFormulario("ativacaoPro");
+
+                } else {
+                    mostrarAlert("Erro ao cadastrar!" + resposta, "danger");
+
+                }
+
+            },
+
+            error: function () {
+
+                botao.prop("disabled", false);
+                botao.html("Cadastrar");
+
+                mostrarAlert("Erro na requisição!", "danger");
+
+            }
+        });
 
         setTimeout(function () {
 
-            botao.prop("disabled", false);
-            botao.html("Cadastrar");
-
-            mostrarAlert("Cadastro realizado!", "success");
 
         }, 2000);
 
@@ -394,6 +453,88 @@ $(document).ready(function () {
     $(".form-control, .form-select, textarea").on("input change", function () {
         $(this).removeClass("is-invalid");
     });
+
+
+    //CEP
+    $cepProfissional.on("blur", function () {
+
+        let cep = $(this).val().replace(/\D/g, "");
+
+        // se vazio
+        if (cep === "") {
+            //limpa_formulário();
+            return;
+        }
+
+        // valida formato
+        const validaCep = /^[0-9]{8}$/;
+
+        if (!validaCep.test(cep)) {
+
+            $cepProfissional.addClass("is-invalid");
+
+            //limpa_formulário();
+            mostrarAlert("Formato de CEP inválido!", "danger");
+            $cepProfissional.addClass("is-invalid");
+            $ruaProfissional.addClass("is-invalid");
+            $bairroProfissional.addClass("is-invalid");
+            $("#cidade").addClass("is-invalid");
+            $ufProfissional.addClass("is-invalid");
+            $ibgeProfissional.addClass("is-invalid");
+            erro = true;
+            return;
+        }
+
+        // loading nos campos
+        $ruaProfissional.val("...");
+        $bairroProfissional.val("...");
+        $("#cidade").val("...");
+        $ufProfissional.val("...");
+        $ibgeProfissional.val("...");
+
+        // consulta API ViaCEP
+        $.getJSON(
+            "https://viacep.com.br/ws/" + cep + "/json/?callback=?",
+            function (dados) {
+
+                if (!("erro" in dados)) {
+
+                    $cepProfissional.removeClass("is-invalid");
+
+                    $ruaProfissional.val(dados.logradouro);
+                    $bairroProfissional.val(dados.bairro);
+                    $("#cidade").val(dados.localidade);
+                    $ufProfissional.val(dados.uf);
+                    $ibgeProfissional.val(dados.ibge);
+
+                    $($parteCEP).removeClass("is-invalid");
+
+                } else {
+
+                    //limpa_formulário();
+
+                    $cepProfissional.addClass("is-invalid");
+
+
+                    mostrarAlert("CEP não encontrado!", "danger");
+                    $cepProfissional.addClass("is-invalid");
+                    $ruaProfissional.addClass("is-invalid");
+                    $bairroProfissional.addClass("is-invalid");
+                    $("#cidade").addClass("is-invalid");
+                    $ufProfissional.addClass("is-invalid");
+                    $ibgeProfissional.addClass("is-invalid");
+                    erro = true;
+                }
+
+            }
+        );
+
+    });
+
+    $cepProfissional.on("input", function () {
+        $(this).removeClass("is-invalid");
+    });
+
 
 
 
@@ -447,71 +588,8 @@ $(document).ready(function () {
     });
 
 
-        // CEP 
-    $cepProfissional.on("blur", function () {
+    // CEP 
 
-        let cep = $(this).val().replace(/\D/g, "");
-
-        // se vazio
-        if (cep === "") {
-            //limpa_formulário();
-            return;
-        }
-
-        // valida formato
-        const validaCep = /^[0-9]{8}$/;
-
-        if (!validaCep.test(cep)) {
-
-            $cepProfissional.addClass("is-invalid");
-
-            //limpa_formulário();
-            mostrarAlert("Formato de CEP inválido!", "danger");
-            return;
-        }
-
-        // loading nos campos
-        $ruaProfissional.val("...");
-        $bairroProfissional.val("...");
-        $("#cidade").val("...");
-        $ufProfissional.val("...");
-        $ibgeProfissional.val("...");
-
-        // consulta API ViaCEP
-        $.getJSON(
-            "https://viacep.com.br/ws/" + cep + "/json/?callback=?",
-            function (dados) {
-
-                if (!("erro" in dados)) {
-
-                    $cepProfissional.removeClass("is-invalid");
-
-                    $ruaProfissional.val(dados.logradouro);
-                    $bairroProfissional.val(dados.bairro);
-                    $("#cidade").val(dados.localidade);
-                    $ufProfissional.val(dados.uf);
-                    $ibgeProfissional.val(dados.ibge);
-
-                    $($parteCEP).removeClass("is-invalid");
-
-                } else {
-
-                    //limpa_formulário();
-
-                    $cepProfissional.addClass("is-invalid");
-
-
-                    mostrarAlert("CEP não encontrado!", "danger");
-                }
-
-            }
-        );
-
-    });
-
-    $cepProfissional.on("input", function () {
-        $(this).removeClass("is-invalid");
-    });
 
 
 
@@ -627,7 +705,7 @@ $(document).ready(function () {
             $bioClinica.addClass("is-invalid");
             erro = true;
         }
-        
+
         if (!CEP) {
             $cepClinica.addClass("is-invalid");
             $ruaClinica.addClass("is-invalid");
@@ -642,7 +720,7 @@ $(document).ready(function () {
             $cnpj.addClass("is-invalid");
             erro = true;
         }
-        
+
         if (!senha) {
             $senhaClinica.addClass("is-invalid");
             erro = true;
@@ -657,7 +735,7 @@ $(document).ready(function () {
         }
 
         //IMAGEM
-        if(!imgPerfil){
+        if (!imgPerfil) {
             botao.prop("disabled", false);
             botao.html("Cadastrar");
             mostrarAlert("A imagem de perfil é obrigatoria.", "danger");

@@ -1,4 +1,6 @@
 <?PHP
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 require_once('../factory/conexao.php');
 $conn = new conexao;
@@ -8,37 +10,58 @@ $_SESSION['erros'] =[];
 $_SESSION['cadastro'] = FALSE;
 $error = array();
 
+$nome = $_POST["nome"];
+$email = $_POST["email"];
+//$imgperfil = $_POST["imgperfil"];
+$telefone = $_POST["telefone"];
+$username = $_POST["username"];
+$bio = $_POST["bio"];
+$dtNas = $_POST["dtNas"];
+$CEP = $_POST["CEP"];
+$registro = $_POST["registro"];
+$CPF = $_POST["CPF"];
+$senha = $_POST["senha"];
+
+
 $pagina_anterior = $_SERVER['HTTP_REFERER'] ?? '../view/cadastro.php';
 
-if (isset($_POST['cxproNome'])) {
+if (isset($_POST['nome'])) {
     
     $campos = [
-        'cxproNome'           => $_POST['cxproNome']           ?? '',
-        'cxproEmail'          => $_POST['cxproEmail']          ?? '',
-        'cxproUsername'       => $_POST['cxproUsername']       ?? '',
-        'cxproSenha'          => $_POST['cxproSenha']          ?? '',
-        'cxproBiografia'      => $_POST['cxproBiografia']      ?? '',
-        'cxprodtNasc'            => $_POST['cxprodtNasc']            ?? '',
-        'cxproCPF'            => $_POST['cxproCPF']            ?? '',
-        'cxproCEP'            => $_POST['cxproCEP']            ?? '',
-        'cxproTelefone'       => $_POST['cxproTelefone']       ?? '',
-        'cxproGenero'         => $_POST['cxproGenero']         ?? '',
-        'cxproRegistro'       => $_POST['cxproRegistro']       ?? '',
+        'nome'           => $_POST['nome']           ?? '',
+        'email'          => $_POST['email']          ?? '',
+        'username'       => $_POST['username']       ?? '',
+        'senha'          => $_POST['senha']          ?? '',
+        'biografia'      => $_POST['bio']      ?? '',
+        'dtNas'            => $_POST['dtNas']            ?? '',
+        'CPF'            => $_POST['CPF']            ?? '',
+        'CEP'            => $_POST['CEP']            ?? '',
+        'telefone'       => $_POST['telefone']       ?? '',
+        'genero'         => $_POST['genero']         ?? '',
+        'registro'       => $_POST['registro']       ?? '',
     ];
-    
-
-
-
-
     // array_filter remove tudo que for vazio/null/false
     $vazios = array_filter($campos, fn($valor) => trim($valor) === '');
     
-    if (!empty($vazios)) {
-        $error[] = "nem todos os campos foram preenchidos";
-        $_SESSION['erros'] = $error;
-        header("Location: $pagina_anterior");
-        exit;
+    $vazios = [];
+
+    foreach($campos as $campo => $valor){
+
+        if(trim($valor) === ''){
+
+            $vazios[] = $campo;
+
+        }
+
     }
+
+    if(!empty($vazios)){
+
+        print_r($vazios);
+        exit;
+
+    }
+
 
     $query = "INSERT INTO profissional 
     (
@@ -109,7 +132,7 @@ if (isset($_POST['cxproNome'])) {
         }
 
         // Se não houve erro
-        if (count($error) == 0) {
+        if (empty($error)) {
 
             // Pega extensão
             if (!preg_match("/\.(gif|bmp|png|jpg|jpeg)$/i", $foto["name"], $ext)) {
@@ -126,36 +149,38 @@ if (isset($_POST['cxproNome'])) {
                 // Prepara query
                 $cadastrar = $conn->getConn()->prepare($query);
     
-                $cadastrar->bindParam(':nome', $_POST['cxproNome'], PDO::PARAM_STR);
-                $cadastrar->bindParam(':email', $_POST['cxproEmail'], PDO::PARAM_STR);
-                $cadastrar->bindParam(':username', $_POST['cxproUsername'], PDO::PARAM_STR);
-                $cadastrar->bindParam(':senha', $_POST['cxproSenha'], PDO::PARAM_STR);
-                $cadastrar->bindParam(':biografia', $_POST['cxproBiografia'], PDO::PARAM_STR);
-                $cadastrar->bindParam(':dtNasc', $_POST['cxprodtNasc'], PDO::PARAM_STR);
+                $cadastrar->bindParam(':nome', $_POST['nome'], PDO::PARAM_STR);
+                $cadastrar->bindParam(':email', $_POST['email'], PDO::PARAM_STR);
+                $cadastrar->bindParam(':username', $_POST['username'], PDO::PARAM_STR);
+                $cadastrar->bindParam(':senha', $_POST['senha'], PDO::PARAM_STR);
+                $cadastrar->bindParam(':biografia', $_POST['bio'], PDO::PARAM_STR);
+                $cadastrar->bindParam(':dtNasc', $_POST['dtNas'], PDO::PARAM_STR);
                 $cadastrar->bindParam(':foto', $nome_imagem, PDO::PARAM_STR);
-                $cadastrar->bindParam(':CPF', $_POST['cxproCPF'], PDO::PARAM_STR);
-                $cadastrar->bindParam(':CEP', $_POST['cxproCEP'], PDO::PARAM_STR);
-                $cadastrar->bindParam(':telefone', $_POST['cxproTelefone'], PDO::PARAM_STR);
-                $cadastrar->bindParam(':genero', $_POST['cxproGenero'], PDO::PARAM_STR);
-                $cadastrar->bindParam(':registro', $_POST['cxproRegistro'], PDO::PARAM_STR);
+                $cadastrar->bindParam(':CPF', $_POST['CPF'], PDO::PARAM_STR);
+                $cadastrar->bindParam(':CEP', $_POST['CEP'], PDO::PARAM_STR);
+                $cadastrar->bindParam(':telefone', $_POST['telefone'], PDO::PARAM_STR);
+                $cadastrar->bindParam(':genero', $_POST['genero'], PDO::PARAM_STR);
+                $cadastrar->bindParam(':registro', $_POST['registro'], PDO::PARAM_STR);
+
     
                 // ALTERAÇÃO:
                 // execute() foi movido antes do rowCount()
     
                 try{
                     $cadastrar->execute();
-        
+
                     if ($cadastrar->rowCount()) {
                         $_SESSION['cadastro'] = TRUE;
                         
                         move_uploaded_file($foto["tmp_name"], $caminho_imagem);
-                        header("Location: $pagina_anterior");
+                        echo "sucesso";
                         exit;
                     } 
                     else {
                         $error[] = "Cadastro não realizado. Por favor, tente novamente";
                         $_SESSION['erros'] = $error;
-                        header("Location: $pagina_anterior");
+                        //$_SESSION['cadastro'] = "não cadastro";
+                        echo "erro";
                         exit;
                         }
                     } 
@@ -163,27 +188,40 @@ if (isset($_POST['cxproNome'])) {
                     if ($e->getCode() == 23000) {$error[] = "E-mail ou usuário já cadastrado.";} 
                     else {$error[] = "Erro interno. Tente novamente mais tarde.";}
                     $_SESSION['erros'] = $error;
-                    header("Location: $pagina_anterior");
+                    echo $e->getMessage();
                     exit;
                     }
                 }
             }
             else {
                 $_SESSION['erros'] = $error;
-                header("Location: $pagina_anterior");
+                print_r($_SESSION['erros']);
                 exit;
             }
     }
     else {
         $error[] = 'nenhuma foto de perfil selecionada';
         $_SESSION['erros'] = $error;
-        header("Location: $pagina_anterior");
+        echo $_SESSION['erros'];
         exit;
     }
 
+    echo "";
 }
 
-elseif (isset($_POST['cxclinNome'])){
+
+
+
+
+
+
+
+
+
+
+
+
+elseif (isset($_POST['nome'])){
     
     $campos = [
         'cxclinNome'        => $_POST['cxclinNome']     ?? '',
@@ -203,7 +241,7 @@ elseif (isset($_POST['cxclinNome'])){
     if (!empty($vazios)) {
         $error[] = "nem todos os campos foram preenchidos";
         $_SESSION['erros'] = $error;
-        header("Location: $pagina_anterior");
+        echo "erro";
         exit;
     }
     
@@ -301,14 +339,14 @@ elseif (isset($_POST['cxclinNome'])){
                     $_SESSION['cadastro'] = TRUE;
                     
                     //move_uploaded_file($foto["tmp_name"], $caminho_imagem);
-                    header("Location: $pagina_anterior");
+                    echo "sucesso";
                     exit;
                     
                 }
                 else {
                     $error[] = "Cadastro não realizado. Por favor, tente novamente";
                     $_SESSION['erros'] = $error;
-                    header("Location: $pagina_anterior");
+                    echo "erro";
                     exit;
                 }
             }
@@ -316,21 +354,21 @@ elseif (isset($_POST['cxclinNome'])){
                 if ($e->getCode() == 23000) {$error[] = "E-mail ou usuário já cadastrado.";}
                 else {$error[] = "Erro interno. Tente novamente mais tarde.";}
                 $_SESSION['erros'] = $error;
-                header("Location: $pagina_anterior");
+                echo $e->getMessage();
                 exit;
             }
             /*}
     }
         else {
             $_SESSION['erros'] = $error;
-            header("Location: $pagina_anterior");
+            echo "erro";
             exit;
         }
     }
     else {
         $error[] = 'nenhuma foto de perfil selecionada';
         $_SESSION['erros'] = $error;
-        header("Location: $pagina_anterior");
+        echo "erro";
         exit;
     }*/
 }
@@ -338,7 +376,7 @@ elseif (isset($_POST['cxclinNome'])){
 else {
     $error[] = 'nenhuma informação enviada';
     $_SESSION['erros'] = $error;
-    header("Location: $pagina_anterior");
+    echo "erro";
     exit;
 }
 
