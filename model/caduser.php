@@ -23,8 +23,6 @@ $CPF = $_POST["CPF"];
 $senha = $_POST["senha"];
 
 
-$pagina_anterior = $_SERVER['HTTP_REFERER'] ?? '../view/cadastro.php';
-
 if (isset($_POST['nome'])) {
     
     $campos = [
@@ -32,8 +30,8 @@ if (isset($_POST['nome'])) {
         'email'          => $_POST['email']          ?? '',
         'username'       => $_POST['username']       ?? '',
         'senha'          => $_POST['senha']          ?? '',
-        'biografia'      => $_POST['bio']      ?? '',
-        'dtNas'            => $_POST['dtNas']            ?? '',
+        'biografia'      => $_POST['bio']            ?? '',
+        'dtNas'            => $_POST['dtNas']        ?? '',
         'CPF'            => $_POST['CPF']            ?? '',
         'CEP'            => $_POST['CEP']            ?? '',
         'telefone'       => $_POST['telefone']       ?? '',
@@ -56,8 +54,7 @@ if (isset($_POST['nome'])) {
     }
 
     if(!empty($vazios)){
-
-        print_r($vazios);
+        echo implode("|", $vazios);
         exit;
 
     }
@@ -185,28 +182,29 @@ if (isset($_POST['nome'])) {
                         }
                     } 
                 catch (PDOException $e) {
-                    if ($e->getCode() == 23000) {$error[] = "E-mail ou usuário já cadastrado.";} 
-                    else {$error[] = "Erro interno. Tente novamente mais tarde.";}
+                    if ($e->getCode() == 23000) {
+                        $error[] = "E-mail ou usuário já cadastrado.";
+                    }else {
+                        $error[] = "Erro interno. Tente novamente mais tarde.";
+                    }
                     $_SESSION['erros'] = $error;
-                    echo $e->getMessage();
+                    echo implode("|", $_SESSION['erros']);
                     exit;
                     }
                 }
             }
             else {
                 $_SESSION['erros'] = $error;
-                print_r($_SESSION['erros']);
+                echo implode("|", $_SESSION['erros']);
                 exit;
             }
     }
     else {
-        $error[] = 'nenhuma foto de perfil selecionada';
+        $error[] = 'Nenhuma foto de perfil selecionada.';
         $_SESSION['erros'] = $error;
-        echo $_SESSION['erros'];
+        echo implode("|", $_SESSION['erros']);
         exit;
     }
-
-    echo "";
 }
 
 
@@ -354,7 +352,7 @@ elseif (isset($_POST['nome'])){
                 if ($e->getCode() == 23000) {$error[] = "E-mail ou usuário já cadastrado.";}
                 else {$error[] = "Erro interno. Tente novamente mais tarde.";}
                 $_SESSION['erros'] = $error;
-                echo $e->getMessage();
+                echo implode("|", $_SESSION['erros']);
                 exit;
             }
             /*}

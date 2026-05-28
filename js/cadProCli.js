@@ -399,7 +399,7 @@ $(document).ready(function () {
         formData.append("CPF", cpfLimpo);
         formData.append("senha", senha);
         formData.append("genero", generoPro);
-        formData.append( "cxproFoto",$("#img_perfil")[0].files[0]);
+        formData.append("cxproFoto", $("#img_perfil")[0].files[0]);
 
         $.ajax({
             url: "/EMP/model/caduser.php",
@@ -409,7 +409,6 @@ $(document).ready(function () {
 
             processData: false,
             contentType: false,
-            dataType: "json",
 
             success: function (resposta) {
 
@@ -417,7 +416,7 @@ $(document).ready(function () {
 
                 botao.prop("disabled", false);
                 botao.html("Cadastrar");
-                
+
 
                 if (resposta.trim() == "sucesso") {
 
@@ -425,7 +424,11 @@ $(document).ready(function () {
                     mostrarFormulario("ativacaoPro");
 
                 } else {
-                    mostrarAlert("Erro ao cadastrar!" + resposta, "danger");
+                    let erros = resposta.split("|");
+                    console.log(erros);
+                    erros.forEach(function (erro) {
+                        mostrarAlert(erro, "danger");
+                    });
 
                 }
 
@@ -439,6 +442,8 @@ $(document).ready(function () {
                 mostrarAlert("Erro na requisição!", "danger");
 
             }
+
+
         });
 
         setTimeout(function () {
@@ -766,43 +771,63 @@ $(document).ready(function () {
             return;
         }
 
+
+        const telLimpo = telefone.replace(/\D/g, "");
+        const cepLimpo = CEP.replace(/\D/g, "");
+        const cnpjLimpo = cnpj.replace(/\D/g, "");
+
         let formData = new FormData();
 
         formData.append("nome", nomeClinica);
         formData.append("email", email);
-        formData.append("telefone", telefone);
+        formData.append("telefone", telLimpo);
         formData.append("username", username);
         formData.append("bio", bio);
-        formData.append("CEP", CEP);
-        formData.append("cnpj", cnpj);
+        formData.append("CEP", cepLimpo);
+        formData.append("cnpj", cnpjLimpo);
         formData.append("senha", senha);
-        formData.append( "cxproFoto",$("#img_perfil_Clinica")[0].files[0]);
+        formData.append("cxcliFoto", $("#img_perfil_clinica")[0].files[0]);
 
         $.ajax({
-            url: "/EMP/model/caduser.php",
+            url: "/EMP/model/cadclinica.php",
             method: "POST",
 
             data: formData,
 
             processData: false,
             contentType: false,
-            dataType: "json",
 
             success: function (resposta) {
+
+                resposta = resposta.trim();
 
                 console.log(resposta);
 
                 botao.prop("disabled", false);
                 botao.html("Cadastrar");
-                
 
-                if (resposta.trim() == "sucesso") {
+                if (resposta === "sucesso") {
 
                     mostrarAlert("Cadastro realizado!", "success");
-                    mostrarFormulario("ativacaoPro");
+                    mostrarFormulario("ativacaoCli");
 
-                } else {
-                    mostrarAlert("Erro ao cadastrar!" + resposta, "danger");
+                }
+
+                else {
+
+                    let erros = resposta.split("|");
+
+                    console.log(erros);
+
+                    erros.forEach(function (erro) {
+
+                        if (erro.trim() != "") {
+
+                            mostrarAlert(erro, "danger");
+
+                        }
+
+                    });
 
                 }
 
@@ -816,12 +841,8 @@ $(document).ready(function () {
                 mostrarAlert("Erro na requisição!", "danger");
 
             }
+
         });
-
-        setTimeout(function () {
-
-
-        }, 2000);
 
     });
 

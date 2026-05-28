@@ -219,3 +219,57 @@ TENTAR TORNAR ESSA PARTE MENOS NUMEROSO (Case, this ou função)
     const $bioCliente = $("#bioCliente");
     const $cpf = $("#CPF");
     const $senhaCliente = $("#senhaCliente");
+
+
+
+
+
+
+
+
+    let erros = resposta.split("|");
+                console.log(erros);
+
+                botao.prop("disabled", false);
+                botao.html("Cadastrar");
+
+                erros.forEach(function(erro){
+            
+                    mostrarAlert(erro, "danger");
+            
+                });
+
+                
+                switch(erros.trim()){
+
+                    case "sucesso":
+                
+                        mostrarAlert("Cadastro realizado!", "success");
+                        mostrarFormulario("ativacaoPro");
+                
+                    break;
+                
+                    case "email_duplicado":
+                
+                        mostrarAlert("E-mail já cadastrado!", "danger");
+                        $emailCadastroInput.addClass("is-invalid");
+                
+                    break;
+                
+                    case "erro_upload":
+                
+                        mostrarAlert("Erro ao salvar imagem!", "danger");
+                
+                    break;
+
+                    case "erro_interno":
+                        mostrarAlert("Erro interno!", "danger");
+                        console.log(resposta);
+
+                    break;
+
+                    default:
+                        mostrarAlert("Erro ao cadastrar!" + resposta, "danger");
+                        
+                
+                }
