@@ -278,75 +278,66 @@ $(document).ready(function () {
 
 
         // VÊ OS CAMPOS VAZIOS
-        if (!nomeProfissional) {
-            $nomeProfissional.addClass("is-invalid");
-            erro = true;
-        }
+        const camposObrigatorios = [
+            { valor: nomeProfissional, elemento: $nomeProfissional },
+            { valor: telefone, elemento: $telProfissional },
+            { valor: username, elemento: $userProfissional },
+            { valor: biografia, elemento: $bioProfissional },
+            { valor: dtnPro, elemento: $dtnPro },
+            { valor: registro, elemento: $registroProfissional },
+            { valor: senha, elemento: $senhaProfissional },
+            { valor: $generoProfissional.val(), elemento: $generoProfissional }
+        ];
 
+        camposObrigatorios.forEach(campo => {
+            if (!campo.valor) {
+                campo.elemento.addClass("is-invalid");
+                erro = true;
+            }
+        });
+
+
+        //E-MAIL
         if (!email) {
             $emailCadastroInput.addClass("is-invalid");
             erro = true;
+        } else if (!emailValido(email)) {
+            $emailCadastroInput.addClass("is-invalid");
+            botao.prop("disabled", false);
+            botao.html("Cadastrar");
+            mostrarAlert("E-mail inválido!", "danger");
+            return;
         }
 
-        if (!telefone) {
-            $telProfissional.addClass("is-invalid");
-            erro = true;
-        }
-
-        if (!username) {
-            $userProfissional.addClass("is-invalid");
-            erro = true;
-        }
-
-        if (!biografia) {
-            $bioProfissional.addClass("is-invalid");
-            erro = true;
-        }
-
-        if (!dtnPro) {
-            $dtnPro.addClass("is-invalid");
-            erro = true;
-        }
-        if (!CPF) {
-            $cpf.addClass("is-invalid");
-            erro = true;
-        }
-
-        if (!registro) {
-            $registroProfissional.addClass("is-invalid");
-            erro = true;
-        }
-
-        if (!CEP || !validaCep.test(cepLimpo)) {
+        //CEP
+        if (!CEP) {
             $cepProfissional.addClass("is-invalid");
             $ruaProfissional.addClass("is-invalid");
             $bairroProfissional.addClass("is-invalid");
             $("#cidade").addClass("is-invalid");
             $ufProfissional.addClass("is-invalid");
             $ibgeProfissional.addClass("is-invalid");
-            if (!validaCep.test(cepLimpo)) {
-                mostrarAlert("Formato de CEP inválido!", "danger");
-            }
-
             erro = true;
+        } else if (!validaCep.test(cepLimpo)) {
+            $cepProfissional.addClass("is-invalid");
+            $ruaProfissional.addClass("is-invalid");
+            $bairroProfissional.addClass("is-invalid");
+            $("#cidade").addClass("is-invalid");
+            $ufProfissional.addClass("is-invalid");
+            $ibgeProfissional.addClass("is-invalid");
+            mostrarAlert("Formato de CEP inválido!", "danger");
+            return;
         }
 
-        if (!senha) {
-            $senhaProfissional.addClass("is-invalid");
+        //CPF
+        if (!CPF) {
+            $cpf.addClass("is-invalid");
             erro = true;
-        }
-
-        if (!$generoProfissional.val()) {
-            $generoProfissional.addClass("is-invalid");
-            erro = true;
-        }
-
-
-
-        if (erro) {
+        } else if (!cpfValido(CPF)) {
+            $cpf.addClass("is-invalid");
             botao.prop("disabled", false);
             botao.html("Cadastrar");
-            mostrarAlert("Preencha todos os campos!", "danger");
+            mostrarAlert("CPF inválido!", "danger");
             return;
         }
 
@@ -358,30 +349,13 @@ $(document).ready(function () {
             return;
         }
 
-
-        // EMAIL
-        if (!emailValido(email)) {
-
-            $emailCadastroInput.addClass("is-invalid");
-
+        if (erro) {
             botao.prop("disabled", false);
             botao.html("Cadastrar");
-
-            mostrarAlert("E-mail inválido!", "danger");
+            mostrarAlert("Preencha todos os campos!", "danger");
             return;
         }
 
-        // CPF
-        if (!cpfValido(CPF)) {
-
-            $cpf.addClass("is-invalid");
-
-            botao.prop("disabled", false);
-            botao.html("Cadastrar");
-
-            mostrarAlert("CPF inválido!", "danger");
-            return;
-        }
 
         const cpfLimpo = CPF.replace(/\D/g, "");
         const telLimpo = telefone.replace(/\D/g, "");
@@ -593,7 +567,7 @@ $(document).ready(function () {
     });
 
 
-    // CEP 
+
 
 
 
@@ -670,7 +644,6 @@ $(document).ready(function () {
                     <span class="spinner-border spinner-border-sm"></span>
                     Cadastrando..
                 `);
-
         // limpa erros anteriores
         $(".form-control, .form-select, textarea").removeClass("is-invalid");
         const imgPerfil = $inputImgClinica.val().trim();
@@ -684,58 +657,64 @@ $(document).ready(function () {
         const senha = $senhaClinica.val().trim();
         let erro = false;
 
-
         // VÊ OS CAMPOS VAZIOS
-        if (!nomeClinica) {
-            $nomeClinica.addClass("is-invalid");
-            erro = true;
-        }
+        const camposObrigatorios = [
+            { valor: nomeClinica, elemento: $nomeClinica },
+            { valor: telefone, elemento: $telClinica },
+            { valor: username, elemento: $userClinica },
+            { valor: bio, elemento: $bioClinica },
+            { valor: senha, elemento: $senhaClinica }
+        ];
 
+        camposObrigatorios.forEach(campo => {
+            if (!campo.valor) {
+                campo.elemento.addClass("is-invalid");
+                erro = true;
+            }
+        });
+
+
+        //E-MAIL
         if (!email) {
             $emailCadClinicaInput.addClass("is-invalid");
             erro = true;
+        } else if (!emailValido(email)) {
+            $emailCadClinicaInput.addClass("is-invalid");
+            botao.prop("disabled", false);
+            botao.html("Cadastrar");
+            mostrarAlert("E-mail inválido!", "danger");
+            return;
         }
 
-        if (!telefone) {
-            $telClinica.addClass("is-invalid");
-            erro = true;
-        }
-
-        if (!username) {
-            $userClinica.addClass("is-invalid");
-            erro = true;
-        }
-
-        if (!bio) {
-            $bioClinica.addClass("is-invalid");
-            erro = true;
-        }
-
+        //CEP
         if (!CEP) {
             $cepClinica.addClass("is-invalid");
-            $ruaClinica.addClass("is-invalid");
-            $bairroClinica.addClass("is-invalid");
-            $("#cidadeClinica").addClass("is-invalid");
-            $ufClinica.addClass("is-invalid");
-            $ibgeClinica.addClass("is-invalid");
+            $ruaProfissional.addClass("is-invalid");
+            $bairroProfissional.addClass("is-invalid");
+            $("#cidade").addClass("is-invalid");
+            $ufProfissional.addClass("is-invalid");
+            $ibgeProfissional.addClass("is-invalid");
             erro = true;
+        } else if (!validaCep.test(cepLimpo)) {
+            $cepClinica.addClass("is-invalid");
+            $ruaProfissional.addClass("is-invalid");
+            $bairroProfissional.addClass("is-invalid");
+            $("#cidade").addClass("is-invalid");
+            $ufProfissional.addClass("is-invalid");
+            $ibgeProfissional.addClass("is-invalid");
+            mostrarAlert("Formato de CEP inválido!", "danger");
+            return;
         }
 
+        //cnpj
         if (!cnpj) {
             $cnpj.addClass("is-invalid");
             erro = true;
-        }
-
-        if (!senha) {
-            $senhaClinica.addClass("is-invalid");
-            erro = true;
-        }
-
-        if (erro) {
+        } else if (!cnpjValido(cnpj)) {
+            $cnpj.addClass("is-invalid");
             botao.prop("disabled", false);
             botao.html("Cadastrar");
-
-            mostrarAlert("Preencha todos os campos!", "danger");
+            mostrarAlert("CNPJ inválido!", "danger");
             return;
         }
 
@@ -747,29 +726,13 @@ $(document).ready(function () {
             return;
         }
 
-        // EMAIL
-        if (!emailValido(email)) {
-
-            $emailCadClinicaInput.addClass("is-invalid");
-
+        if (erro) {
             botao.prop("disabled", false);
             botao.html("Cadastrar");
-
-            mostrarAlert("E-mail inválido!", "danger");
+            mostrarAlert("Preencha todos os campos!", "danger");
             return;
         }
 
-        // CNPJ
-        if (!cnpjValido(cnpj)) {
-
-            $cnpj.addClass("is-invalid");
-
-            botao.prop("disabled", false);
-            botao.html("Cadastrar");
-
-            mostrarAlert("CNPJ inválido!", "danger");
-            return;
-        }
 
 
         const telLimpo = telefone.replace(/\D/g, "");
@@ -778,18 +741,19 @@ $(document).ready(function () {
 
         let formData = new FormData();
 
-        formData.append("nome", nomeClinica);
-        formData.append("email", email);
-        formData.append("telefone", telLimpo);
-        formData.append("username", username);
-        formData.append("bio", bio);
-        formData.append("CEP", cepLimpo);
-        formData.append("cnpj", cnpjLimpo);
-        formData.append("senha", senha);
-        formData.append("cxcliFoto", $("#img_perfil_clinica")[0].files[0]);
+        formData.append("nomeClinica", nomeClinica);
+        formData.append("emailClinica", email);
+        formData.append("telefoneClinica", telLimpo);
+        formData.append("usernameClinica", username);
+        formData.append("bioClinica", bio);
+        formData.append("CEPClinica", cepLimpo);
+        formData.append("CNPJClinica", cnpjLimpo);
+        formData.append("senhaClinica", senha);
+        formData.append("telefoneClinica", telefone);
+        formData.append("cxclinFoto", $("#img_perfil_Clinica")[0].files[0]);
 
         $.ajax({
-            url: "/EMP/model/cadclinica.php",
+            url: "/EMP/model/caduser.php",
             method: "POST",
 
             data: formData,

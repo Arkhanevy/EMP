@@ -10,9 +10,9 @@ $_SESSION['erros'] =[];
 $_SESSION['cadastro'] = FALSE;
 $error = array();
 
-$nome = $_POST["nome"];
+//
+/*$nome = $_POST["nome"];
 $email = $_POST["email"];
-//$imgperfil = $_POST["imgperfil"];
 $telefone = $_POST["telefone"];
 $username = $_POST["username"];
 $bio = $_POST["bio"];
@@ -20,8 +20,16 @@ $dtNas = $_POST["dtNas"];
 $CEP = $_POST["CEP"];
 $registro = $_POST["registro"];
 $CPF = $_POST["CPF"];
-$senha = $_POST["senha"];
+$senha = $_POST["senha"];*/
 
+$nomeClinica = $_POST["nomeClinica"];
+$emailClinica = $_POST["emailClinica"];
+$telefoneClinica = $_POST["telefoneClinica"];
+$usernameClinica = $_POST["usernameClinica"];
+$bioClinica = $_POST["bioClinica"];
+$CEPClinica = $_POST["CEPClinica"];
+$CNPJClinica = $_POST["CNPJClinica"];
+$senhaClinica = $_POST["senhaClinica"];
 
 if (isset($_POST['nome'])) {
     
@@ -177,7 +185,8 @@ if (isset($_POST['nome'])) {
                         $error[] = "Cadastro não realizado. Por favor, tente novamente";
                         $_SESSION['erros'] = $error;
                         //$_SESSION['cadastro'] = "não cadastro";
-                        echo "erro";
+                        //echo "erro";
+                        echo implode("|", $_SESSION['erros']);
                         exit;
                         }
                     } 
@@ -208,51 +217,51 @@ if (isset($_POST['nome'])) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-elseif (isset($_POST['nome'])){
+elseif (isset($_POST['nomeClinica'])){
     
     $campos = [
-        'cxclinNome'        => $_POST['cxclinNome']     ?? '',
-        'cxclinEmail'       => $_POST['cxclinEmail']       ?? '',
-        'cxclinTelefone'    => $_POST['cxclinTelefone']    ?? '',
-        'cxclinUsername'    => $_POST['cxclinUsername']    ?? '',
-        'cxclinBiografia'   => $_POST['cxclinBiografia']   ?? '',
-        'cxclinCEP'         => $_POST['cxclinCEP']      ?? '',
-        'cxclinCnpj'        => $_POST['cxclinCnpj']        ?? '',
-        'cxclinSenha'       => $_POST['cxclinSenha']       ?? '',
+        'nomeClinica'        => $_POST['nomeClinica']     ?? '',
+        'emailClinica'       => $_POST['emailClinica']       ?? '',
+        'telefoneClinica'    => $_POST['telefoneClinica']    ?? '',
+        'usernameClinica'    => $_POST['usernameClinica']    ?? '',
+        'bioClinica'   => $_POST['bioClinica']   ?? '',
+        'CEPClinica'         => $_POST['CEPClinica']      ?? '',
+        'CNPJClinica'        => $_POST['CNPJClinica']        ?? '',
+        'senhaClinica'       => $_POST['senhaClinica']       ?? '',
     ];
     
     
     // array_filter remove tudo que for vazio/null/false
     $vazios = array_filter($campos, fn($valor) => trim($valor) === '');
     
-    if (!empty($vazios)) {
-        $error[] = "nem todos os campos foram preenchidos";
-        $_SESSION['erros'] = $error;
-        echo "erro";
+    $vazios = [];
+
+    foreach($campos as $campo => $valor){
+
+        if(trim($valor) === ''){
+
+            $vazios[] = $campo;
+
+        }
+
+    }
+
+    if(!empty($vazios)){
+        echo implode("|", $vazios);
         exit;
+
     }
     
     $query = "INSERT INTO clinica
     (
-        clin_Nome,
-        clin_Email,
-        clin_Username,
-        clin_Senha,
-        clin_Biografia,
-        clin_Cnpj,
-        clin_CEP,
-        clin_Telefone
+        clin_nome,
+        clin_email,
+        clin_username,
+        clin_senha,
+        clin_biografia,
+        clin_cnpj,
+        clin_cep,
+        clin_telefone
     )
         
     VALUES
@@ -267,7 +276,7 @@ elseif (isset($_POST['nome'])){
         :telefone
     )";
     
-    /*$foto = $_FILES["cxclinicaFoto"];
+    $foto = $_FILES["cxclinFoto"];
     
     if (!empty($foto["name"])) {
         
@@ -317,18 +326,18 @@ elseif (isset($_POST['nome'])){
             // Caminho da imagem
             $caminho_imagem = "../img/" . $nome_imagem;
             
-            // Prepara query*/
+            // Prepara query
             $cadastrar = $conn->getConn()->prepare($query);
             
-            $cadastrar->bindParam(':nome', $_POST['cxclinNome'], PDO::PARAM_STR);
-            $cadastrar->bindParam(':email', $_POST['cxclinemail'], PDO::PARAM_STR);
-            $cadastrar->bindParam(':username', $_POST['cxclinUsername'], PDO::PARAM_STR);
-            $cadastrar->bindParam(':senha', $_POST['cxclinSenha'], PDO::PARAM_STR);
-            $cadastrar->bindParam(':biografia', $_POST['cxclinBiografia'], PDO::PARAM_STR);
+            $cadastrar->bindParam(':nome', $_POST['nomeClinica'], PDO::PARAM_STR);
+            $cadastrar->bindParam(':email', $_POST['emailClinica'], PDO::PARAM_STR);
+            $cadastrar->bindParam(':username', $_POST['usernameClinica'], PDO::PARAM_STR);
+            $cadastrar->bindParam(':senha', $_POST['senhaClinica'], PDO::PARAM_STR);
+            $cadastrar->bindParam(':biografia', $_POST['bioClinica'], PDO::PARAM_STR);
             //$cadastrar->bindParam(':foto', $nome_imagem, PDO::PARAM_STR);
-            $cadastrar->bindParam(':CNPJ', $_POST['cxclinCnpj'], PDO::PARAM_STR);
-            $cadastrar->bindParam(':CEP', $_POST['cxclinCEP'], PDO::PARAM_STR);
-            $cadastrar->bindParam(':telefone', $_POST['cxproTelefone'], PDO::PARAM_STR);
+            $cadastrar->bindParam(':CNPJ', $_POST['CNPJClinica'], PDO::PARAM_STR);
+            $cadastrar->bindParam(':CEP', $_POST['CEPClinica'], PDO::PARAM_STR);
+            $cadastrar->bindParam(':telefone', $_POST['telefoneClinica'], PDO::PARAM_STR);
             
             try{
                 $cadastrar->execute();
@@ -344,7 +353,7 @@ elseif (isset($_POST['nome'])){
                 else {
                     $error[] = "Cadastro não realizado. Por favor, tente novamente";
                     $_SESSION['erros'] = $error;
-                    echo "erro";
+                    echo implode("|", $_SESSION['erros']);
                     exit;
                 }
             }
@@ -355,26 +364,26 @@ elseif (isset($_POST['nome'])){
                 echo implode("|", $_SESSION['erros']);
                 exit;
             }
-            /*}
+            }
     }
         else {
             $_SESSION['erros'] = $error;
-            echo "erro";
+            echo implode("|", $_SESSION['erros']);
             exit;
         }
     }
     else {
         $error[] = 'nenhuma foto de perfil selecionada';
         $_SESSION['erros'] = $error;
-        echo "erro";
+        echo implode("|", $_SESSION['erros']);
         exit;
-    }*/
+    }
 }
 
 else {
     $error[] = 'nenhuma informação enviada';
     $_SESSION['erros'] = $error;
-    echo "erro";
+    echo implode("|", $_SESSION['erros']);
     exit;
 }
 

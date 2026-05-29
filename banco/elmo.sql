@@ -139,7 +139,7 @@ create table atendimento ( -- esse vai salvar pra fazer o relatorio e mander no 
     constraint fk_atd_ser foreign key (atd_ser) references servico(ser_id)  on delete cascade
 );
 
-select * from profisional;
+select * from profissional;
 
 drop database dbelmo;
 
