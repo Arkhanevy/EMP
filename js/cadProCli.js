@@ -40,6 +40,9 @@ $(document).ready(function () {
     const $linkLogin = $(".logarProfissional");
     const $linkCadastro = $(".cadastrarProfissional");
 
+    //ATIVAÇÃO
+    const $btnAtivar = $("#btnAtivar");
+    const $codigoCliente = $("#codigoCliente");
 
     // DADOS PROFISSIONAL
     const $nomeProfissional = $("#nomeProfissional");
@@ -249,8 +252,6 @@ $(document).ready(function () {
 
     // CADASTRO PROFISSIONAL
     $btnCadastrar.on("click", function () {
-        /*$("#formProfissional").on("submit", function (e) {
-            e.preventDefault();*/
         let botao = $(this);
         botao.prop("disabled", true);
         botao.html(`
@@ -349,6 +350,7 @@ $(document).ready(function () {
             return;
         }
 
+
         if (erro) {
             botao.prop("disabled", false);
             botao.html("Cadastrar");
@@ -395,7 +397,7 @@ $(document).ready(function () {
                 if (resposta.trim() == "sucesso") {
 
                     mostrarAlert("Cadastro realizado!", "success");
-                    mostrarFormulario("ativacaoPro");
+                    mostrarFormulario("ativacao");
 
                 } else {
                     let erros = resposta.split("|");
@@ -773,7 +775,7 @@ $(document).ready(function () {
                 if (resposta === "sucesso") {
 
                     mostrarAlert("Cadastro realizado!", "success");
-                    mostrarFormulario("ativacaoCli");
+                    mostrarFormulario("ativacao");
 
                 }
 
@@ -932,6 +934,36 @@ $(document).ready(function () {
 
 
 
+
+
+        // ATIVAÇÃO
+        $btnAtivar.on("click", function (e) {
+            e.preventDefault();
+            let botao = $(this);
+            botao.prop("disabled", true);
+            botao.html(`<span class="spinner-border spinner-border-sm"></span>Ativando conta..`);
+            // limpa erros anteriores
+            $(".form-control").removeClass("is-invalid");
+            const codigoCliente = $codigoCliente.val().trim();
+    
+            // VÊ OS CAMPOS VAZIOS
+            if (!codigoCliente) {
+                $codigoCliente.addClass("is-invalid");
+                botao.prop("disabled", false);
+                botao.html("Ativar");
+                mostrarAlert("Preencha o campo com o código de acesso para finalizar o cadastro!", "danger");
+            } else if (!codigoValido(codigoCliente)) {
+                $codigoCliente.addClass("is-invalid");
+                botao.prop("disabled", false);
+                botao.html("Ativar");
+                mostrarAlert("Código inválido!", "danger");
+                return;
+            }
+        });
+        // Remover a borada vermelha
+        $(".form-control").on("input change", function () {
+            $(this).removeClass("is-invalid");
+        });
 
 
 

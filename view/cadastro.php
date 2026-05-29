@@ -160,7 +160,6 @@
 
                     </div>
 
-
                     <!-- LOGIN PROFISSIONAL-->
                     <div id="loginProfissional">
                         <div class="text-center mt-4">
@@ -336,6 +335,23 @@
 
                         <p>Não tem conta? <a class="cadastrarClinica" href="#">Cadastre-se</a></p>
                     </div>
+
+
+
+        <!--Ativação-->
+        <div class="img-thumbnail bg-light border border-success p-4 rounded-4 shadow" id="ativacao">
+            <h1 class="text-muted mt-5 mx-auto">Seja Bem-Vindo!</h1>
+            <p class="text-muted mt-5 mx-auto"> Um código de ativação foi enviado para o seu e-mail.</p>
+            <form action="../model/caduser.php" method="POST">
+                <div class="form-floating mt-5 mb-3">
+                    <input name="cxcliCodigo" id="codigoCliente" class="form-control" type="text" placeholder="Nome" required>
+                    <label>Código de Ativação</label>
+                </div>
+                <div class="d-grid mb-3">
+                    <button type="submit" id="btnAtivar" class="btn btn-success">Ativar</button>
+                </div>
+            </form>
+        </div>
                 </div>
             </div>
         </div>
