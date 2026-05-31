@@ -658,6 +658,8 @@ $(document).ready(function () {
         const cnpj = $cnpj.val().trim();
         const senha = $senhaClinica.val().trim();
         let erro = false;
+		const cepLimpo = CEP.replace(/\D/g, "");
+		const validaCep = /^[0-9]{8}$/;
 
         // VÊ OS CAMPOS VAZIOS
         const camposObrigatorios = [
@@ -691,19 +693,19 @@ $(document).ready(function () {
         //CEP
         if (!CEP) {
             $cepClinica.addClass("is-invalid");
-            $ruaProfissional.addClass("is-invalid");
-            $bairroProfissional.addClass("is-invalid");
-            $("#cidade").addClass("is-invalid");
-            $ufProfissional.addClass("is-invalid");
-            $ibgeProfissional.addClass("is-invalid");
+            $ruaClinica.addClass("is-invalid");
+            $bairroClinica.addClass("is-invalid");
+            $("#cidadeClinica").addClass("is-invalid");
+            $ufClinica.addClass("is-invalid");
+            $ibgeClinica.addClass("is-invalid");
             erro = true;
         } else if (!validaCep.test(cepLimpo)) {
             $cepClinica.addClass("is-invalid");
-            $ruaProfissional.addClass("is-invalid");
-            $bairroProfissional.addClass("is-invalid");
-            $("#cidade").addClass("is-invalid");
-            $ufProfissional.addClass("is-invalid");
-            $ibgeProfissional.addClass("is-invalid");
+            $ruaClinica.addClass("is-invalid");
+            $bairroClinica.addClass("is-invalid");
+            $("#cidadeClinica").addClass("is-invalid");
+            $ufClinica.addClass("is-invalid");
+            $ibgeClinica.addClass("is-invalid");
             mostrarAlert("Formato de CEP inválido!", "danger");
             return;
         }
@@ -738,7 +740,6 @@ $(document).ready(function () {
 
 
         const telLimpo = telefone.replace(/\D/g, "");
-        const cepLimpo = CEP.replace(/\D/g, "");
         const cnpjLimpo = cnpj.replace(/\D/g, "");
 
         let formData = new FormData();
@@ -751,7 +752,6 @@ $(document).ready(function () {
         formData.append("CEPClinica", cepLimpo);
         formData.append("CNPJClinica", cnpjLimpo);
         formData.append("senhaClinica", senha);
-        formData.append("telefoneClinica", telefone);
         formData.append("cxclinFoto", $("#img_perfil_Clinica")[0].files[0]);
 
         $.ajax({

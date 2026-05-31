@@ -8,28 +8,9 @@ $conn = new conexao;
 session_start();
 $_SESSION['erros'] =[];
 $_SESSION['cadastro'] = FALSE;
+$_SESSION['email'] = "";
 $error = array();
-
-//
-/*$nome = $_POST["nome"];
-$email = $_POST["email"];
-$telefone = $_POST["telefone"];
-$username = $_POST["username"];
-$bio = $_POST["bio"];
-$dtNas = $_POST["dtNas"];
-$CEP = $_POST["CEP"];
-$registro = $_POST["registro"];
-$CPF = $_POST["CPF"];
-$senha = $_POST["senha"];*/
-
-$nomeClinica = $_POST["nomeClinica"];
-$emailClinica = $_POST["emailClinica"];
-$telefoneClinica = $_POST["telefoneClinica"];
-$usernameClinica = $_POST["usernameClinica"];
-$bioClinica = $_POST["bioClinica"];
-$CEPClinica = $_POST["CEPClinica"];
-$CNPJClinica = $_POST["CNPJClinica"];
-$senhaClinica = $_POST["senhaClinica"];
+$codigo = random_int(100000, 999999);
 
 if (isset($_POST['nome'])) {
     
@@ -39,7 +20,7 @@ if (isset($_POST['nome'])) {
         'username'       => $_POST['username']       ?? '',
         'senha'          => $_POST['senha']          ?? '',
         'biografia'      => $_POST['bio']            ?? '',
-        'dtNas'            => $_POST['dtNas']        ?? '',
+        'dtNas'          => $_POST['dtNas']          ?? '',
         'CPF'            => $_POST['CPF']            ?? '',
         'CEP'            => $_POST['CEP']            ?? '',
         'telefone'       => $_POST['telefone']       ?? '',
@@ -77,6 +58,7 @@ if (isset($_POST['nome'])) {
         pro_biografia,
         pro_dtNasc,
         pro_foto,
+        pro_codVali,
         pro_CPF,
         pro_CEP,
         pro_telefone,
@@ -94,6 +76,7 @@ if (isset($_POST['nome'])) {
         :biografia,
         :dtNasc,
         :foto,
+        :codvali,
         :CPF,
         :CEP,
         :telefone,
@@ -161,22 +144,19 @@ if (isset($_POST['nome'])) {
                 $cadastrar->bindParam(':biografia', $_POST['bio'], PDO::PARAM_STR);
                 $cadastrar->bindParam(':dtNasc', $_POST['dtNas'], PDO::PARAM_STR);
                 $cadastrar->bindParam(':foto', $nome_imagem, PDO::PARAM_STR);
+                $cadastrar->bindParam(':codvali', $codigo, PDO::PARAM_STR);
                 $cadastrar->bindParam(':CPF', $_POST['CPF'], PDO::PARAM_STR);
                 $cadastrar->bindParam(':CEP', $_POST['CEP'], PDO::PARAM_STR);
                 $cadastrar->bindParam(':telefone', $_POST['telefone'], PDO::PARAM_STR);
                 $cadastrar->bindParam(':genero', $_POST['genero'], PDO::PARAM_STR);
                 $cadastrar->bindParam(':registro', $_POST['registro'], PDO::PARAM_STR);
 
-    
-                // ALTERAÇÃO:
-                // execute() foi movido antes do rowCount()
-    
                 try{
                     $cadastrar->execute();
 
                     if ($cadastrar->rowCount()) {
                         $_SESSION['cadastro'] = TRUE;
-                        
+                        $_SESSION['email'] = $_POST['email'];
                         move_uploaded_file($foto["tmp_name"], $caminho_imagem);
                         echo "sucesso";
                         exit;
@@ -194,7 +174,7 @@ if (isset($_POST['nome'])) {
                     if ($e->getCode() == 23000) {
                         $error[] = "E-mail ou usuário já cadastrado.";
                     }else {
-                        $error[] = "Erro interno. Tente novamente mais tarde.";
+                        $error[] = $e;//"Erro interno. Tente novamente mais tarde.";
                     }
                     $_SESSION['erros'] = $error;
                     echo implode("|", $_SESSION['erros']);
@@ -220,12 +200,12 @@ if (isset($_POST['nome'])) {
 elseif (isset($_POST['nomeClinica'])){
     
     $campos = [
-        'nomeClinica'        => $_POST['nomeClinica']     ?? '',
+        'nomeClinica'        => $_POST['nomeClinica']        ?? '',
         'emailClinica'       => $_POST['emailClinica']       ?? '',
         'telefoneClinica'    => $_POST['telefoneClinica']    ?? '',
         'usernameClinica'    => $_POST['usernameClinica']    ?? '',
-        'bioClinica'   => $_POST['bioClinica']   ?? '',
-        'CEPClinica'         => $_POST['CEPClinica']      ?? '',
+        'bioClinica'         => $_POST['bioClinica']         ?? '',
+        'CEPClinica'         => $_POST['CEPClinica']         ?? '',
         'CNPJClinica'        => $_POST['CNPJClinica']        ?? '',
         'senhaClinica'       => $_POST['senhaClinica']       ?? '',
     ];
@@ -259,6 +239,8 @@ elseif (isset($_POST['nomeClinica'])){
         clin_username,
         clin_senha,
         clin_biografia,
+        clin_foto,
+        clin_codVali,
         clin_cnpj,
         clin_cep,
         clin_telefone
@@ -271,6 +253,8 @@ elseif (isset($_POST['nomeClinica'])){
         :username,
         sha1(:senha),
         :biografia,
+        :foto,
+        :codvali,
         :CNPJ,
         :CEP,
         :telefone
@@ -334,7 +318,8 @@ elseif (isset($_POST['nomeClinica'])){
             $cadastrar->bindParam(':username', $_POST['usernameClinica'], PDO::PARAM_STR);
             $cadastrar->bindParam(':senha', $_POST['senhaClinica'], PDO::PARAM_STR);
             $cadastrar->bindParam(':biografia', $_POST['bioClinica'], PDO::PARAM_STR);
-            //$cadastrar->bindParam(':foto', $nome_imagem, PDO::PARAM_STR);
+            $cadastrar->bindParam(':foto', $nome_imagem, PDO::PARAM_STR);
+            $cadastrar->bindParam(':codvali', $codigo, PDO::PARAM_STR);
             $cadastrar->bindParam(':CNPJ', $_POST['CNPJClinica'], PDO::PARAM_STR);
             $cadastrar->bindParam(':CEP', $_POST['CEPClinica'], PDO::PARAM_STR);
             $cadastrar->bindParam(':telefone', $_POST['telefoneClinica'], PDO::PARAM_STR);
@@ -345,7 +330,7 @@ elseif (isset($_POST['nomeClinica'])){
                 if ($cadastrar->rowCount()) {
                     $_SESSION['cadastro'] = TRUE;
                     
-                    //move_uploaded_file($foto["tmp_name"], $caminho_imagem);
+                    move_uploaded_file($foto["tmp_name"], $caminho_imagem);
                     echo "sucesso";
                     exit;
                     

@@ -9,7 +9,7 @@ create table clinica( -- tabela com os dados do perifil da clinica
 	clin_senha varchar(255),
 	clin_biografia text, 
 	clin_foto varchar(100), -- vai guardar o nome do do arquivo ao inves do arquivo em si
-	clin_vodVali int null, -- codigo de validação da conta
+	clin_codVali int null, -- codigo de validação da conta
 	clin_dtCad datetime default current_timestamp, 
 	clin_dtDell datetime, -- data do soft delete 
 	clin_status varchar(8), -- se o perfil está ativo ou desativado
