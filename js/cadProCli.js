@@ -376,9 +376,9 @@ $(document).ready(function () {
         formData.append("senha", senha);
         formData.append("genero", generoPro);
         formData.append("cxproFoto", $("#img_perfil")[0].files[0]);
-
+		formData.append("acao", "cadastrar");
         $.ajax({
-            url: "/EMP/model/caduser.php",
+            url: "../controller/profissionalcontroller.php",
             method: "POST",
 
             data: formData,
@@ -753,9 +753,9 @@ $(document).ready(function () {
         formData.append("CNPJClinica", cnpjLimpo);
         formData.append("senhaClinica", senha);
         formData.append("cxclinFoto", $("#img_perfil_Clinica")[0].files[0]);
-
+		formData.append("acao", "cadastrar");
         $.ajax({
-            url: "/EMP/model/caduser.php",
+            url: "../controller/clinicacontroller.php",
             method: "POST",
 
             data: formData,
@@ -917,8 +917,6 @@ $(document).ready(function () {
 
                     //limpa_formulário();
                     $cepClinica.addClass("is-invalid");
-                    botao.prop("disabled", false);
-                    botao.html("Cadastrar");
 
 
                     mostrarAlert("CEP não encontrado!", "danger");

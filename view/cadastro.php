@@ -212,7 +212,7 @@
 
 
 
-                        <form id="formClinica" action="../model/cadclinica.php"  method="POST" enctype="multipart/form-data">>
+                        <form id="formClinica" method="POST" enctype="multipart/form-data">>
                             <div class="avatar-container">
                             <img id="previewClinica" src="../img/logo_user.png" alt="Foto de perfil">
                             <input name="cxclinFoto" type="file" id="img_perfil_Clinica" accept="image/*" required>

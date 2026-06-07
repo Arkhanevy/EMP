@@ -78,7 +78,7 @@
         <div class="img-thumbnail bg-light border border-success p-4 rounded-4 shadow" id="cadastroCliente">
             <h1>Seja Bem-Vindo!</h1>
             <p class="text-muted mt-2 mx-auto"> Cadastre-se para poder agendar suas consultas.</p>
-            <form action="../model/caduser.php" method="POST">
+            <form method="POST">
                 <div class="text-center">
                     <img class="img-fluid rounded-circle" id="preview" src="../img/logo_user.png" alt="Foto de perfil">
                     <input name="cxcliFoto" class="form-control" type="file" id="img_perfil" accept="image/*" required>

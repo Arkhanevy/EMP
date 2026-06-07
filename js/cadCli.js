@@ -226,8 +226,9 @@ document.addEventListener("DOMContentLoaded", function () {
         formData.append("senha", senha);
         formData.append("CPF", cpfLimpo);
         formData.append("cxcliFoto", $("#img_perfil")[0].files[0]);
+		formData.append("acao", "cadastrar");
         $.ajax({
-            url: "/EMP/model/cadcli.php",
+            url: "../controller/clientecontroller.php",
             method: "POST",
 
             data: formData,
