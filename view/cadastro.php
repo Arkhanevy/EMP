@@ -180,7 +180,7 @@
                             </div>
 
                             <div class="form-floating mt-4 mb-3">
-                                <input class="form-control" type="password" placeholder="Senha">
+                                <input id="senhaLogin" class="form-control" type="password" placeholder="Senha">
                                 <label>Senha</label>
                             </div>
 
@@ -194,7 +194,6 @@
 
                         <p> Não tem conta? <a class="cadastrarProfissional" href="#">Cadastre-se</a></p>
 
-                        <div id="alertLogin" class="alert alert-danger">E-mail inválido!</div>
 
                     </div>
 
@@ -348,8 +347,8 @@
                     <label>Código de Ativação</label>
                 </div>
                 <div class="d-grid mb-3">
-                    <button type="submit" id="btnAtivar" class="btn btn-success">Ativar</button>
-                    <button type="submit" id="btnCodigo" class="btn btn-success">Gerar código</button>
+                    <button type="button" id="btnAtivar" class="btn btn-success">Ativar</button>
+                    <button type="button" id="btnCodigo" class="btn btn-success">Gerar código</button>
                 </div>
             </form>
         </div>
