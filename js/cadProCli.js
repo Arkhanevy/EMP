@@ -42,7 +42,9 @@ $(document).ready(function () {
 
     //ATIVAÇÃO
     const $btnAtivar = $("#btnAtivar");
+    const $btnCodigo = $("#btnCodigo");
     const $codigoCliente = $("#codigoCliente");
+
 
     // DADOS PROFISSIONAL
     const $nomeProfissional = $("#nomeProfissional");
@@ -376,7 +378,7 @@ $(document).ready(function () {
         formData.append("senha", senha);
         formData.append("genero", generoPro);
         formData.append("cxproFoto", $("#img_perfil")[0].files[0]);
-		formData.append("acao", "cadastrar");
+        formData.append("acao", "cadastrar");
         $.ajax({
             url: "../controller/profissionalcontroller.php",
             method: "POST",
@@ -658,8 +660,8 @@ $(document).ready(function () {
         const cnpj = $cnpj.val().trim();
         const senha = $senhaClinica.val().trim();
         let erro = false;
-		const cepLimpo = CEP.replace(/\D/g, "");
-		const validaCep = /^[0-9]{8}$/;
+        const cepLimpo = CEP.replace(/\D/g, "");
+        const validaCep = /^[0-9]{8}$/;
 
         // VÊ OS CAMPOS VAZIOS
         const camposObrigatorios = [
@@ -753,7 +755,7 @@ $(document).ready(function () {
         formData.append("CNPJClinica", cnpjLimpo);
         formData.append("senhaClinica", senha);
         formData.append("cxclinFoto", $("#img_perfil_Clinica")[0].files[0]);
-		formData.append("acao", "cadastrar");
+        formData.append("acao", "cadastrar");
         $.ajax({
             url: "../controller/clinicacontroller.php",
             method: "POST",
@@ -825,25 +827,80 @@ $(document).ready(function () {
         $btnLogClinica.on("click", function () {
 
             const email = $emailLogClinica.val().trim();
+            const senha = $senhaLogClinica.val().trim();
 
             // limpa erro anterior
             $emailLogClinica.removeClass("is-invalid");
+            $senhaLogClinica.removeClass("is-invalid");
 
+            if (!senha) {
+                $senhaLogClinica.addClass("is-invalid");
+                mostrarAlert("Preencha a senha!", "danger");
+                return;
+            }
             if (!email) {
-
                 $emailLogClinica.addClass("is-invalid");
-
                 mostrarAlert("Preencha o e-mail!", "danger");
                 return;
             }
 
             if (emailValido(email)) {
-
-                $alertLogin
-                    .removeClass("alert-danger")
-                    .addClass("alert alert-success")
-                    .text("Login realizado!")
-                    .show();
+                let formData = new FormData();
+                formData.append("codigoCliente", codigoCliente);
+                formData.append("acao", "cadastrar");
+                $.ajax({
+                    url: "../controller/profissionalcontroller.php",
+                    method: "POST",
+        
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+        
+                    success: function (resposta) {
+        
+                        resposta = resposta.trim();
+        
+                        console.log(resposta);
+        
+                        botao.prop("disabled", false);
+                        botao.html("Ativar");
+        
+                        if (resposta === "sucesso") {
+        
+                            mostrarAlert("Cadastro realizado!", "success");
+                            mostrarFormulario("perfilUser");
+                        }
+        
+                        else {
+        
+                            let erros = resposta.split("|");
+        
+                            console.log(erros);
+        
+                            erros.forEach(function (erro) {
+        
+                                if (erro.trim() != "") {
+        
+                                    mostrarAlert(erro, "danger");
+        
+                                }
+        
+                            });
+        
+                        }
+        
+                    },
+        
+                    error: function () {
+        
+                        botao.prop("disabled", false);
+                        botao.html("Cadastrar");
+        
+                        mostrarAlert("Erro na requisição!", "danger");
+        
+                    }
+        
+                });
 
             } else {
 
@@ -856,85 +913,97 @@ $(document).ready(function () {
                     .show();
             }
 
-        });
-
-    }
+        }
 
 
     // remove vermelho ao digitar
     $emailLogClinica.on("input", function () {
-        $(this).removeClass("is-invalid");
-    });
+            $(this).removeClass("is-invalid");
+        });
 
 
-    // CEP 
-    $cepClinica.on("blur", function () {
+        // CEP 
+        $cepClinica.on("blur", function () {
 
-        let cep = $(this).val().replace(/\D/g, "");
+            let cep = $(this).val().replace(/\D/g, "");
 
-        // se vazio
-        if (cep === "") {
-            //limpa_formulário();
-            return;
-        }
-
-        // valida formato
-        const validaCep = /^[0-9]{8}$/;
-
-        if (!validaCep.test(cep)) {
-
-            $cepClinica.addClass("is-invalid");
-
-            //limpa_formulário();
-            mostrarAlert("Formato de CEP inválido!", "danger");
-            return;
-        }
-
-        // loading nos campos
-        $ruaClinica.val("...");
-        $bairroClinica.val("...");
-        $("#cidadeClinica").val("...");
-        $ufClinica.val("...");
-        $ibgeClinica.val("...");
-
-        // consulta API ViaCEP
-        $.getJSON(
-            "https://viacep.com.br/ws/" + cep + "/json/?callback=?",
-            function (dados) {
-
-                if (!("erro" in dados)) {
-                    $cepClinica.removeClass("is-invalid");
-
-                    $ruaClinica.val(dados.logradouro);
-                    $bairroClinica.val(dados.bairro);
-                    $("#cidadeClinica").val(dados.localidade);
-                    $ufClinica.val(dados.uf);
-                    $ibgeClinica.val(dados.ibge);
-
-                    $($parteCEPClinica).removeClass("is-invalid");
-
-                } else {
-
-                    //limpa_formulário();
-                    $cepClinica.addClass("is-invalid");
-
-
-                    mostrarAlert("CEP não encontrado!", "danger");
-                }
-
+            // se vazio
+            if (cep === "") {
+                //limpa_formulário();
+                return;
             }
-        );
 
-    });
-    $cepClinica.on("input", function () {
-        $(this).removeClass("is-invalid");
-    });
+            // valida formato
+            const validaCep = /^[0-9]{8}$/;
+
+            if (!validaCep.test(cep)) {
+
+                $cepClinica.addClass("is-invalid");
+
+                //limpa_formulário();
+                mostrarAlert("Formato de CEP inválido!", "danger");
+                return;
+            }
+
+            // loading nos campos
+            $ruaClinica.val("...");
+            $bairroClinica.val("...");
+            $("#cidadeClinica").val("...");
+            $ufClinica.val("...");
+            $ibgeClinica.val("...");
+
+            // consulta API ViaCEP
+            $.getJSON(
+                "https://viacep.com.br/ws/" + cep + "/json/?callback=?",
+                function (dados) {
+
+                    if (!("erro" in dados)) {
+                        $cepClinica.removeClass("is-invalid");
+
+                        $ruaClinica.val(dados.logradouro);
+                        $bairroClinica.val(dados.bairro);
+                        $("#cidadeClinica").val(dados.localidade);
+                        $ufClinica.val(dados.uf);
+                        $ibgeClinica.val(dados.ibge);
+
+                        $($parteCEPClinica).removeClass("is-invalid");
+
+                    } else {
+
+                        //limpa_formulário();
+                        $cepClinica.addClass("is-invalid");
+
+
+                        mostrarAlert("CEP não encontrado!", "danger");
+                    }
+
+                }
+            );
+
+        });
+        $cepClinica.on("input", function () {
+            $(this).removeClass("is-invalid");
+        });
+
 
 
 
 
 
         // ATIVAÇÃO
+        let codigo = 0;
+        $btnCodigo.on("click", function (e) {
+            e.preventDefault();
+            let botao = $(this);
+            botao.prop("disabled", true);
+            botao.html(`<span class="spinner-border spinner-border-sm"></span>Codigo enviado, espere`);
+            const gerarCodigo = (min, max) => {
+                return Math.random() * (max - min) + min
+            };
+            codigo = Math.floor(gerarCodigo(1000, 9999));
+            console.log(codigo);
+        });
+
         $btnAtivar.on("click", function (e) {
             e.preventDefault();
             let botao = $(this);
@@ -943,20 +1012,80 @@ $(document).ready(function () {
             // limpa erros anteriores
             $(".form-control").removeClass("is-invalid");
             const codigoCliente = $codigoCliente.val().trim();
-    
+
             // VÊ OS CAMPOS VAZIOS
             if (!codigoCliente) {
                 $codigoCliente.addClass("is-invalid");
                 botao.prop("disabled", false);
                 botao.html("Ativar");
                 mostrarAlert("Preencha o campo com o código de acesso para finalizar o cadastro!", "danger");
-            } else if (!codigoValido(codigoCliente)) {
+            } else if (codigoCliente != codigo) {
                 $codigoCliente.addClass("is-invalid");
                 botao.prop("disabled", false);
                 botao.html("Ativar");
                 mostrarAlert("Código inválido!", "danger");
                 return;
+            } else {
+                let formData = new FormData();
+                formData.append("codigoCliente", codigoCliente);
+                formData.append("acao", "cadastrar");
+                $.ajax({
+                    url: "../controller/profissionalcontroller.php",
+                    method: "POST",
+
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+
+                    success: function (resposta) {
+
+                        resposta = resposta.trim();
+
+                        console.log(resposta);
+
+                        botao.prop("disabled", false);
+                        botao.html("Ativar");
+
+                        if (resposta === "sucesso") {
+
+                            mostrarAlert("Cadastro realizado!", "success");
+                            mostrarFormulario("perfilUser");
+                        }
+
+                        else {
+
+                            let erros = resposta.split("|");
+
+                            console.log(erros);
+
+                            erros.forEach(function (erro) {
+
+                                if (erro.trim() != "") {
+
+                                    mostrarAlert(erro, "danger");
+
+                                }
+
+                            });
+
+                        }
+
+                    },
+
+                    error: function () {
+
+                        botao.prop("disabled", false);
+                        botao.html("Cadastrar");
+
+                        mostrarAlert("Erro na requisição!", "danger");
+
+                    }
+
+                });
             }
+
+
+
         });
         // Remover a borada vermelha
         $(".form-control").on("input change", function () {
@@ -965,27 +1094,27 @@ $(document).ready(function () {
 
 
 
-    // ALERTAS
-    function mostrarAlert(mensagem, tipo = "success") {
+        // ALERTAS
+        function mostrarAlert(mensagem, tipo = "success") {
 
-        const $container = $("#alertContainer");
+            const $container = $("#alertContainer");
 
-        const $alert = $(` <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
+            const $alert = $(` <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
             ${mensagem}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
             `);
 
-        $container.append($alert);
-
-        setTimeout(function () {
-
-            $alert.removeClass("show").addClass("hide");
+            $container.append($alert);
 
             setTimeout(function () {
-                $alert.remove();
-            }, 500);
 
-        }, 3000);
-    }
+                $alert.removeClass("show").addClass("hide");
 
-});
+                setTimeout(function () {
+                    $alert.remove();
+                }, 500);
+
+            }, 3000);
+        }
+
+    });

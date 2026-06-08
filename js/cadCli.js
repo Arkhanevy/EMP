@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     //ATIVAÇÃO
     const $btnAtivar = $("#btnAtivar");
+    const $btnCodigo = $("#btnCodigo");
+
 
     //LOGIN
     const $btnLogar = $("#btnLogar");
@@ -226,7 +228,7 @@ document.addEventListener("DOMContentLoaded", function () {
         formData.append("senha", senha);
         formData.append("CPF", cpfLimpo);
         formData.append("cxcliFoto", $("#img_perfil")[0].files[0]);
-		formData.append("acao", "cadastrar");
+        formData.append("acao", "cadastrar");
         $.ajax({
             url: "../controller/clientecontroller.php",
             method: "POST",
@@ -277,37 +279,6 @@ document.addEventListener("DOMContentLoaded", function () {
     $(".form-control, .form-select, textarea").on("input change", function () {
         $(this).removeClass("is-invalid");
     });
-
-
-    // ATIVAÇÃO
-    $btnAtivar.on("click", function (e) {
-        e.preventDefault();
-        let botao = $(this);
-        botao.prop("disabled", true);
-        botao.html(`<span class="spinner-border spinner-border-sm"></span>Ativando conta..`);
-        // limpa erros anteriores
-        $(".form-control").removeClass("is-invalid");
-        const codigoCliente = $codigoCliente.val().trim();
-
-        // VÊ OS CAMPOS VAZIOS
-        if (!codigoCliente) {
-            $codigoCliente.addClass("is-invalid");
-            botao.prop("disabled", false);
-            botao.html("Ativar");
-            mostrarAlert("Preencha o campo com o código de acesso para finalizar o cadastro!", "danger");
-        } else if (!codigoValido(codigoCliente)) {
-            $codigoCliente.addClass("is-invalid");
-            botao.prop("disabled", false);
-            botao.html("Ativar");
-            mostrarAlert("Código inválido!", "danger");
-            return;
-        }
-    });
-    // Remover a borada vermelha
-    $(".form-control").on("input change", function () {
-        $(this).removeClass("is-invalid");
-    });
-
 
     // LOGIN
     $btnLogar.on("click", function (e) {
@@ -365,6 +336,63 @@ document.addEventListener("DOMContentLoaded", function () {
 
         $("#" + cadastroId).show();
     }
+
+
+
+    const codigo = 0;
+
+    // ATIVAÇÃO
+    $btnCodigo.on("click", function (e) {
+        e.preventDefault();
+        let botao = $(this);
+        botao.prop("disabled", true);
+        botao.html(`<span class="spinner-border spinner-border-sm"></span>Codigo enviado, espere`);
+        const gerarCodigo = (min, max) => {
+            return Math.random() * (max - min) + min
+        }
+        codigo = gerarCodigo(1000, 9999)
+        console.log(codigo)
+    });
+
+    $btnAtivar.on("click", function (e) {
+        e.preventDefault();
+        let botao = $(this);
+        botao.prop("disabled", true);
+        botao.html(`<span class="spinner-border spinner-border-sm"></span>Ativando conta..`);
+        // limpa erros anteriores
+        $(".form-control").removeClass("is-invalid");
+        const codigoCliente = $codigoCliente.val().trim();
+
+        codigo
+        
+        // VÊ OS CAMPOS VAZIOS
+        if (!codigoCliente) {
+            $codigoCliente.addClass("is-invalid");
+            botao.prop("disabled", false);
+            botao.html("Ativar");
+            mostrarAlert("Preencha o campo com o código de acesso para finalizar o cadastro!", "danger");
+        } else if (!codigoValido(codigoCliente)) {
+            $codigoCliente.addClass("is-invalid");
+            botao.prop("disabled", false);
+            botao.html("Ativar");
+            mostrarAlert("Código inválido!", "danger");
+            return;
+        }
+    });
+    // Remover a borada vermelha
+    $(".form-control").on("input change", function () {
+        $(this).removeClass("is-invalid");
+    });
+
+
+
+
+
+
+
+
+
+
 
 
     // ALERTAS
