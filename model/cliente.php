@@ -146,7 +146,28 @@ class cliente {
             }
             catch (PDOException $e) {
                 if ($e->getCode() == 23000) {
-                    $error[] = "E-mail ou usuário já cadastrado.";
+                    
+                    preg_match("/for key '([^']+)'/", $e->getMessage(), $matches);
+                    
+                    if (!empty($matches[1])) {
+                        
+                        switch ($matches[1]) {
+                            case 'cli_email':
+                                $error[] = "E-mail já cadastrado.";
+                                break;
+                                
+                            case 'cli_username':
+                                $error[] = "Usuário já cadastrado.";
+                                break;
+                            case 'cli_CPF':
+                                $error[] = "CPF já cadastrado.";
+                                break;
+                            default:
+                                $error[] = "Registro duplicado.";
+                                break;
+                        }
+                    }
+                    
                 }else {
                     $error[] = $e;//"Erro interno. Tente novamente mais tarde.";
                 }

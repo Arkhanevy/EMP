@@ -1,7 +1,7 @@
 <?php
 class conexao {
     public static $usuario = "root";
-    public static $senha = "senha";
+    public static $senha = "";
     public static $connect = null;
 
     private static function Conectar() {

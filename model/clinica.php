@@ -141,7 +141,26 @@ class clinica {
             }
             catch (PDOException $e) {
                 if ($e->getCode() == 23000) {
-                    $error[] = "E-mail ou usuário já cadastrado.";
+                    preg_match("/for key '([^']+)'/", $e->getMessage(), $matches);
+                    
+                    if (!empty($matches[1])) {
+                        
+                        switch ($matches[1]) {
+                            case 'clin_email':
+                                $error[] = "E-mail já cadastrado.";
+                                break;
+                                
+                            case 'clin_username':
+                                $error[] = "Usuário já cadastrado.";
+                                break;
+                            case 'clin_cnpj':
+                                $error[] = "CNPJ já cadastrado.";
+                                break;
+                            default:
+                                $error[] = "Registro duplicado.";
+                                break;
+                        }
+                    }
                 }else {
                     $error[] = $e;//"Erro interno. Tente novamente mais tarde.";
                 }
