@@ -8,12 +8,30 @@ $(document).ready(function () {
         clinica: "cadastroClinica"
     };
 
-    mostrarFormulario(forms[tipo] || forms.profissional);
+    const telas = {
+        cadastroProfissional: $("#cadastroProfissional"),
+        loginProfissional: $("#loginProfissional"),
 
-    function mostrarFormulario(id) {
-        $(".cadastro").hide();
-        $("#" + id).show();
+        cadastroClinica: $("#cadastroClinica"),
+        loginClinica: $("#loginClinica"),
+
+        ativacao: $("#ativacao"),
+        perfilUser: $("#perfilUser"),
+        perfilClinica: $("#perfilClinica")
+    };
+
+    function mostrarTela(nomeTela) {
+        Object.values(telas).forEach(tela => tela.hide());
+
+        if (telas[nomeTela]) {
+            telas[nomeTela].show();
+        } else {
+            console.warn("Tela não encontrada:", nomeTela);
+        }
     }
+
+    mostrarTela(forms[tipo] || forms.profissional);
+
 
 
     //Objetos-Dados dos usuarios
@@ -35,10 +53,12 @@ $(document).ready(function () {
         bairro: $("#bairro"),
         uf: $("#uf"),
         ibge: $("#ibge"),
+        cidade: $("#cidade"),
         registro: $("#registroProfissional"),
         form: $("#cadastroProfissional"),
         login: $("#loginProfissional")
     };
+
 
     const cli = {
         img: $("#img_perfil_Clinica"),
@@ -59,32 +79,9 @@ $(document).ready(function () {
         login: $("#loginClinica")
     };
 
-    const telas = {
-        cadastroProfissional: $("#cadastroProfissional"),
-        loginProfissional: $("#loginProfissional"),
-    
-        cadastroClinica: $("#cadastroClinica"),
-        loginClinica: $("#loginClinica"),
-    
-        ativacao: $("#ativacao"),
-        perfilUser: $("#perfilUser"),
-        perfilClinica: $("#perfilClinica")
-    };
+
 
     //Funções
-    function mostrarTela(nomeTela) {
-
-        // esconde todas
-        Object.values(telas).forEach(tela => tela.hide());
-    
-        // mostra a escolhida
-        if (telas[nomeTela]) {
-            telas[nomeTela].show();
-        } else {
-            console.warn("Tela não encontrada:", nomeTela);
-        }
-    }
-
     function mostrarAlert(mensagem, tipo = "success") {
         const $container = $("#alertContainer");
 
@@ -110,10 +107,6 @@ $(document).ready(function () {
         return v.replace(/\D/g, "");
     }
 
-    function limparInvalid($els) {
-        $els.removeClass("is-invalid");
-    }
-
     function validarCampos(campos) {
         let erro = false;
 
@@ -129,68 +122,68 @@ $(document).ready(function () {
 
     function cpfValido(cpf) {
         cpf = cpf.replace(/\D/g, "");
-    
+
         if (cpf.length !== 11) return false;
         if (/^(\d)\1+$/.test(cpf)) return false;
-    
+
         let soma = 0;
-    
+
         for (let i = 0; i < 9; i++) {
             soma += parseInt(cpf[i]) * (10 - i);
         }
-    
+
         let resto = (soma * 10) % 11;
         if (resto === 10 || resto === 11) resto = 0;
-    
+
         if (resto !== parseInt(cpf[9])) return false;
-    
+
         soma = 0;
-    
+
         for (let i = 0; i < 10; i++) {
             soma += parseInt(cpf[i]) * (11 - i);
         }
-    
+
         resto = (soma * 10) % 11;
         if (resto === 10 || resto === 11) resto = 0;
-    
+
         return resto === parseInt(cpf[10]);
     }
 
     function cnpjValido(cnpj) {
         cnpj = cnpj.replace(/\D/g, "");
-    
+
         if (cnpj.length !== 14) return false;
         if (/^(\d)\1+$/.test(cnpj)) return false;
-    
+
         let tamanho = 12;
         let numeros = cnpj.substring(0, tamanho);
         let digitos = cnpj.substring(tamanho);
-    
+
         let soma = 0;
         let pos = tamanho - 7;
-    
+
         for (let i = tamanho; i >= 1; i--) {
             soma += numeros.charAt(tamanho - i) * pos--;
             if (pos < 2) pos = 9;
         }
-    
+
         let resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
-    
+
         if (resultado != digitos.charAt(0)) return false;
-    
+
         tamanho = 13;
         numeros = cnpj.substring(0, tamanho);
-    
+
         soma = 0;
         pos = tamanho - 7;
-    
+
         for (let i = tamanho; i >= 1; i--) {
             soma += numeros.charAt(tamanho - i) * pos--;
             if (pos < 2) pos = 9;
         }
-    
+
         resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
-    
+
         return resultado == digitos.charAt(1);
     }
 
@@ -264,7 +257,7 @@ $(document).ready(function () {
         cep: prof.cep,
         rua: prof.rua,
         bairro: prof.bairro,
-        cidade: $("#cidade"),
+        cidade: prof.cidade,
         uf: prof.uf,
         ibge: prof.ibge
     });
@@ -289,20 +282,17 @@ $(document).ready(function () {
         e.preventDefault();
         mostrarTela("loginProfissional");
     });
-    
+
     $(".cadastrarProfissional").on("click", function (e) {
         e.preventDefault();
         mostrarTela("cadastroProfissional");
     });
 
     //CADASTRO PROFISSIONAL
-
     $("#btnCadastrar").on("click", function () {
 
         const btn = $(this);
         btn.prop("disabled", true).html("Cadastrando...");
-
-        limparInvalid($(".form-control, .form-select, textarea"));
         const campos = [
             { valor: prof.nome.val(), el: prof.nome },
             { valor: prof.tel.val(), el: prof.tel },
@@ -311,7 +301,10 @@ $(document).ready(function () {
             { valor: prof.data.val(), el: prof.data },
             { valor: prof.registro.val(), el: prof.registro },
             { valor: prof.senha.val(), el: prof.senha },
-            { valor: prof.genero.val(), el: prof.genero }
+            { valor: prof.genero.val(), el: prof.genero },
+            { valor: prof.email.val(), el: prof.email },
+            { valor: prof.cpf.val(), el: prof.cpf },
+            { valor: prof.cep.val(), el: prof.cep }
         ];
 
         if (validarCampos(campos)) {
@@ -320,9 +313,19 @@ $(document).ready(function () {
             return;
         }
 
-        const email = prof.email.val();
 
-        if (!emailValido(email)) {
+        const cpf = prof.cpf.val().trim();
+
+        if (!cpf || !cpfValido(cpf)) {
+            prof.cpf.addClass("is-invalid");
+            btn.prop("disabled", false).html("Cadastrar");
+            mostrarAlert("CPF inválido!", "danger");
+            return;
+        }
+
+        const email = prof.email.val().trim();
+
+        if (!email || !emailValido(email)) {
             prof.email.addClass("is-invalid");
             btn.prop("disabled", false).html("Cadastrar");
             mostrarAlert("E-mail inválido!", "danger");
@@ -330,12 +333,27 @@ $(document).ready(function () {
         }
 
         const imgFile = prof.img[0].files[0];
-
         if (!imgFile) {
             btn.prop("disabled", false).html("Cadastrar");
             mostrarAlert("A imagem de perfil é obrigatória.", "danger");
             return;
         }
+        const camposEndereco = [
+            prof.cep,
+            prof.rua,
+            prof.bairro,
+            prof.uf,
+            prof.ibge,
+            prof.cidade
+        ];
+
+        // CEP
+        if (apenasNumeros(prof.cep.val()).length !== 8) {
+            marcarErro(camposEndereco, "CEP inválido!");
+            btn.prop("disabled", false).html("Cadastrar");
+            return;
+        }
+
         const cpfLimpo = prof.cpf.val().replace(/\D/g, "");
         const CEPLimpo = prof.cep.val().replace(/\D/g, "");
 
@@ -368,7 +386,7 @@ $(document).ready(function () {
 
                 if (r.trim() === "sucesso") {
                     mostrarAlert("Cadastro realizado!", "success");
-                    mostrarFormulario("ativacao");
+                    mostrarTela("ativacao");
                 } else {
                     mostrarAlert(r, "danger");
                 }
@@ -379,18 +397,21 @@ $(document).ready(function () {
             }
         });
     });
+    $("input").on("input", function () {
+        $(this).removeClass("is-invalid");
+    });
 
     //LOGIN
 
     $("#btnLogar").on("click", function (e) {
-
         e.preventDefault();
-
+        $("#loginForm").on("submit", function(e){
+            e.preventDefault();
+         });
         const btn = $(this);
         btn.prop("disabled", true).html("Entrando...");
-
-        const email = $("#emailLogin").val();
-        const senha = $("#senhaLogin").val();
+        const email = $("#emailLogin").val().trim();
+        const senha = $("#senhaLogin").val().trim();
 
         if (!email || !senha) {
             mostrarAlert("Preencha todos os campos!", "danger");
@@ -423,14 +444,21 @@ $(document).ready(function () {
                 } else {
                     mostrarAlert(r, "danger");
                 }
+            },
+            error: function () {
+                btn.prop("disabled", false).html("Logar");
+                mostrarAlert("Erro na requisição!", "danger");
             }
         });
     });
+    $("input").on("input", function () {
+        $(this).removeClass("is-invalid");
+    });
 
-    let codigoProf = null;
+
 
     /* GERAR CÓDIGO */
-
+    let codigoProf = null;
     $("#btnCodigo").on("click", function (e) {
 
         e.preventDefault();
@@ -475,6 +503,7 @@ $(document).ready(function () {
         btn.prop("disabled", true).html("Ativando...");
 
         const inputCodigo = $("#codigoCliente").val().trim();
+        const email = $("#emailAtivar").val();
 
         if (codigoProf === null) {
             mostrarAlert("Gere um código primeiro!", "danger");
@@ -495,10 +524,18 @@ $(document).ready(function () {
             btn.prop("disabled", false).html("Ativar");
             return;
         }
+
+        const fd = new FormData();
+        fd.append("email", email);
+        fd.append("codigo", codigoProf);
+        fd.append("acao", "ativar");
+
         $.ajax({
             url: "../controller/profissionalcontroller.php",
             method: "POST",
-            data: { acao: "ativar", codigo: inputCodigo },
+            data: fd,
+            processData: false,
+            contentType: false,
 
             success: function (resposta) {
 
@@ -508,7 +545,7 @@ $(document).ready(function () {
                     mostrarAlert("Conta ativada com sucesso!", "success");
 
                     // fluxo correto pós-ativação
-                    mostrarFormulario("perfilUser");
+                    mostrarTela("perfilUser");
                 } else {
                     mostrarAlert(resposta, "danger");
                 }
@@ -518,10 +555,14 @@ $(document).ready(function () {
                 console.log("STATUS:", status);
                 console.log("ERRO:", error);
                 console.log("RESPOSTA:", xhr.responseText);
-            
+
                 mostrarAlert("Erro na requisição!", "danger");
             }
         });
+
+    });
+    $("input").on("input", function () {
+        $(this).removeClass("is-invalid");
     });
 
 
@@ -533,7 +574,7 @@ $(document).ready(function () {
         e.preventDefault();
         mostrarTela("loginClinica");
     });
-    
+
     $(".cadastrarClinica").on("click", function (e) {
         e.preventDefault();
         mostrarTela("cadastroClinica");
@@ -545,39 +586,21 @@ $(document).ready(function () {
         const btn = $(this);
         btn.prop("disabled", true).html("Cadastrando...");
 
-        limparInvalid($(".form-control, .form-select, textarea"));
 
         const campos = [
             { valor: cli.nome.val(), el: cli.nome },
             { valor: cli.tel.val(), el: cli.tel },
             { valor: cli.user.val(), el: cli.user },
             { valor: cli.bio.val(), el: cli.bio },
-            { valor: cli.senha.val(), el: cli.senha }
+            { valor: cli.senha.val(), el: cli.senha },
+            { valor: cli.email.val(), el: cli.email },
+            { valor: cli.cep.val(), el: cli.cep },
+            { valor: cli.cnpj.val(), el: cli.cnpj }
         ];
 
         if (validarCampos(campos)) {
             btn.prop("disabled", false).html("Cadastrar");
             mostrarAlert("Preencha todos os campos!", "danger");
-            return;
-        }
-
-        const email = cli.email.val();
-        const cnpj = cli.cnpj.val();
-        const cep = apenasNumeros(cli.cep.val());
-
-        // EMAIL
-        if (!emailValido(email)) {
-            cli.email.addClass("is-invalid");
-            btn.prop("disabled", false).html("Cadastrar");
-            mostrarAlert("E-mail inválido!", "danger");
-            return;
-        }
-
-        // CNPJ
-        if (!cnpj || !cnpjValido(cnpj)) {
-            cli.cnpj.addClass("is-invalid");
-            btn.prop("disabled", false).html("Cadastrar");
-            mostrarAlert("CNPJ inválido!", "danger");
             return;
         }
 
@@ -588,6 +611,42 @@ $(document).ready(function () {
             return;
         }
 
+        // CNPJ
+        const cnpj = cli.cnpj.val().trim();
+
+        if (!cnpj || !cnpjValido(cnpj)) {
+            cli.cnpj.addClass("is-invalid");
+            btn.prop("disabled", false).html("Cadastrar");
+            mostrarAlert("CNPJ inválido!", "danger");
+            return;
+        }
+
+        //E-MAIL
+        const email = cli.email.val().trim();
+        if (!email || !emailValido(email)) {
+            cli.email.addClass("is-invalid");
+            btn.prop("disabled", false).html("Cadastrar");
+            mostrarAlert("E-mail inválido!", "danger");
+            return;
+        }
+
+
+        const camposEndereco = [
+            cli.cep,
+            cli.rua,
+            cli.bairro,
+            cli.uf,
+            cli.ibge,
+            cli.cidade
+        ];
+
+        // CEP
+        if (apenasNumeros(prof.cep.val()).length !== 8) {
+            marcarErro(camposEndereco, "CEP inválido!");
+            btn.prop("disabled", false).html("Cadastrar");
+            return;
+        }
+
         const formData = new FormData();
 
         formData.append("nomeClinica", cli.nome.val());
@@ -595,7 +654,7 @@ $(document).ready(function () {
         formData.append("telefoneClinica", apenasNumeros(cli.tel.val()));
         formData.append("usernameClinica", cli.user.val());
         formData.append("bioClinica", cli.bio.val());
-        formData.append("CEPClinica", cep);
+        formData.append("CEPClinica", apenasNumeros(cli.cep.val()));
         formData.append("CNPJClinica", apenasNumeros(cnpj));
         formData.append("senhaClinica", cli.senha.val());
         formData.append("cxclinFoto", cli.img[0].files[0]);
@@ -614,7 +673,7 @@ $(document).ready(function () {
 
                 if (resposta.trim() === "sucesso") {
                     mostrarAlert("Cadastro realizado!", "success");
-                    mostrarFormulario("ativacao");
+                    mostrarTela("ativacao");
                 } else {
                     mostrarAlert(resposta, "danger");
                 }
@@ -626,6 +685,9 @@ $(document).ready(function () {
             }
         });
     });
+    $("input").on("input", function () {
+        $(this).removeClass("is-invalid");
+    });
 
 
     //Login
@@ -636,8 +698,8 @@ $(document).ready(function () {
         const btn = $(this);
         btn.prop("disabled", true).html("Entrando...");
 
-        const email = $("#emailLogClinica").val();
-        const senha = $("#senhaLogClinica").val();
+        const email = $("#emailLogClinica").val().trim();
+        const senha = $("#senhaLogClinica").val().trim();
 
         if (!email || !senha) {
             mostrarAlert("Preencha todos os campos!", "danger");
@@ -680,11 +742,15 @@ $(document).ready(function () {
             }
         });
     });
+    $("input").on("input", function () {
+        $(this).removeClass("is-invalid");
+    });
 
 
-    let codigoCli = null;
+
 
     // GERAR CÓDIGO
+    let codigoCli = null;
     $("#btnCodigoCli").on("click", function (e) {
 
         e.preventDefault();
@@ -759,7 +825,7 @@ $(document).ready(function () {
 
                 if (resposta.trim() === "sucesso") {
                     mostrarAlert("Conta ativada!", "success");
-                    mostrarFormulario("perfilClinica");
+                    mostrarTela("perfilClinica");
                 } else {
                     mostrarAlert(resposta, "danger");
                 }
@@ -770,6 +836,9 @@ $(document).ready(function () {
                 mostrarAlert("Erro na requisição!", "danger");
             }
         });
+    });
+    $("input").on("input", function () {
+        $(this).removeClass("is-invalid");
     });
 
 

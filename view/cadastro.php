@@ -342,6 +342,11 @@
             <h1 class="text-muted mt-5 mx-auto">Seja Bem-Vindo!</h1>
             <p class="text-muted mt-5 mx-auto"> Clique no botão "Gerar código" para que um código seja enviado para o seu e-mail. Depois coloque-o da caixa abaixo para ativar sua conta.</p>
             <form action="../model/caduser.php" method="POST">
+            
+            <div class="form-floating mt-5 mb-3">
+                    <input name="cxcliEmail" id="emailAtivar" class="form-control" type="text" placeholder="Nome" required>
+                    <label>Código de Ativação</label>
+                </div>
                 <div class="form-floating mt-5 mb-3">
                     <input name="cxcliCodigo" id="codigoCliente" class="form-control" type="text" placeholder="Nome" required>
                     <label>Código de Ativação</label>
