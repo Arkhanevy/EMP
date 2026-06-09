@@ -1,5 +1,24 @@
 document.addEventListener("DOMContentLoaded", function () {
-    //VARIAVEIS
+    const forms = {
+        profissionalCad: "cadastroProfissional",
+        clinicaCad: "cadastroClinica",
+        ativacao: "ativacao",
+        profissionalLog: "loginProfissional",
+        clinicaLog: "loginClinica"
+    };
+
+    function mostrarTela(nomeTela) {
+        Object.values(telas).forEach(tela => tela.hide());
+
+        if (telas[nomeTela]) {
+            telas[nomeTela].show();
+        } else {
+            console.warn("Tela não encontrada:", nomeTela);
+        }
+    }
+    
+    mostrarTela(forms[tipo] || forms.profissionalCad);
+   /* //VARIAVEIS
     const $inputImgCliente = $("#img_perfil");
     const $previewCliente = $("#preview");
 
@@ -18,22 +37,30 @@ document.addEventListener("DOMContentLoaded", function () {
     const $emailLogin = $("#emailLogin");
     const $senhaLogin = $("#senhaLogin");
     const $loginForm = $("#loginCliente");
-    const $linkLogin = $(".logarCliente");
+    const $linkLogin = $(".logarCliente");*/
 
 
+    //Objetos-Dados dos usuarios
 
-    //dados
-    const $nomeCliente = $("#nomeCliente");
-    const $userCliente = $("#userCliente");
-    const $emailCliente = $("#emailCadastro");
-    const $generoCliente = $("#generoCliente");
-    const $telCliente = $("#telCliente");
-    const $dataNascimetnoCli = $("#dtnCli");
-    const $bioCliente = $("#bioCliente");
-    const $cpfCliente = $("#CPF");
-    const $senhaCliente = $("#senhaCliente");
-    const $codigoCliente = $("#codigoCliente");
-
+    const prof = {
+        img: $("#img_perfil"),
+        preview: $("#preview"),
+        nome: $("#nomeCliente"),
+        email: $("#emailCadastro"),
+        tel: $("#telCliente"),
+        user: $("#userCliente"),
+        genero: $("#generoCliente"),
+        bio: $("#bioCliente"),
+        data: $("#dtnCli"),
+        cpf: $("#CPF"),
+        senha: $("#senhaCliente"),
+        form: $("#cadastroCliente"),
+        login: $("#login"),
+        loginEmail: $("#emailLog"),
+        loginSenha: $("#senhaLog"),
+        emailAtivacao: $("#emailAtivar"),
+        codigo: $("#codigoCliente")
+    };
 
     // FUNÇÃO GLOBAL
     function limpa_formulário() {

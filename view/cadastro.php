@@ -310,22 +310,21 @@
                     <!--LOGIN CLINICA-->
                     <div id="loginClinica">
                         <h1>Login Clínica</h1>
-
-                        <form>
-                            <div class="form-floating mb-3">
-                                <input id="emailLogClinica" class="form-control" type="text">
-                                <label>E-mail</label>
-                            </div>
-
-                            <div class="form-floating mb-3">
-                                <input class="form-control" type="password">
-                                <label>Senha</label>
-                            </div>
+                        <form class="mt-4" action="../model/caduser.php" method="POST" enctype="multipart/form-data">
+                                <div class="form-floating mb-3">
+                                    <input name="cxproEmailLog" id="emailLogClinica" class="form-control" type="email"
+                                        placeholder="E-mail" required>
+                                    <label>E-mail</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input name="cxproSenhaLog" id="senhaLogClinica" class="form-control" type="password"
+                                        placeholder="Senha" required>
+                                    <label>Senha</label>
+                                </div>
+                                <div class="d-grid mb-3">
+                                    <button type="submit" id="btnLogClinica" class="btn btn-success">Logar</button>
+                                </div>
                         </form>
-
-                        <div class="d-grid mb-3">
-                            <button id="btnLogClinica" class="btn btn-success">Logar</button>
-                        </div>
 
                         <p>Não tem conta? <a class="cadastrarClinica" href="#">Cadastre-se</a></p>
                     </div>

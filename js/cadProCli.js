@@ -82,10 +82,14 @@ $(document).ready(function () {
         bairro: $("#bairroClinica"),
         uf: $("#ufClinica"),
         ibge: $("#ibgeClinica"),
+        cidade: $("#cidadeClinica"),
         form: $("#cadastroClinica"),
-        login: $("#loginClinica")
+        login: $("#loginClinica"),
+        loginEmail: $("#emailLogClinica"),
+        loginSenha: $("#senhaLogClinica"),
+        emailAtivacao: $("#emailAtivar"),
+        codigo: $("#codigoCliente")
     };
-
 
 
     //Funções
@@ -480,7 +484,7 @@ $(document).ready(function () {
 
 
         if (!email || !emailValido(email)) {
-            prof.emailAtivacao.addClass("is-invalid");
+            prof.loginEmail.addClass("is-invalid");
             btn.prop("disabled", false).html("Ativar");
             mostrarAlert("E-mail inválido!", "danger");
             return;
@@ -591,7 +595,7 @@ $(document).ready(function () {
             mostrarAlert("Gere um código primeiro!", "danger");
             btn.prop("disabled", false).html("Ativar");
             return;
-        } else if(!inputCodigo) {
+        } else if (!inputCodigo) {
             mostrarAlert("Digite o código enviado!", "danger");
             prof.codigo.addClass("is-invalid");
             btn.prop("disabled", false).html("Ativar");
@@ -657,12 +661,10 @@ $(document).ready(function () {
     });
 
     //cadastro
-    $("#btnCadClinica").on("click", function () {
-
+    $("#btnCadClinica").on("click", function (e) {
+        e.preventDefault();
         const btn = $(this);
         btn.prop("disabled", true).html("Cadastrando...");
-
-
         const campos = [
             { valor: cli.nome.val(), el: cli.nome },
             { valor: cli.tel.val(), el: cli.tel },
@@ -671,19 +673,17 @@ $(document).ready(function () {
             { valor: cli.senha.val(), el: cli.senha },
             { valor: cli.email.val(), el: cli.email },
             { valor: cli.cep.val(), el: cli.cep },
+            { valor: cli.rua.val(), el: cli.rua },
+            { valor: cli.bairro.val(), el: cli.bairro },
+            { valor: cli.uf.val(), el: cli.uf },
+            { valor: cli.ibge.val(), el: cli.ibge },
+            { valor: cli.cidade.val(), el: cli.cidade },
             { valor: cli.cnpj.val(), el: cli.cnpj }
         ];
 
         if (validarCampos(campos)) {
             btn.prop("disabled", false).html("Cadastrar");
             mostrarAlert("Preencha todos os campos!", "danger");
-            return;
-        }
-
-        // IMAGEM
-        if (!cli.img.val()) {
-            btn.prop("disabled", false).html("Cadastrar");
-            mostrarAlert("Imagem obrigatória!", "danger");
             return;
         }
 
@@ -697,6 +697,15 @@ $(document).ready(function () {
             return;
         }
 
+
+        // IMAGEM
+        if (!cli.img.val()) {
+            btn.prop("disabled", false).html("Cadastrar");
+            mostrarAlert("Imagem obrigatória!", "danger");
+            return;
+        }
+
+
         //E-MAIL
         const email = cli.email.val().trim();
         if (!email || !emailValido(email)) {
@@ -707,21 +716,20 @@ $(document).ready(function () {
         }
 
 
-        const camposEndereco = [
-            cli.cep,
-            cli.rua,
-            cli.bairro,
-            cli.uf,
-            cli.ibge,
-            cli.cidade
-        ];
-
         // CEP
-        if (apenasNumeros(prof.cep.val()).length !== 8) {
-            marcarErro(camposEndereco, "CEP inválido!");
+        if (apenasNumeros(cli.cep.val()).length !== 8) {
+            cli.cep.addClass("is-invalid");
+            cli.rua.addClass("is-invalid");
+            cli.bairro.addClass("is-invalid");
+            cli.uf.addClass("is-invalid");
+            cli.ibge.addClass("is-invalid");
+            cli.cidade.addClass("is-invalid");
             btn.prop("disabled", false).html("Cadastrar");
+            mostrarAlert("CEP inválido!", "danger");
             return;
         }
+        const CNPJLimpo = prof.cpf.val().replace(/\D/g, "");
+        const CEPLimpo = prof.cep.val().replace(/\D/g, "");
 
         const formData = new FormData();
 
@@ -730,11 +738,14 @@ $(document).ready(function () {
         formData.append("telefoneClinica", apenasNumeros(cli.tel.val()));
         formData.append("usernameClinica", cli.user.val());
         formData.append("bioClinica", cli.bio.val());
-        formData.append("CEPClinica", apenasNumeros(cli.cep.val()));
-        formData.append("CNPJClinica", apenasNumeros(cnpj));
+        formData.append("CEPClinica", CEPLimpo);
+        formData.append("CNPJClinica", CNPJLimpo);
         formData.append("senhaClinica", cli.senha.val());
         formData.append("cxclinFoto", cli.img[0].files[0]);
         formData.append("acao", "cadastrar");
+
+
+
 
         $.ajax({
             url: "../controller/clinicacontroller.php",
@@ -768,30 +779,35 @@ $(document).ready(function () {
 
     //Login
     $("#btnLogClinica").on("click", function (e) {
-
         e.preventDefault();
-
         const btn = $(this);
-        btn.prop("disabled", true).html("Entrando...");
+        btn.prop("disabled", true).html("Logando...");
 
-        const email = $("#emailLogClinica").val().trim();
-        const senha = $("#senhaLogClinica").val().trim();
+        const campos = [
+            { valor: cli.loginEmail.val(), el: cli.loginEmail },
+            { valor: cli.loginSenha.val(), el: cli.loginSenha }
+        ];
 
-        if (!email || !senha) {
+        if (validarCampos(campos)) {
+            btn.prop("disabled", false).html("Ativar");
             mostrarAlert("Preencha todos os campos!", "danger");
-            btn.prop("disabled", false).html("Logar");
             return;
         }
 
-        if (!emailValido(email)) {
+        const email = cli.loginEmail.val().trim();
+
+
+        if (!email || !emailValido(email)) {
+            cli.loginEmail.addClass("is-invalid");
+            btn.prop("disabled", false).html("Ativar");
             mostrarAlert("E-mail inválido!", "danger");
-            btn.prop("disabled", false).html("Logar");
             return;
         }
+
 
         const fd = new FormData();
         fd.append("email", email);
-        fd.append("senha", senha);
+        fd.append("senhaLog", cli.loginSenha);
         fd.append("acao", "login");
 
         $.ajax({
@@ -802,18 +818,20 @@ $(document).ready(function () {
             contentType: false,
 
             success: function (resposta) {
-
-                btn.prop("disabled", false).html("Logar");
-
+                console.log("Foi mandado");
+                btn.prop("disabled", false).html("Ativar");
                 if (resposta.trim() === "sucesso") {
-                    window.location.href = "../view/perfilClinica.php";
+                    mostrarAlert("Login realizado com sucesso!", "success");
+                    mostrarTela("perfilUser");
                 } else {
                     mostrarAlert(resposta, "danger");
                 }
             },
 
-            error: function () {
-                btn.prop("disabled", false).html("Logar");
+            error: function (xhr, status, error) {
+                console.log("STATUS:", status);
+                console.log("ERRO:", error);
+                console.log("RESPOSTA:", xhr.responseText);
                 mostrarAlert("Erro na requisição!", "danger");
             }
         });
