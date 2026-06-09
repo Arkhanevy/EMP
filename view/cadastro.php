@@ -165,35 +165,30 @@
                         <div class="text-center mt-4">
                             <div class="d-flex align-items-center justify-content-center gap-2">
                                 <img src="../img/logo_verde.png" class="logo-titulo">
-                                <h1 class="m-0">Seja Bem-Vindo!</h1>
+                                <h1 class="m-0">Seja Bem-Vindo de Volta!</h1>
                             </div>
                             <p class="text-muted mt-2 mx-auto" style="max-width: 400px;">
-                                Faça um cadastro como profissional para que os clientes possam encontrar seus serviços.
+                                Faça um login como profissional para que os clientes possam encontrar seus serviços.
                             </p>
                         </div>
-
-                        <form class="mt-4">
-
-                            <div class="form-floating mt-4 mb-3">
-                                <input id="emailLogin" class="form-control" type="text" placeholder="Email">
-                                <label>E-mail</label>
-                            </div>
-
-                            <div class="form-floating mt-4 mb-3">
-                                <input id="senhaLogin" class="form-control" type="password" placeholder="Senha">
-                                <label>Senha</label>
-                            </div>
-
-                            <!-- <a id="linkEsqueci" href="#">Esqueci a senha</a> -->
-
+                        <form class="mt-4" action="../model/caduser.php" method="POST" enctype="multipart/form-data">
+                                <div class="form-floating mb-3">
+                                    <input name="cxproEmailLog" id="emailCadastroLog" class="form-control" type="email"
+                                        placeholder="E-mail" required>
+                                    <label>E-mail</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input name="cxproSenhaLog" id="senhaProfissionalLog" class="form-control" type="password"
+                                        placeholder="Senha" required>
+                                    <label>Senha</label>
+                                </div>
+                                <div class="d-grid mb-3">
+                                    <button type="submit" id="btnLogar" class="btn btn-success">Logar</button>
+                                </div>
                         </form>
-
-                        <div class="d-grid mt-4 mb-3">
-                            <button id="btnLogar" class="btn btn-success">Logar</button>
-                        </div>
-
+                        
                         <p> Não tem conta? <a class="cadastrarProfissional" href="#">Cadastre-se</a></p>
-
+                        <!-- <a id="linkEsqueci" href="#">Esqueci a senha</a> -->
 
                     </div>
 
@@ -345,14 +340,14 @@
             
             <div class="form-floating mt-5 mb-3">
                     <input name="cxcliEmail" id="emailAtivar" class="form-control" type="text" placeholder="Nome" required>
-                    <label>Código de Ativação</label>
+                    <label>E-mail</label>
                 </div>
                 <div class="form-floating mt-5 mb-3">
                     <input name="cxcliCodigo" id="codigoCliente" class="form-control" type="text" placeholder="Nome" required>
                     <label>Código de Ativação</label>
                 </div>
                 <div class="d-grid mb-3">
-                    <button type="button" id="btnAtivar" class="btn btn-success">Ativar</button>
+                    <button type="button" id="btnAtivar" class="btn btn-success mb-3">Ativar</button>
                     <button type="button" id="btnCodigo" class="btn btn-success">Gerar código</button>
                 </div>
             </form>

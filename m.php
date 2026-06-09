@@ -7,8 +7,8 @@
     <title>Document</title>
 </head>
 <body>
-    <a href="view/cadastro.php?tipo=profissional">Cadastro Profissional</a>
-    <a href="view/cadastro.php?tipo=clinica">Cadastro Clínica</a>
+    <a href="view/cadastro.php?tipo=profissionalCad">Cadastro Profissional</a>
+    <a href="view/cadastro.php?tipo=clinicaCad">Cadastro Clínica</a>
     <a href="view/cadastroCli.php">Cadastro Cliente</a>
 </body>
 </html>

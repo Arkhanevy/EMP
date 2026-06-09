@@ -4,8 +4,11 @@ $(document).ready(function () {
     const tipo = params.get("tipo") || "profissional";
 
     const forms = {
-        profissional: "cadastroProfissional",
-        clinica: "cadastroClinica"
+        profissionalCad: "cadastroProfissional",
+        clinicaCad: "cadastroClinica",
+        ativacao: "ativacao",
+        profissionalLog: "loginProfissional",
+        clinicaLog: "loginClinica"
     };
 
     const telas = {
@@ -30,7 +33,7 @@ $(document).ready(function () {
         }
     }
 
-    mostrarTela(forms[tipo] || forms.profissional);
+    mostrarTela(forms[tipo] || forms.profissionalCad);
 
 
 
@@ -56,7 +59,11 @@ $(document).ready(function () {
         cidade: $("#cidade"),
         registro: $("#registroProfissional"),
         form: $("#cadastroProfissional"),
-        login: $("#loginProfissional")
+        login: $("#loginProfissional"),
+        loginEmail: $("#emailCadastroLog"),
+        loginSenha: $("#senhaProfissionalLog"),
+        emailAtivacao: $("#emailAtivar"),
+        codigo: $("#codigoCliente")
     };
 
 
@@ -124,10 +131,10 @@ $(document).ready(function () {
         cpf = cpf.replace(/\D/g, "");
 
         if (cpf.length !== 11) return false;
-        if (/^(\d)\1+$/.test(cpf)) return false;
+        if (/^(\d)\1+$/.test(cpf)) return false;// Elimina CPFs inválidos conhecidos
 
+        // Validação do primeiro dígito
         let soma = 0;
-
         for (let i = 0; i < 9; i++) {
             soma += parseInt(cpf[i]) * (10 - i);
         }
@@ -137,8 +144,8 @@ $(document).ready(function () {
 
         if (resto !== parseInt(cpf[9])) return false;
 
+        // Validação do segundo dígito
         soma = 0;
-
         for (let i = 0; i < 10; i++) {
             soma += parseInt(cpf[i]) * (11 - i);
         }
@@ -153,7 +160,7 @@ $(document).ready(function () {
         cnpj = cnpj.replace(/\D/g, "");
 
         if (cnpj.length !== 14) return false;
-        if (/^(\d)\1+$/.test(cnpj)) return false;
+        if (/^(\d)\1+$/.test(cnpj)) return false;// Elimina CNPJs inválidos conhecidos
 
         let tamanho = 12;
         let numeros = cnpj.substring(0, tamanho);
@@ -217,6 +224,14 @@ $(document).ready(function () {
             const cep = apenasNumeros($(this).val());
 
             if (!/^[0-9]{8}$/.test(cep)) {
+                config.cep.addClass("is-invalid");
+                config.cep.addClass("is-invalid");
+                config.rua.addClass("is-invalid");
+                config.bairro.addClass("is-invalid");
+                config.cidade.addClass("is-invalid");
+                config.uf.addClass("is-invalid");
+                config.ibge.addClass("is-invalid");
+                erro = true;
                 mostrarAlert("CEP inválido!", "danger");
                 return;
             }
@@ -231,14 +246,33 @@ $(document).ready(function () {
 
                 if (dados.erro) {
                     mostrarAlert("CEP não encontrado!", "danger");
+                    config.cep.addClass("is-invalid");
+                    config.cep.addClass("is-invalid");
+                    config.rua.addClass("is-invalid");
+                    config.bairro.addClass("is-invalid");
+                    config.cidade.addClass("is-invalid");
+                    config.uf.addClass("is-invalid");
+                    config.ibge.addClass("is-invalid");
+                    erro = true;
+                    return;
+                } else {
+                    config.rua.val(dados.logradouro);
+                    config.bairro.val(dados.bairro);
+                    config.cidade.val(dados.localidade);
+                    config.uf.val(dados.uf);
+                    config.ibge.val(dados.ibge);
+                    config.cep.removeClass("is-invalid");
+                    config.cep.removeClass("is-invalid");
+                    config.rua.removeClass("is-invalid");
+                    config.bairro.removeClass("is-invalid");
+                    config.cidade.removeClass("is-invalid");
+                    config.uf.removeClass("is-invalid");
+                    config.ibge.removeClass("is-invalid");
+                    erro = false;
                     return;
                 }
 
-                config.rua.val(dados.logradouro);
-                config.bairro.val(dados.bairro);
-                config.cidade.val(dados.localidade);
-                config.uf.val(dados.uf);
-                config.ibge.val(dados.ibge);
+
 
             });
         });
@@ -246,6 +280,11 @@ $(document).ready(function () {
         config.cep.on("input", function () {
             $(this).removeClass("is-invalid");
         });
+    }
+
+    function marcarErro(campos, mensagem) {
+        campos.forEach(c => c.addClass("is-invalid"));
+        mostrarAlert(mensagem, "danger");
     }
 
     //Funções-Estrutura
@@ -290,7 +329,6 @@ $(document).ready(function () {
 
     //CADASTRO PROFISSIONAL
     $("#btnCadastrar").on("click", function () {
-
         const btn = $(this);
         btn.prop("disabled", true).html("Cadastrando...");
         const campos = [
@@ -304,7 +342,12 @@ $(document).ready(function () {
             { valor: prof.genero.val(), el: prof.genero },
             { valor: prof.email.val(), el: prof.email },
             { valor: prof.cpf.val(), el: prof.cpf },
-            { valor: prof.cep.val(), el: prof.cep }
+            { valor: prof.cep.val(), el: prof.cep },
+            { valor: prof.rua.val(), el: prof.rua },
+            { valor: prof.bairro.val(), el: prof.bairro },
+            { valor: prof.uf.val(), el: prof.uf },
+            { valor: prof.ibge.val(), el: prof.ibge },
+            { valor: prof.cidade.val(), el: prof.cidade },
         ];
 
         if (validarCampos(campos)) {
@@ -338,6 +381,20 @@ $(document).ready(function () {
             mostrarAlert("A imagem de perfil é obrigatória.", "danger");
             return;
         }
+
+        // CEP
+        if (apenasNumeros(prof.cep.val()).length !== 8) {
+            prof.cep.addClass("is-invalid");
+            prof.rua.addClass("is-invalid");
+            prof.bairro.addClass("is-invalid");
+            prof.uf.addClass("is-invalid");
+            prof.ibge.addClass("is-invalid");
+            prof.cidade.addClass("is-invalid");
+
+            btn.prop("disabled", false).html("Cadastrar");
+            mostrarAlert("CEP inválido!", "danger");
+            return;
+        }
         const camposEndereco = [
             prof.cep,
             prof.rua,
@@ -347,7 +404,7 @@ $(document).ready(function () {
             prof.cidade
         ];
 
-        // CEP
+
         if (apenasNumeros(prof.cep.val()).length !== 8) {
             marcarErro(camposEndereco, "CEP inválido!");
             btn.prop("disabled", false).html("Cadastrar");
@@ -356,6 +413,7 @@ $(document).ready(function () {
 
         const cpfLimpo = prof.cpf.val().replace(/\D/g, "");
         const CEPLimpo = prof.cep.val().replace(/\D/g, "");
+
 
 
 
@@ -402,32 +460,36 @@ $(document).ready(function () {
     });
 
     //LOGIN
-
     $("#btnLogar").on("click", function (e) {
         e.preventDefault();
-        $("#loginForm").on("submit", function(e){
-            e.preventDefault();
-         });
         const btn = $(this);
-        btn.prop("disabled", true).html("Entrando...");
-        const email = $("#emailLogin").val().trim();
-        const senha = $("#senhaLogin").val().trim();
+        btn.prop("disabled", true).html("Logando...");
 
-        if (!email || !senha) {
+        const campos = [
+            { valor: prof.loginEmail.val(), el: prof.loginEmail },
+            { valor: prof.loginSenha.val(), el: prof.loginSenha }
+        ];
+
+        if (validarCampos(campos)) {
+            btn.prop("disabled", false).html("Ativar");
             mostrarAlert("Preencha todos os campos!", "danger");
-            btn.prop("disabled", false).html("Logar");
             return;
         }
 
-        if (!emailValido(email)) {
+        const email = prof.loginEmail.val().trim();
+
+
+        if (!email || !emailValido(email)) {
+            prof.emailAtivacao.addClass("is-invalid");
+            btn.prop("disabled", false).html("Ativar");
             mostrarAlert("E-mail inválido!", "danger");
-            btn.prop("disabled", false).html("Logar");
             return;
         }
+
 
         const fd = new FormData();
         fd.append("email", email);
-        fd.append("senha", senha);
+        fd.append("senhaLog", prof.loginSenha);
         fd.append("acao", "login");
 
         $.ajax({
@@ -436,26 +498,30 @@ $(document).ready(function () {
             data: fd,
             processData: false,
             contentType: false,
-            success: function (r) {
-                btn.prop("disabled", false).html("Logar");
 
-                if (r.trim() === "sucesso") {
-                    window.location.href = "../view/perfilProfissional.php";
+            success: function (resposta) {
+                console.log("Foi mandado");
+                btn.prop("disabled", false).html("Ativar");
+                if (resposta.trim() === "sucesso") {
+                    mostrarAlert("Login realizado com sucesso!", "success");
+                    mostrarTela("perfilUser");
                 } else {
-                    mostrarAlert(r, "danger");
+                    mostrarAlert(resposta, "danger");
                 }
             },
-            error: function () {
-                btn.prop("disabled", false).html("Logar");
+
+            error: function (xhr, status, error) {
+                console.log("STATUS:", status);
+                console.log("ERRO:", error);
+                console.log("RESPOSTA:", xhr.responseText);
                 mostrarAlert("Erro na requisição!", "danger");
             }
         });
+
     });
     $("input").on("input", function () {
         $(this).removeClass("is-invalid");
     });
-
-
 
     /* GERAR CÓDIGO */
     let codigoProf = null;
@@ -494,33 +560,45 @@ $(document).ready(function () {
 
 
     //ATIVACAO
-
     $("#btnAtivar").on("click", function (e) {
-
         e.preventDefault();
-
         const btn = $(this);
         btn.prop("disabled", true).html("Ativando...");
 
-        const inputCodigo = $("#codigoCliente").val().trim();
-        const email = $("#emailAtivar").val();
+        const campos = [
+            { valor: prof.emailAtivacao.val(), el: prof.emailAtivacao },
+            { valor: prof.codigo.val(), el: prof.codigo }
+        ];
+
+        if (validarCampos(campos)) {
+            btn.prop("disabled", false).html("Ativar");
+            mostrarAlert("Preencha todos os campos!", "danger");
+            return;
+        }
+
+        const email = prof.emailAtivacao.val().trim();
+        const inputCodigo = prof.codigo.val().trim();
+
+
+        if (!email || !emailValido(email)) {
+            prof.emailAtivacao.addClass("is-invalid");
+            btn.prop("disabled", false).html("Ativar");
+            mostrarAlert("E-mail inválido!", "danger");
+            return;
+        }
 
         if (codigoProf === null) {
             mostrarAlert("Gere um código primeiro!", "danger");
             btn.prop("disabled", false).html("Ativar");
             return;
-        }
-
-        if (!inputCodigo) {
+        } else if(!inputCodigo) {
             mostrarAlert("Digite o código enviado!", "danger");
-            $("#codigoCliente").addClass("is-invalid");
+            prof.codigo.addClass("is-invalid");
             btn.prop("disabled", false).html("Ativar");
             return;
-        }
-
-        if (inputCodigo != codigoProf) {
+        } else if (inputCodigo != codigoProf) {
             mostrarAlert("Código inválido!", "danger");
-            $("#codigoCliente").addClass("is-invalid");
+            prof.codigo.addClass("is-invalid");
             btn.prop("disabled", false).html("Ativar");
             return;
         }
@@ -538,9 +616,7 @@ $(document).ready(function () {
             contentType: false,
 
             success: function (resposta) {
-
                 btn.prop("disabled", false).html("Ativar");
-
                 if (resposta.trim() === "sucesso") {
                     mostrarAlert("Conta ativada com sucesso!", "success");
 
