@@ -239,8 +239,8 @@ class profissional {
             $resultado->bindParam(':email', $email, PDO::PARAM_STR);
             $resultado->execute();
             return "conta ativada";
-        }
-        ;
+        };
+        
     }
     
     

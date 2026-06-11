@@ -16,7 +16,7 @@ class MailSender{
         $this->phpmailer->Host                    = 'sandbox.smtp.mailtrap.io';
         $this->phpmailer->SMTPAuth      = true;
         $this->phpmailer->Port                    = 2525;
-        $this->phpmailer->Username       = '37f4b10004e7d0';
+        $this->phpmailer->Username       = '327fb0d82bfa35';
         $this->phpmailer->Password        = 'a562d06e63e067';
     }
 
@@ -26,6 +26,8 @@ class MailSender{
         $this->phpmailer->isHTML( $isHtml);
         $this->phpmailer->Subject = $subject;
         $this->phpmailer->Body = $body;
+        $this->phpmailer->CharSet  = 'UTF-8';
+        $this->phpmailer->Encoding = 'base64';
         $this->phpmailer ->send();
     }
     
