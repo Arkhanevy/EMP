@@ -36,9 +36,11 @@ $(document).ready(function () {
     mostrarTela(forms[tipo] || forms.profissionalCad);
 
 
+    let tipoUsuario = null;
+    let codigoGeradoGlobal = null;
+
 
     //Objetos-Dados dos usuarios
-
     const prof = {
         img: $("#img_perfil"),
         preview: $("#preview"),
@@ -318,7 +320,6 @@ $(document).ready(function () {
         $(this).removeClass("is-invalid");
     });
 
-
     //PROFISSIONAL
     //Troca de telas
     $(".logarProfissional").on("click", function (e) {
@@ -448,6 +449,7 @@ $(document).ready(function () {
 
                 if (r.trim() === "sucesso") {
                     mostrarAlert("Cadastro realizado!", "success");
+                    tipoUsuario = "profissional"
                     mostrarTela("ativacao");
                 } else {
                     mostrarAlert(r, "danger");
@@ -475,7 +477,7 @@ $(document).ready(function () {
         ];
 
         if (validarCampos(campos)) {
-            btn.prop("disabled", false).html("Ativar");
+            btn.prop("disabled", false).html("Logar");
             mostrarAlert("Preencha todos os campos!", "danger");
             return;
         }
@@ -485,7 +487,7 @@ $(document).ready(function () {
 
         if (!email || !emailValido(email)) {
             prof.loginEmail.addClass("is-invalid");
-            btn.prop("disabled", false).html("Ativar");
+            btn.prop("disabled", false).html("Logar");
             mostrarAlert("E-mail inválido!", "danger");
             return;
         }
@@ -505,7 +507,7 @@ $(document).ready(function () {
 
             success: function (resposta) {
                 console.log("Foi mandado");
-                btn.prop("disabled", false).html("Ativar");
+                btn.prop("disabled", false).html("Logar");
                 if (resposta.trim() === "sucesso") {
                     mostrarAlert("Login realizado com sucesso!", "success");
                     mostrarTela("perfilUser");
@@ -526,126 +528,6 @@ $(document).ready(function () {
     $("input").on("input", function () {
         $(this).removeClass("is-invalid");
     });
-
-    /* GERAR CÓDIGO */
-    let codigoProf = null;
-    $("#btnCodigo").on("click", function (e) {
-
-        e.preventDefault();
-
-        const btn = $(this);
-        btn.prop("disabled", true);
-
-        let tempo = 60;
-        btn.text(`Aguarde ${tempo}s`);
-
-        const interval = setInterval(() => {
-
-            tempo--;
-            btn.text(`Aguarde ${tempo}s`);
-
-            if (tempo <= 0) {
-                clearInterval(interval);
-                btn.prop("disabled", false);
-                btn.text("Gerar código");
-            }
-
-        }, 1000);
-
-        codigoProf = Math.floor(Math.random() * 9000) + 1000;
-
-        console.log("Código profissional:", codigoProf);
-
-        $.post("../controller/profissionalcontroller.php", {
-            acao: "gerarCodigo",
-            codigo: codigoProf
-        });
-    });
-
-
-    //ATIVACAO
-    $("#btnAtivar").on("click", function (e) {
-        e.preventDefault();
-        const btn = $(this);
-        btn.prop("disabled", true).html("Ativando...");
-
-        const campos = [
-            { valor: prof.emailAtivacao.val(), el: prof.emailAtivacao },
-            { valor: prof.codigo.val(), el: prof.codigo }
-        ];
-
-        if (validarCampos(campos)) {
-            btn.prop("disabled", false).html("Ativar");
-            mostrarAlert("Preencha todos os campos!", "danger");
-            return;
-        }
-
-        const email = prof.emailAtivacao.val().trim();
-        const inputCodigo = prof.codigo.val().trim();
-
-
-        if (!email || !emailValido(email)) {
-            prof.emailAtivacao.addClass("is-invalid");
-            btn.prop("disabled", false).html("Ativar");
-            mostrarAlert("E-mail inválido!", "danger");
-            return;
-        }
-
-        if (codigoProf === null) {
-            mostrarAlert("Gere um código primeiro!", "danger");
-            btn.prop("disabled", false).html("Ativar");
-            return;
-        } else if (!inputCodigo) {
-            mostrarAlert("Digite o código enviado!", "danger");
-            prof.codigo.addClass("is-invalid");
-            btn.prop("disabled", false).html("Ativar");
-            return;
-        } else if (inputCodigo != codigoProf) {
-            mostrarAlert("Código inválido!", "danger");
-            prof.codigo.addClass("is-invalid");
-            btn.prop("disabled", false).html("Ativar");
-            return;
-        }
-
-        const fd = new FormData();
-        fd.append("email", email);
-        fd.append("codigo", codigoProf);
-        fd.append("acao", "ativar");
-
-        $.ajax({
-            url: "../controller/profissionalcontroller.php",
-            method: "POST",
-            data: fd,
-            processData: false,
-            contentType: false,
-
-            success: function (resposta) {
-                btn.prop("disabled", false).html("Ativar");
-                if (resposta.trim() === "sucesso") {
-                    mostrarAlert("Conta ativada com sucesso!", "success");
-
-                    // fluxo correto pós-ativação
-                    mostrarTela("perfilUser");
-                } else {
-                    mostrarAlert(resposta, "danger");
-                }
-            },
-
-            error: function (xhr, status, error) {
-                console.log("STATUS:", status);
-                console.log("ERRO:", error);
-                console.log("RESPOSTA:", xhr.responseText);
-
-                mostrarAlert("Erro na requisição!", "danger");
-            }
-        });
-
-    });
-    $("input").on("input", function () {
-        $(this).removeClass("is-invalid");
-    });
-
-
 
     //CLINICA
 
@@ -699,7 +581,7 @@ $(document).ready(function () {
 
 
         // IMAGEM
-        if (!cli.img.val()) {
+        if (!cli.img[0].files || cli.img[0].files.length === 0) {
             btn.prop("disabled", false).html("Cadastrar");
             mostrarAlert("Imagem obrigatória!", "danger");
             return;
@@ -728,8 +610,8 @@ $(document).ready(function () {
             mostrarAlert("CEP inválido!", "danger");
             return;
         }
-        const CNPJLimpo = prof.cpf.val().replace(/\D/g, "");
-        const CEPLimpo = prof.cep.val().replace(/\D/g, "");
+        const CNPJLimpo = cli.cnpj.val().replace(/\D/g, "");
+        const CEPLimpo = cli.cep.val().replace(/\D/g, "");
 
         const formData = new FormData();
 
@@ -760,6 +642,7 @@ $(document).ready(function () {
 
                 if (resposta.trim() === "sucesso") {
                     mostrarAlert("Cadastro realizado!", "success");
+                    tipoUsuario = "clinica"
                     mostrarTela("ativacao");
                 } else {
                     mostrarAlert(resposta, "danger");
@@ -789,7 +672,7 @@ $(document).ready(function () {
         ];
 
         if (validarCampos(campos)) {
-            btn.prop("disabled", false).html("Ativar");
+            btn.prop("disabled", false).html("Logar");
             mostrarAlert("Preencha todos os campos!", "danger");
             return;
         }
@@ -799,7 +682,7 @@ $(document).ready(function () {
 
         if (!email || !emailValido(email)) {
             cli.loginEmail.addClass("is-invalid");
-            btn.prop("disabled", false).html("Ativar");
+            btn.prop("disabled", false).html("Logar");
             mostrarAlert("E-mail inválido!", "danger");
             return;
         }
@@ -819,7 +702,7 @@ $(document).ready(function () {
 
             success: function (resposta) {
                 console.log("Foi mandado");
-                btn.prop("disabled", false).html("Ativar");
+                btn.prop("disabled", false).html("Logar");
                 if (resposta.trim() === "sucesso") {
                     mostrarAlert("Login realizado com sucesso!", "success");
                     mostrarTela("perfilUser");
@@ -844,10 +727,13 @@ $(document).ready(function () {
 
 
     // GERAR CÓDIGO
-    let codigoCli = null;
-    $("#btnCodigoCli").on("click", function (e) {
-
+    $("#btnCodigo").on("click", function (e) {
         e.preventDefault();
+
+        if (!tipoUsuario) {
+            mostrarAlert("Erro: Tipo de usuário não identificado. Faça o cadastro novamente.", "danger");
+            return;
+        }
 
         const btn = $(this);
         btn.prop("disabled", true);
@@ -856,84 +742,142 @@ $(document).ready(function () {
         btn.text(`Aguarde ${tempo}s`);
 
         const interval = setInterval(() => {
-
             tempo--;
             btn.text(`Aguarde ${tempo}s`);
-
             if (tempo <= 0) {
                 clearInterval(interval);
                 btn.prop("disabled", false);
                 btn.text("Gerar código");
             }
-
         }, 1000);
 
-        codigoCli = Math.floor(Math.random() * 9000) + 1000;
+        // Gera um código de 4 dígitos 
+        codigoGeradoGlobal = (Math.floor(Math.random() * 9000) + 1000).toString();
+        console.log(`Código gerado para ${tipoUsuario}:`, codigoGeradoGlobal);
 
-        $.post("../controller/clinicacontroller.php", {
-            acao: "gerarCodigo",
-            codigo: codigoCli
+        // Define dinamicamente o e-mail e o destin
+        let email = "";
+        let controller = "";
+
+        if (tipoUsuario === "profissional") {
+            email = prof.email.val().trim();
+            controller = "../controller/profissionalcontroller.php";
+        } else if (tipoUsuario === "clinica") {
+            email = cli.email.val().trim();
+            controller = "../controller/clinicacontroller.php";
+        }
+
+        const fd = new FormData();
+        fd.append("email", email);
+        fd.append("codigo", codigoGeradoGlobal);
+        fd.append("acao", "gerarCodigo");
+
+        $.ajax({
+            url: controller,
+            method: "POST",
+            data: fd,
+            processData: false,
+            contentType: false,
+            success: function (resposta) {
+                if (resposta.trim() === "sucesso") {
+                    mostrarAlert("Código enviado com sucesso para o seu e-mail!", "success");
+                } else {
+                    mostrarAlert(resposta, "danger");
+                    //codigoGeradoGlobal = null;
+                }
+            },
+            error: function () {
+                console.log("Erro na requisição ao gerar código!", "danger");
+                //codigoGeradoGlobal = null;
+            }
         });
     });
 
 
-    // ATIVAÇÃO
-    $("#btnAtivarCli").on("click", function (e) {
-
+    //ATIVACAO
+    $("#btnAtivar").on("click", function (e) {
         e.preventDefault();
+        /*console.log("Valor atual de codigoGeradoGlobal:", codigoGeradoGlobal);
+        console.log("Tipo do valor:", typeof codigoGeradoGlobal);*/
+
+        if (!tipoUsuario) {
+            mostrarAlert("Erro: Sessão de usuário perdida. Refaça o processo.", "danger");
+            return;
+        }
 
         const btn = $(this);
-        btn.prop("disabled", true).html("Ativando...");
+        const campoCodigo = $("#codigoCliente");
+        const inputCodigo = campoCodigo.val().trim();
 
-        const inputCodigo = $("#codigoCli").val().trim();
+        let email = (tipoUsuario === "profissional") ? prof.email.val().trim() : cli.email.val().trim();
+        let controller;
 
-        if (codigoCli === null) {
+        if (tipoUsuario === "profissional") {
+            controller = "../controller/profissionalcontroller.php";
+        } else {
+            controller = "../controller/clinicacontroller.php";
+        }
+
+        if (!codigoGeradoGlobal) {
             mostrarAlert("Gere um código primeiro!", "danger");
             btn.prop("disabled", false).html("Ativar");
             return;
         }
 
         if (!inputCodigo) {
-            mostrarAlert("Digite o código!", "danger");
+            campoCodigo.addClass("is-invalid");
+            mostrarAlert("Digite o código enviado!", "danger");
             btn.prop("disabled", false).html("Ativar");
             return;
         }
 
-        if (inputCodigo != codigoCli) {
+        if (inputCodigo.toString() !== codigoGeradoGlobal.toString()) {
+            campoCodigo.addClass("is-invalid");
             mostrarAlert("Código inválido!", "danger");
             btn.prop("disabled", false).html("Ativar");
             return;
         }
 
+
+        btn.prop("disabled", true).html("Ativando...");
+
+        const fd = new FormData();
+        fd.append("email", email);
+        fd.append("codigo", inputCodigo);
+        fd.append("acao", "ativar");
+
         $.ajax({
-            url: "../controller/clinicacontroller.php",
+            url: controller,
             method: "POST",
-            data: {
-                acao: "ativar",
-                codigo: inputCodigo
-            },
-
+            data: fd,
+            processData: false,
+            contentType: false,
             success: function (resposta) {
-
                 btn.prop("disabled", false).html("Ativar");
 
                 if (resposta.trim() === "sucesso") {
-                    mostrarAlert("Conta ativada!", "success");
-                    mostrarTela("perfilClinica");
+                    mostrarAlert("Conta ativada com sucesso!", "success");
+                    codigoGeradoGlobal = null;
+                    if (tipoUsuario === "profissional") {
+                        mostrarTela("perfilUser");
+                    } else {
+                        mostrarTela("perfilClinica");
+                    }
                 } else {
                     mostrarAlert(resposta, "danger");
                 }
             },
-
-            error: function () {
+            error: function (xhr, status, error) {
                 btn.prop("disabled", false).html("Ativar");
-                mostrarAlert("Erro na requisição!", "danger");
+                console.error("Erro:", error);
+                mostrarAlert("Erro na requisição de ativação!", "danger");
             }
         });
     });
     $("input").on("input", function () {
         $(this).removeClass("is-invalid");
     });
+
 
 
 });

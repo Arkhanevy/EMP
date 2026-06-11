@@ -1,48 +1,34 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const forms = {
-        profissionalCad: "cadastroProfissional",
-        clinicaCad: "cadastroClinica",
-        ativacao: "ativacao",
-        profissionalLog: "loginProfissional",
-        clinicaLog: "loginClinica"
+    const params = new URLSearchParams(window.location.search);
+    const tipo = params.get("tipo") || "cadastro";
+    const telas = {
+        cadastro: $("#cadastroCliente"),
+        login: $("#loginCliente"),
+        ativacao: $("#ativacao"),
+        perfilUser: $("#perfilUser")
     };
 
     function mostrarTela(nomeTela) {
         Object.values(telas).forEach(tela => tela.hide());
-
         if (telas[nomeTela]) {
             telas[nomeTela].show();
         } else {
             console.warn("Tela não encontrada:", nomeTela);
+            telas.cadastro.show();
         }
     }
-    
-    mostrarTela(forms[tipo] || forms.profissionalCad);
-   /* //VARIAVEIS
-    const $inputImgCliente = $("#img_perfil");
-    const $previewCliente = $("#preview");
+    if (telas[tipo]) {
+        mostrarTela(tipo);
+    } else {
+        mostrarTela("cadastro");
+    }
 
-    //CADASTRO
-    const $btnCadastrar = $("#btnCadastrar");
-    const $cadastroForm = $("#cadastroCliente");
-    const $linkCadastro = $(".cadastrarCliente");
-
-    //ATIVAÇÃO
-    const $btnAtivar = $("#btnAtivar");
-    const $btnCodigo = $("#btnCodigo");
-
-
-    //LOGIN
-    const $btnLogar = $("#btnLogar");
-    const $emailLogin = $("#emailLogin");
-    const $senhaLogin = $("#senhaLogin");
-    const $loginForm = $("#loginCliente");
-    const $linkLogin = $(".logarCliente");*/
+    let codigoGeradoGlobal = null;
 
 
     //Objetos-Dados dos usuarios
 
-    const prof = {
+    const cliente = {
         img: $("#img_perfil"),
         preview: $("#preview"),
         nome: $("#nomeCliente"),
@@ -56,34 +42,61 @@ document.addEventListener("DOMContentLoaded", function () {
         senha: $("#senhaCliente"),
         form: $("#cadastroCliente"),
         login: $("#login"),
-        loginEmail: $("#emailLog"),
-        loginSenha: $("#senhaLog"),
-        emailAtivacao: $("#emailAtivar"),
+        loginEmail: $("#emailLogin"),
+        loginSenha: $("#senhaLogin"),
+        emailAtivacao: $("#emailAtivacao"),
         codigo: $("#codigoCliente")
     };
 
-    // FUNÇÃO GLOBAL
-    function limpa_formulário() {
-        $("#nomeCliente").val("");
-        $("#userCliente").val("");
-        $("#emailCadastro").val("");
-        $("#telCliente").val("");
-        $("#dtnCli").val("");
-        $("#generoCliente").val("");
-        $("#bioCliente").val("");
-        $("#CPF").val("");
-        $("#senhaCliente").val("");
+    //FUNÇÕES
+
+    //Alerta
+    function mostrarAlert(mensagem, tipo = "success") {
+        const $container = $("#alertContainer");
+
+        const $alert = $(`
+                <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
+                    ${mensagem}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `);
+
+        $container.append($alert);
+
+        setTimeout(() => {
+            $alert.fadeOut(200, () => $alert.remove());
+        }, 3000);
     }
 
+    //E-mail
     function emailValido(email) {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
+
+    //Limpeza dos valores
+    function apenasNumeros(v) {
+        return v.replace(/\D/g, "");
+    }
+
+    //Validação
+    function validarCampos(campos) {
+        let erro = false;
+
+        campos.forEach(c => {
+            if (!c.valor) {
+                c.el.addClass("is-invalid");
+                erro = true;
+            }
+        });
+
+        return erro;
+    }
+
+    //CPF
     function cpfValido(cpf) {
         cpf = cpf.replace(/\D/g, "");
 
         if (cpf.length !== 11) return false;
-
         if (/^(\d)\1+$/.test(cpf)) return false;// Elimina CPFs inválidos conhecidos
 
         // Validação do primeiro dígito
@@ -106,343 +119,327 @@ document.addEventListener("DOMContentLoaded", function () {
         resto = (soma * 10) % 11;
         if (resto === 10 || resto === 11) resto = 0;
 
-        if (resto !== parseInt(cpf[10])) return false;
-
-        return true;
+        return resto === parseInt(cpf[10]);
     }
 
+    //IMG
+    function configurarPreview(input, preview) {
 
+        preview.on("click", () => input.trigger("click"));
 
-    // TROCAR TELAS
-    if ($linkLogin.length) {
-        $linkLogin.on("click", function (e) {
-            e.preventDefault();
-            $cadastroForm.hide();
-            $loginForm.show();
-        });
-    }
+        input.on("change", function () {
 
-    if ($linkCadastro.length) {
-        $linkCadastro.on("click", function (e) {
-            e.preventDefault();
-            $loginForm.hide();
-            $cadastroForm.show();
-        });
-    }
+            const file = this.files[0];
 
-    // PREVIEW DE IMAGEM
-    if ($inputImgCliente.length && $previewCliente.length) {
-
-        $previewCliente.on("click", function () {
-            $inputImgCliente.trigger("click");
-        });
-
-        $inputImgCliente.on("change", function () {
-
-            const arquivo = this.files[0];
-
-            if (arquivo && arquivo.type.startsWith("image/")) {
-
-                const reader = new FileReader();
-
-                reader.onload = function (e) {
-                    $previewCliente.attr("src", e.target.result);
-                };
-
-                reader.readAsDataURL(arquivo);
-
-            } else {
+            if (!file || !file.type.startsWith("image/")) {
                 mostrarAlert("Selecione uma imagem válida!", "danger");
+                return;
             }
 
+            const reader = new FileReader();
+
+            reader.onload = e => preview.attr("src", e.target.result);
+            reader.readAsDataURL(file);
         });
     }
 
+    function marcarErro(campos, mensagem) {
+        campos.forEach(c => c.addClass("is-invalid"));
+        mostrarAlert(mensagem, "danger");
+    }
 
-    // CADASTRO
-    $btnCadastrar.on("click", function (e) {
+    //Funções-Estrutura
+
+    configurarPreview(cliente.img, cliente.preview);
+    $(document).on("input change", ".form-control, .form-select, textarea", function () {
+        $(this).removeClass("is-invalid");
+    });
+
+
+
+
+    // TROCAR DE TELA
+    $(".logarCliente").on("click", function (e) {
         e.preventDefault();
-        let botao = $(this);
-        botao.prop("disabled", true);
-        botao.html(`<span class="spinner-border spinner-border-sm"></span>Cadastrando..`);
+        mostrarTela("login");
+    });
 
-        // limpa erros anteriores
-        $(".form-control, .form-select, textarea").removeClass("is-invalid");
-        const imgPerfil = $inputImgCliente.val().trim();
-        const nome = $nomeCliente.val().trim();
-        const username = $userCliente.val().trim();
-        const email = $emailCliente.val().trim();
-        const genero = $generoCliente.val();
-        const telefone = $telCliente.val().trim();
-        const dtn = $dataNascimetnoCli.val().trim();
-        const biografia = $bioCliente.val().trim();
-        const CPF = $cpfCliente.val().trim();
-        const senha = $senhaCliente.val().trim();
-        let erro = false;
+    $(".cadastrarCliente").on("click", function (e) {
+        e.preventDefault();
+        mostrarTela("cadastro");
+    });
 
+    //CADASTRO
+    $("#btnCadastrar").on("click", function () {
+        const btn = $(this);
+        btn.prop("disabled", true).html("Cadastrando...");
 
-        // VÊ OS CAMPOS VAZIOS
-        const camposObrigatorios = [
-            { valor: nome, elemento: $nomeCliente },
-            { valor: username, elemento: $userCliente },
-            { valor: genero, elemento: $generoCliente },
-            { valor: telefone, elemento: $telCliente },
-            { valor: dtn, elemento: $dataNascimetnoCli },
-            { valor: biografia, elemento: $bioCliente },
-            { valor: senha, elemento: $senhaCliente },
+        const campos = [
+            { valor: cliente.nome.val(), el: cliente.nome },
+            { valor: cliente.tel.val(), el: cliente.tel },
+            { valor: cliente.user.val(), el: cliente.user },
+            { valor: cliente.bio.val(), el: cliente.bio },
+            { valor: cliente.data.val(), el: cliente.data },
+            { valor: cliente.senha.val(), el: cliente.senha },
+            { valor: cliente.genero.val(), el: cliente.genero },
+            { valor: cliente.email.val(), el: cliente.email },
+            { valor: cliente.cpf.val(), el: cliente.cpf }
         ];
 
-        camposObrigatorios.forEach(campo => {
-            if (!campo.valor) {
-                campo.elemento.addClass("is-invalid");
-                erro = true;
-            }
-        });
-
-
-        //E-MAIL
-        if (!email) {
-            $emailCliente.addClass("is-invalid");
-            erro = true;
-        } else if (!emailValido(email)) {
-            $emailCliente.addClass("is-invalid");
-            botao.prop("disabled", false);
-            botao.html("Cadastrar");
-            mostrarAlert("E-mail inválido!", "danger");
+        if (validarCampos(campos)) {
+            btn.prop("disabled", false).html("Cadastrar");
+            mostrarAlert("Preencha todos os campos obrigatórios!", "danger");
             return;
         }
 
-        //CPF
-        if (!CPF) {
-            $cpfCliente.addClass("is-invalid");
-            erro = true;
-        } else if (!cpfValido(CPF)) {
-            $cpfCliente.addClass("is-invalid");
-            botao.prop("disabled", false);
-            botao.html("Cadastrar");
+        const cpfLimpo = cliente.cpf.val().replace(/\D/g, "");
+        if (!cpfValido(cpfLimpo)) {
+            cliente.cpf.addClass("is-invalid");
+            btn.prop("disabled", false).html("Cadastrar");
             mostrarAlert("CPF inválido!", "danger");
             return;
         }
 
-        //IMAGEM
-        if (!imgPerfil) {
-            botao.prop("disabled", false);
-            botao.html("Cadastrar");
-            mostrarAlert("A imagem de perfil é obrigatoria.", "danger");
+        const email = cliente.email.val().trim();
+        if (!emailValido(email)) {
+            cliente.email.addClass("is-invalid");
+            btn.prop("disabled", false).html("Cadastrar");
+            mostrarAlert("E-mail inválido!", "danger");
             return;
         }
 
-        if (erro) {
-            botao.prop("disabled", false);
-            botao.html("Cadastrar");
+        const imgFile = cliente.img[0].files[0];
+        if (!imgFile) {
+            btn.prop("disabled", false).html("Cadastrar");
+            mostrarAlert("A imagem de perfil é obrigatória.", "danger");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("nome", cliente.nome.val());
+        formData.append("email", email);
+        formData.append("telefone", cliente.tel.val().replace(/\D/g, ""));
+        formData.append("username", cliente.user.val());
+        formData.append("bio", cliente.bio.val());
+        formData.append("dtNas", cliente.data.val());
+        formData.append("senha", cliente.senha.val());
+        formData.append("genero", cliente.genero.val());
+        formData.append("CPF", cpfLimpo);
+        formData.append("acao", "cadastrar");
+        formData.append("cxclientefoto", imgFile);
+
+        $.ajax({
+            url: "../controller/clientecontroller.php",
+            method: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (r) {
+                btn.prop("disabled", false).html("Cadastrar");
+
+                if (r.trim() === "sucesso") {
+                    mostrarAlert("Cadastro realizado com sucesso!", "success");
+                    mostrarTela("ativacao");
+                } else {
+                    mostrarAlert(r, "danger");
+                }
+            },
+            error: function () {
+                btn.prop("disabled", false).html("Cadastrar");
+                mostrarAlert("Erro interno na requisição. Tente novamente.", "danger");
+            }
+        });
+    });
+
+
+
+
+
+
+    // GERAR CÓDIGO
+    $("#btnCodigo").on("click", function (e) {
+        e.preventDefault();
+        const btn = $(this);
+        btn.prop("disabled", true);
+
+        let tempo = 60;
+        btn.text(`Aguarde ${tempo}s`);
+
+        const interval = setInterval(() => {
+            tempo--;
+            btn.text(`Aguarde ${tempo}s`);
+            if (tempo <= 0) {
+                clearInterval(interval);
+                btn.prop("disabled", false);
+                btn.text("Gerar código");
+            }
+        }, 1000);
+
+        codigoGeradoGlobal = (Math.floor(Math.random() * 9000) + 1000).toString();
+        console.log(codigoGeradoGlobal);
+
+        // Define dinamicamente o e-mail e o destino (Back-end)
+        let email = cliente.email.val().trim();
+
+        const fd = new FormData();
+        fd.append("email", email);
+        fd.append("codigo", codigoGeradoGlobal);
+        fd.append("acao", "gerarCodigo");
+
+        $.ajax({
+            url: "../controller/clientecontroller.php",
+            method: "POST",
+            data: fd,
+            processData: false,
+            contentType: false,
+            success: function (resposta) {
+                if (resposta.trim() === "sucesso") {
+                    mostrarAlert("Código enviado com sucesso para o seu e-mail!", "success");
+                } else {
+                    mostrarAlert(resposta, "danger");
+                    //codigoGeradoGlobal = null;
+                }
+            },
+            error: function () {
+                console.log("Erro na requisição ao gerar código!", "danger");
+                //codigoGeradoGlobal = null;
+            }
+        });
+    });
+
+
+    //ATIVACAO
+    $("#btnAtivar").on("click", function (e) {
+        e.preventDefault();
+        /*console.log("Valor atual de codigoGeradoGlobal:", codigoGeradoGlobal);
+        console.log("Tipo do valor:", typeof codigoGeradoGlobal);*/
+
+        const btn = $(this);
+        const campoCodigo = $("#codigoCliente");
+        const inputCodigo = campoCodigo.val().trim();
+
+        let email = cliente.email.val().trim();
+
+        if (!codigoGeradoGlobal) {
+            mostrarAlert("Gere um código primeiro!", "danger");
+            btn.prop("disabled", false).html("Ativar");
+            return;
+        }
+
+        if (!inputCodigo) {
+            campoCodigo.addClass("is-invalid");
+            mostrarAlert("Digite o código enviado!", "danger");
+            btn.prop("disabled", false).html("Ativar");
+            return;
+        }
+
+        if (inputCodigo.toString() !== codigoGeradoGlobal.toString()) {
+            campoCodigo.addClass("is-invalid");
+            mostrarAlert("Código inválido!", "danger");
+            btn.prop("disabled", false).html("Ativar");
+            return;
+        }
+
+
+        btn.prop("disabled", true).html("Ativando...");
+
+        const fd = new FormData();
+        fd.append("email", email);
+        fd.append("codigo", inputCodigo);
+        fd.append("acao", "ativar");
+
+        $.ajax({
+            url: "../controller/clientecontroller.php",
+            method: "POST",
+            data: fd,
+            processData: false,
+            contentType: false,
+            success: function (resposta) {
+                btn.prop("disabled", false).html("Ativar");
+
+                if (resposta.trim() === "sucesso") {
+                    mostrarAlert("Conta ativada com sucesso!", "success");
+                    codigoGeradoGlobal = null;
+                    mostrarTela("perfilUser");
+                } else {
+                    mostrarAlert(resposta, "danger");
+                }
+            },
+            error: function (xhr, status, error) {
+                btn.prop("disabled", false).html("Ativar");
+                console.log("STATUS:", status);
+                console.log("ERRO:", error);
+                console.log("RESPOSTA:", xhr.responseText);
+                mostrarAlert("Erro na requisição de ativação!", "danger");
+            }
+        });
+    });
+    $("input").on("input", function () {
+        $(this).removeClass("is-invalid");
+    });
+
+
+
+    //Login
+    $("#btnLogar").on("click", function (e) {
+        e.preventDefault();
+        const btn = $(this);
+        btn.prop("disabled", true).html("Logando...");
+
+        const campos = [
+            { valor: cliente.loginEmail.val(), el: cliente.loginEmail },
+            { valor: cliente.loginSenha.val(), el: cliente.loginSenha }
+        ];
+
+        if (validarCampos(campos)) {
+            btn.prop("disabled", false).html("Logar");
             mostrarAlert("Preencha todos os campos!", "danger");
             return;
         }
 
+        const email = cliente.loginEmail.val().trim();
 
-        const cpfLimpo = CPF.replace(/\D/g, "");
-        const telLimpo = telefone.replace(/\D/g, "");
+        if (!email || !emailValido(email)) {
+            cliente.loginEmail.addClass("is-invalid");
+            btn.prop("disabled", false).html("Logar");
+            mostrarAlert("E-mail inválido!", "danger");
+            return;
+        }
 
-        let formData = new FormData();
 
-        formData.append("nome", nome);
-        formData.append("email", email);
-        formData.append("username", username);
-        formData.append("genero", genero);
-        formData.append("telefone", telLimpo);
-        formData.append("dtNas", dtn);
-        formData.append("bio", biografia);
-        formData.append("senha", senha);
-        formData.append("CPF", cpfLimpo);
-        formData.append("cxcliFoto", $("#img_perfil")[0].files[0]);
-        formData.append("acao", "cadastrar");
+        const fd = new FormData();
+        fd.append("email", email);
+        fd.append("senhaLog", cliente.loginSenha);
+        fd.append("acao", "login");
+
         $.ajax({
             url: "../controller/clientecontroller.php",
             method: "POST",
-
-            data: formData,
-
+            data: fd,
             processData: false,
             contentType: false,
 
             success: function (resposta) {
-
-                console.log(resposta);
-
-                botao.prop("disabled", false);
-                botao.html("Cadastrar");
-
-
-                if (resposta.trim() == "sucesso") {
-
-                    mostrarAlert("Cadastro realizado!", "success");
-                    mostrarFormulario("ativacao");
-
+                console.log("Foi mandado");
+                btn.prop("disabled", false).html("Logar");
+                if (resposta.trim() === "sucesso") {
+                    mostrarAlert("Login realizado com sucesso!", "success");
+                    mostrarTela("perfilUser");
                 } else {
-                    let erros = resposta.split("|");
-                    console.log(erros);
-                    erros.forEach(function (erro) {
-                        mostrarAlert(erro, "danger");
-                    });
-
+                    mostrarAlert(resposta, "danger");
                 }
-
             },
 
-            error: function () {
-
-                botao.prop("disabled", false);
-                botao.html("Cadastrar");
-
+            error: function (xhr, status, error) {
+                console.log("STATUS:", status);
+                console.log("ERRO:", error);
+                console.log("RESPOSTA:", xhr.responseText);
                 mostrarAlert("Erro na requisição!", "danger");
-
             }
-
-
         });
-
     });
-    // Remover a borada vermelha
-    $(".form-control, .form-select, textarea").on("input change", function () {
+    $("input").on("input", function () {
         $(this).removeClass("is-invalid");
     });
-
-    // LOGIN
-    $btnLogar.on("click", function (e) {
-        e.preventDefault();
-        let botao = $(this);
-        botao.prop("disabled", true);
-        botao.html(`<span class="spinner-border spinner-border-sm"></span>Logando..`);
-        // limpa erros anteriores
-        $(".form-control").removeClass("is-invalid");
-        const emailLogin = $emailLogin.val().trim();
-        const senhaLogin = $senhaLogin.val().trim();
-        let erro = false;
-
-        // VÊ OS CAMPOS VAZIOS
-        if (!emailLogin) {
-            $emailLogin.addClass("is-invalid");
-        }
-        if (!senhaLogin) {
-            $senhaLogin.addClass("is-invalid");
-            erro = true;
-        }
-
-        if (erro) {
-            botao.prop("disabled", false);
-            botao.html("Logar");
-            mostrarAlert("Preencha todos os campos!", "danger");
-            return;
-        }
-
-        if (erro) {
-            botao.prop("disabled", false);
-            botao.html("Logar");
-            mostrarAlert("Preencha todos os campos!", "danger");
-            return;
-        }
-
-        if (!emailValido(emailLogin)) {
-            $emailLogin.addClass("is-invalid");
-            botao.prop("disabled", false);
-            botao.html("Logar");
-            mostrarAlert("E-mail inválido!", "danger");
-            return;
-        }
-    });
-    // Remover a borada vermelha
-    $(".form-control").on("input change", function () {
-        $(this).removeClass("is-invalid");
-    });
-
-
-
-    function mostrarFormulario(cadastroId) {
-
-        $(".cadastro").hide();
-
-        $("#" + cadastroId).show();
-    }
-
-
-
-    const codigo = 0;
-
-    // ATIVAÇÃO
-    $btnCodigo.on("click", function (e) {
-        e.preventDefault();
-        let botao = $(this);
-        botao.prop("disabled", true);
-        botao.html(`<span class="spinner-border spinner-border-sm"></span>Codigo enviado, espere`);
-        const gerarCodigo = (min, max) => {
-            return Math.random() * (max - min) + min
-        }
-        codigo = gerarCodigo(1000, 9999)
-        console.log(codigo)
-    });
-
-    $btnAtivar.on("click", function (e) {
-        e.preventDefault();
-        let botao = $(this);
-        botao.prop("disabled", true);
-        botao.html(`<span class="spinner-border spinner-border-sm"></span>Ativando conta..`);
-        // limpa erros anteriores
-        $(".form-control").removeClass("is-invalid");
-        const codigoCliente = $codigoCliente.val().trim();
-
-        codigo
-        
-        // VÊ OS CAMPOS VAZIOS
-        if (!codigoCliente) {
-            $codigoCliente.addClass("is-invalid");
-            botao.prop("disabled", false);
-            botao.html("Ativar");
-            mostrarAlert("Preencha o campo com o código de acesso para finalizar o cadastro!", "danger");
-        } else if (!codigoValido(codigoCliente)) {
-            $codigoCliente.addClass("is-invalid");
-            botao.prop("disabled", false);
-            botao.html("Ativar");
-            mostrarAlert("Código inválido!", "danger");
-            return;
-        }
-    });
-    // Remover a borada vermelha
-    $(".form-control").on("input change", function () {
-        $(this).removeClass("is-invalid");
-    });
-
-
-
-
-
-
-
-
-
-
-
-
-    // ALERTAS
-    function mostrarAlert(mensagem, tipo = "success") {
-
-        const $container = $("#alertContainer");
-
-        const $alert = $(` <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
-                ${mensagem}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
-                `);
-
-        $container.append($alert);
-
-        setTimeout(function () {
-
-            $alert.removeClass("show").addClass("hide");
-
-            setTimeout(function () {
-                $alert.remove();
-            }, 500);
-
-        }, 3000);
-    }
 
 });

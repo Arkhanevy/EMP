@@ -9,6 +9,6 @@
 <body>
     <a href="view/cadastro.php?tipo=profissionalCad">Cadastro Profissional</a>
     <a href="view/cadastro.php?tipo=clinicaCad">Cadastro Clínica</a>
-    <a href="view/cadastroCli.php">Cadastro Cliente</a>
+    <a href="view/cadastroCli.php?tipo=cadastro">Cadastro Cliente</a>
 </body>
 </html>

@@ -10,10 +10,10 @@
     <title>Cadastro do Cliente</title>
 </head>
 <style>
-    html,
-    body {
-        height: 100%;
+    * {
         margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
 
     body {
@@ -22,6 +22,9 @@
         background-position: center;
         background-repeat: no-repeat;
         background-attachment: fixed;
+        height: 100vh;
+        width: 100%;
+        overflow: hidden;
     }
 
     #ativacao, #loginCliente, .cadastro {
@@ -113,10 +116,9 @@
                 <div class="form-floating mb-3">
                     <select name="cxcliGenero" id="generoCliente" class="form-select">
                         <option value="" selected disabled>Selecione uma opção</option>
-                        <option value="feminino">Feminino</option>
-                        <option value="masculino">Masculino</option>
-                        <option value="naoBinario">Não Binario</option>
-                        <option value="naoIdentificado">Prefiro não dizer</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Feminino</option>
+                        <option value="O">Outro</option>
                     </select>
                     <label for="especialidade">Gênero</label>
                 </div> 
@@ -150,11 +152,12 @@
             <p class="text-muted mt-5 mx-auto"> Um código de ativação foi enviado para o seu e-mail.</p>
             <form action="../model/caduser.php" method="POST">
                 <div class="form-floating mt-5 mb-3">
-                    <input name="cxcliCodigo" id="codigoCliente" class="form-control" type="text" placeholder="Nome" required>
+                    <input name="cxcliCodigo" id="codigoCliente" class="form-control" type="text" placeholder="Código de Ativação" required>
                     <label>Código de Ativação</label>
                 </div>
                 <div class="d-grid mb-3">
-                    <button type="submit" id="btnAtivar" class="btn btn-success">Ativar</button>
+                    <button type="button" id="btnAtivar" class="btn btn-success mb-3">Ativar</button>
+                    <button type="button" id="btnCodigo" class="btn btn-success">Gerar código</button>
                 </div>
             </form>
         </div>

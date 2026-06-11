@@ -206,7 +206,7 @@
 
 
 
-                        <form id="formClinica" method="POST" enctype="multipart/form-data">>
+                        <form id="formClinica" method="POST" enctype="multipart/form-data">
                             <div class="avatar-container">
                             <img id="previewClinica" src="../img/logo_user.png" alt="Foto de perfil">
                             <input name="cxclinFoto" type="file" id="img_perfil_Clinica" accept="image/*" required>
@@ -331,26 +331,23 @@
 
 
 
-        <!--Ativação-->
-        <div class="img-thumbnail bg-light border border-success p-4 rounded-4 shadow" id="ativacao">
-            <h1 class="text-muted mt-5 mx-auto">Seja Bem-Vindo!</h1>
-            <p class="text-muted mt-5 mx-auto"> Clique no botão "Gerar código" para que um código seja enviado para o seu e-mail. Depois coloque-o da caixa abaixo para ativar sua conta.</p>
-            <form action="../model/caduser.php" method="POST">
-            
-            <div class="form-floating mt-5 mb-3">
-                    <input name="cxcliEmail" id="emailAtivar" class="form-control" type="text" placeholder="Nome" required>
-                    <label>E-mail</label>
-                </div>
-                <div class="form-floating mt-5 mb-3">
-                    <input name="cxcliCodigo" id="codigoCliente" class="form-control" type="text" placeholder="Nome" required>
-                    <label>Código de Ativação</label>
-                </div>
-                <div class="d-grid mb-3">
-                    <button type="button" id="btnAtivar" class="btn btn-success mb-3">Ativar</button>
-                    <button type="button" id="btnCodigo" class="btn btn-success">Gerar código</button>
-                </div>
-            </form>
-        </div>
+                        <!--Ativação-->
+                        <div class="img-thumbnail bg-light border border-success p-4 rounded-4 shadow" id="ativacao">
+                            <h1 class="text-muted mt-5 mx-auto">Seja Bem-Vindo!</h1>
+                            <p class="text-muted mt-5 mx-auto"> Clique no botão "Gerar código" para que um código seja enviado para o seu e-mail. Depois coloque-o da caixa abaixo para ativar sua conta.</p>
+                            <form action="../model/caduser.php" method="POST">
+                                <div class="form-floating mt-5 mb-3">
+                                    <input name="cxcliCodigo" id="codigoCliente" class="form-control" type="text" placeholder="Nome" required>
+                                    <label>Código de Ativação</label>
+                                </div>
+                                <div class="d-grid mb-3">
+                                    <button type="button" id="btnAtivar" class="btn btn-success mb-3">Ativar</button>
+                                    <button type="button" id="btnCodigo" class="btn btn-success">Gerar código</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        
                 </div>
             </div>
         </div>

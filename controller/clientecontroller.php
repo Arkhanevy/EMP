@@ -13,7 +13,7 @@ if ($acao === "cadastrar") {
     $bio = $_POST['bio'];
     $senha = $_POST['senha'];
     $cpf = $_POST['CPF'];
-    $img = "cxcliFoto";
+    $img = "cxclientefoto";
     
     $cadastrar = new cliente();
     $resultado = $cadastrar->Setcliente($nome,$email,$telefone,$username,$bio,$dtNas,$cpf,$senha,$genero,$img);
