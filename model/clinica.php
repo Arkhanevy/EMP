@@ -69,9 +69,11 @@ class clinica {
     private function SetErro($erro){
         $this->erros = array_merge($this->erros, (array)$erro);
     }
+    
     public function GetErro(){
         return $this->erros;
     }
+    
     public function ResetErro(){
         $this->erros = [];
     }
@@ -83,7 +85,6 @@ class clinica {
         $foto = $this->ValidaFtperfil($_FILES[$img]);
         
         $senhaHash  = password_hash($senha, PASSWORD_BCRYPT);
-        $codigo = random_int(100000, 999999);
         
         $query = "INSERT INTO clinica
     (
@@ -93,7 +94,6 @@ class clinica {
         clin_senha,
         clin_biografia,
         clin_foto,
-        clin_codVali,
         clin_cnpj,
         clin_cep,
         clin_telefone
@@ -107,7 +107,6 @@ class clinica {
         :senha,
         :biografia,
         :foto,
-        :codvali,
         :CNPJ,
         :CEP,
         :telefone
@@ -121,7 +120,6 @@ class clinica {
             $clin->bindParam(':senha', $senhaHash, PDO::PARAM_STR);
             $clin->bindParam(':biografia', $bio, PDO::PARAM_STR);
             $clin->bindParam(':foto', $foto[0], PDO::PARAM_STR);
-            $clin->bindParam(':codvali', $codigo, PDO::PARAM_STR);
             $clin->bindParam(':CNPJ', $cnpj, PDO::PARAM_STR);
             $clin->bindParam(':CEP', $cep, PDO::PARAM_STR);
             $clin->bindParam(':telefone', $telefone, PDO::PARAM_STR);
@@ -171,8 +169,73 @@ class clinica {
             return null;
         }
     }
+    
+    public function InserirCodigo($codigo,$email){
+        require_once('../factory/conexao.php');
+        require '../control/MailSender.php';
+        
+        $error = [];
+        
+        $conn = new conexao();
+        $inserir = "UPDATE clinica SET clin_codVali = :codigo WHERE clin_email = :email";
+        $resultado = $conn->getConn()->prepare($inserir);
+        $resultado->bindParam(':email', $email, PDO::PARAM_STR);
+        $resultado->bindParam(':codigo', $codigo, PDO::PARAM_INT);
+        try {
+            $resultado->execute();
+            if ($resultado->rowCount() > 0) {
+                $consulta = "select * from clinica where clin_email = :email";
+                $resultado = $conn->getConn()->prepare($consulta);
+                $resultado->bindParam(':email', $email, PDO::PARAM_STR);
+                $resultado->execute();
+                $campo = $resultado->fetch(PDO::FETCH_ASSOC);
+                $nome = $campo['clin_nome'];
+                
+                $mailSender = new MailSender();
+                $result  = $mailSender->send(
+                    "naoresponda@elmo.info", /*E-mail que enviou.*/
+                    "ELMO - EMP" ,  //Nome de quem enviou
+                    $email, //@ que recebeu.
+                    $nome, //Nome que recebeu
+                    "validação da sua conta", //Assunto
+                    "<html><head><meta charset='utf-8'></head><body><p>seu codigo é: $codigo</p></body></html>", //Mensagem com html
+                    true
+                    );
+                return "codigo enviado";
+            }
+            
+            $this->erros[] = "Nenhum registro foi atualizado.";
+            return null;
+        }
+        catch (PDOException $e) {
+            $error[] = "Não foi possível salvar o código.";
+            $this->erros = $error;
+            return null;
+        }
+        
+    }
+    // Valida o código de ativação enviado
+    public function AtivarConta($codigo,$email) {
+        require_once('../factory/conexao.php');
+        
+        $conn = new conexao();
+        $consulta = "select * from clinica where clin_email = :email";
+        $resultado = $conn->getConn()->prepare($consulta);
+        $resultado->bindParam(':email', $email, PDO::PARAM_STR);
+        $resultado->execute();
+        $campo = $resultado->fetch(PDO::FETCH_ASSOC);
+        $cod = $campo['clin_codVali'];
+        if ((string)$codigo === (string)$cod) {
+            $status = "UPDATE clinica SET clin_status = 'ativado' WHERE clin_email = :email";
+            $resultado = $conn->getConn()->prepare($status);
+            $resultado->bindParam(':email', $email, PDO::PARAM_STR);
+            $resultado->execute();
+            return "conta ativada";
+        };
+        
+    }
 }
-
+    
 
 
 ?>
