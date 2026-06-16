@@ -332,7 +332,7 @@
 
 
                         <!--Ativação-->
-                        <div class="img-thumbnail bg-light border border-success p-4 rounded-4 shadow" id="ativacao">
+                        <div id="ativacao">
                             <h1 class="text-muted mt-5 mx-auto">Seja Bem-Vindo!</h1>
                             <p class="text-muted mt-5 mx-auto"> Clique no botão "Gerar código" para que um código seja enviado para o seu e-mail. Depois coloque-o da caixa abaixo para ativar sua conta.</p>
                             <form action="../model/caduser.php" method="POST">
