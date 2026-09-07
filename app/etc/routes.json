@@ -1,0 +1,109 @@
+{
+	"home": {
+		"path": "app/views/home.php",
+		"sessionKey": [
+			{
+				"idUsuario": false
+			}
+		],
+		"sanitize": {
+			"requestVars": true,
+			"code": true,
+			"sql": true
+		},
+		"errorPath": "app/views/erro.php"
+	},
+	"cadastroproclin": {
+		"path": "app/views/cadastro.php",
+		"sessionKey": [
+			{
+				"idUsuario": false
+			}
+		],
+		"sanitize": {
+			"requestVars": true,
+			"code": true,
+			"sql": true
+		},
+		"errorPath": "app/views/erro.php"
+	},
+	"cadastrocli": {
+		"path": "app/views/cadastroCli.php",
+		"sessionKey": [
+			{
+				"idUsuario": false
+			}
+		],
+		"sanitize": {
+			"requestVars": true,
+			"code": true,
+			"sql": true
+		},
+		"errorPath": "app/views/erro.php"
+	},
+	"cadastro": {
+		"path": "app/views/cadastro.php",
+		"sessionKey": [
+			{
+				"idUsuario": false
+			}
+		],
+		"sanitize": {
+			"requestVars": true,
+			"code": true,
+			"sql": true
+		},
+		"errorPath": "app/views/erro.php"
+	},
+	"profissional": {
+		"path": "app/models/profissional.php"
+	},
+	"clinica": {
+		"path": "app/models/clinica.php"
+	},
+	"cliente": {
+		"path": "app/models/cliente.php"
+	},
+	"infoServico": {
+		"path": "app/views/infoServico.php",
+		"sessionKey": [
+			{
+				"idUsuario": false
+			}
+		],
+		"sanitize": {
+			"requestVars": true,
+			"code": true,
+			"sql": true
+		},
+		"errorPath": "app/views/erro.php"
+	},
+	"agendamentoCli": {
+		"path": "app/views/agendamentoCli.php",
+		"sessionKey": [
+			{
+				"idUsuario": false
+			}
+		],
+		"sanitize": {
+			"requestVars": true,
+			"code": true,
+			"sql": true
+		},
+		"errorPath": "app/views/erro.php"
+	},
+	"consultasCli": {
+		"path": "app/views/consultasCli.php",
+		"sessionKey": [
+			{
+				"idUsuario": false
+			}
+		],
+		"sanitize": {
+			"requestVars": true,
+			"code": true,
+			"sql": true
+		},
+		"errorPath": "app/views/erro.php"
+	}
+}
