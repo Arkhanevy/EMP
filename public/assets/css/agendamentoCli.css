@@ -1,3 +1,15 @@
+/* ============================================================
+   PÁGINA: agendamentoCli (Agendamento)
+   Depende de: /site/assets/css/variaveis.css
+              /site/assets/css/componentes.css
+   (ambos devem ser carregados antes deste arquivo)
+
+   Este arquivo contém SOMENTE o que é específico desta página:
+   grid do formulário, calendário customizado e dropdowns.
+   Navegação, botões e modal padrão estão em componentes.css.
+   ============================================================ */
+
+
 .gradeAgendamento {
   display: grid;
   grid-template-columns: 1fr;
@@ -44,7 +56,6 @@
   font-weight: 700;
 }
 
-
 .campoValorLinha {
   display: flex;
   align-items: center;
@@ -66,7 +77,6 @@
   font-size: var(--fonteTamanhoCaption);
   font-weight: 700;
 }
-
 
 .campoFormulario {
   display: flex;
@@ -176,7 +186,6 @@
   background-color: var(--corFundo);
 }
 
-
 .calendarioAgendamento {
   padding: var(--espacamentoMd);
   border: 1px solid var(--corBorda);
@@ -271,6 +280,7 @@
   color: var(--corBranco);
 }
 
+
 @media (max-width: 400px) {
   .calendarioAgendamento {
     padding: var(--espacamentoSm);
@@ -312,6 +322,7 @@
   border: 2px solid var(--corErro);
   background-color: transparent;
 }
+
 
 .acoesFormulario {
   display: flex;

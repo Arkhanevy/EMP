@@ -1,3 +1,4 @@
+
 .navegacaoLateral {
   position: fixed;
   top: 0;
@@ -87,6 +88,7 @@
   padding: var(--espacamentoXs);
 }
 
+
 .navegacaoInferior {
   position: fixed;
   left: 0;
@@ -116,7 +118,6 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-
 .areaConteudo {
   padding-top: calc(var(--alturaCabecalhoMobile) + var(--espacamentoMd));
   padding-bottom: calc(var(--alturaNavegacaoInferior) + var(--espacamentoMd));
@@ -136,7 +137,6 @@
   max-width: 1200px;
   margin: 0 auto;
 }
-
 
 .botaoVoltar {
   display: flex;
@@ -208,7 +208,6 @@
   font-size: var(--fonteTamanhoBody);
 }
 
-
 @keyframes animacaoEsqueleto {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
@@ -244,7 +243,8 @@
   cursor: not-allowed;
 }
 
-
+/* Quando a busca falha: mantém os blocos neutros, mas sem
+   animação, para não distrair atrás do modal de erro. */
 .estadoErro .imagemServico,
 .estadoErro [data-campo]:not(img) {
   color: transparent;
@@ -252,7 +252,6 @@
   background-image: none;
   animation: none;
 }
-
 
 .botaoAgendarAgora,
 .botaoTentarNovamente {
@@ -276,7 +275,6 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
-
 
 .modalPadrao .modal-content {
   background-color: var(--corFundo);
@@ -308,7 +306,6 @@
   text-decoration: underline;
 }
 
-
 .iconeModalErro {
   position: relative;
   width: 96px;
@@ -334,7 +331,6 @@
   background-color: var(--corBranco);
   border-radius: 999px;
 }
-
 
 .botaoFecharModal {
   position: absolute;

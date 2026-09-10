@@ -1,3 +1,10 @@
+/* ============================================================
+   VARIÁVEIS GLOBAIS DE DESIGN
+   Compartilhadas por todas as telas do projeto (infoServico,
+   agendamentoCli, consultasCli). Não duplicar estes valores
+   em outros arquivos CSS — sempre referenciar via var(--nome).
+   ============================================================ */
+
 :root {
   /* ---------- Paleta de cores ---------- */
   --corFundo: #D2FFE1;             /* Fundo */
@@ -10,7 +17,11 @@
   --corErro: #DC2626;              /* Erro / Cancelar */
   --corBranco: #FFFFFF;
 
-  /* ---------- Tipografia ---------- */
+  /* ---------- Skeleton (estado de carregamento) ---------- */
+  --corEsqueletoClara: #C5EED3;
+  --corEsqueletoEscura: #DFF7E6;
+
+  /* ---------- Tipografia: tamanhos (Mobile — padrão/mobile-first) ---------- */
   --fonteTamanhoH1: 32px;
   --fonteTamanhoH2: 24px;
   --fonteTamanhoH3: 20px;
@@ -18,7 +29,7 @@
   --fonteTamanhoSmall: 14px;
   --fonteTamanhoCaption: 12px;
 
-  /* ---------- Espaçamentos base ---------- */
+  /* ---------- Espaçamentos base (px) ---------- */
   --espacamentoXs: 4px;
   --espacamentoSm: 8px;
   --espacamentoMd: 16px;
@@ -34,7 +45,9 @@
   --fonteFamilia: "Segoe UI", Roboto, Arial, sans-serif;
 }
 
-
+/* ---------- Tipografia: tamanhos (Desktop) ----------
+   Breakpoint alinhado ao "md" do Bootstrap (768px),
+   já usado nas classes d-md-* do HTML. */
 @media (min-width: 768px) {
   :root {
     --fonteTamanhoH1: 48px;
@@ -46,7 +59,7 @@
   }
 }
 
-
+/* ---------- Reset/base mínimo ---------- */
 * {
   box-sizing: border-box;
 }

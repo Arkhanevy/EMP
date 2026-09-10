@@ -1,3 +1,14 @@
+/* ============================================================
+   COMPONENTES COMPARTILHADOS
+   Usado por todas as páginas (infoServico, agendamentoCli,
+   consultasCli). Depende de: variaveis.css (deve ser carregado
+   antes deste arquivo).
+
+   Contém: navegação (lateral/topo/inferior), botão voltar,
+   botões de ação padrão, modal padrão (+ variantes), área de
+   conteúdo e estado de carregamento (skeleton).
+   ============================================================ */
+
 .linkPularConteudo {
   position: absolute;
   top: -48px;
@@ -16,6 +27,7 @@
 .linkPularConteudo:focus {
   top: 8px;
 }
+
 
 .navegacaoLateral {
   position: fixed;
@@ -137,6 +149,7 @@
 }
 
 
+
 .areaConteudo {
   padding-top: calc(var(--alturaCabecalhoMobile) + var(--espacamentoMd));
   padding-bottom: calc(var(--alturaNavegacaoInferior) + var(--espacamentoMd));
@@ -149,7 +162,6 @@
     padding-bottom: var(--espacamentoLg);
   }
 }
-
 
 .conteudoPagina {
   padding-left: var(--espacamentoMd);
@@ -354,9 +366,9 @@
   background-color: transparent;
   background-image: linear-gradient(
     90deg,
-    #C5EED3 25%,
-    #DFF7E6 50%,
-    #C5EED3 75%
+    var(--corEsqueletoClara) 25%,
+    var(--corEsqueletoEscura) 50%,
+    var(--corEsqueletoClara) 75%
   );
   background-size: 200% 100%;
   animation: animacaoEsqueleto 1.5s ease-in-out infinite;
@@ -367,9 +379,9 @@
   border-radius: 4px;
   background-image: linear-gradient(
     90deg,
-    #C5EED3 25%,
-    #DFF7E6 50%,
-    #C5EED3 75%
+    var(--corEsqueletoClara) 25%,
+    var(--corEsqueletoEscura) 50%,
+    var(--corEsqueletoClara) 75%
   );
   background-size: 200% 100%;
   animation: animacaoEsqueleto 1.5s ease-in-out infinite;
@@ -380,10 +392,11 @@
   cursor: not-allowed;
 }
 
+
 .estadoErro img[data-campo],
 .estadoErro [data-campo]:not(img) {
   color: transparent;
-  background-color: #C5EED3;
+  background-color: var(--corEsqueletoClara);
   background-image: none;
   animation: none;
 }

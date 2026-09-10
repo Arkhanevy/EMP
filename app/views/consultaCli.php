@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,48 +9,46 @@
   <link rel="stylesheet" href="/ProjetoExemplo/public/assets/css/variaveis.css" /><!-- Variáveis globais -->
   <link rel="stylesheet" href="/ProjetoExemplo/public/assets/css/componentes.css" /><!-- Componentes  -->
   <link rel="stylesheet" href="/ProjetoExemplo/public/assets/css/consultasCli.css" /><!-- CSS próprio -->
-  <base href="/ProjetoExemplo/">
+  <base href="/atual/">
 </head>
-
 <body class="corpoPagina">
 
   <a href="#conteudoConsultas" class="linkPularConteudo">Pular para o conteúdo principal</a>
 
-  <nav id="navegacaoLateral" class="navegacaoLateral d-none d-md-flex flex-column align-items-center"
-    aria-label="Navegação principal">
-    <a href="index.php?uri=home" class="marcaApp" aria-label="Página inicial">
-      <img src="public/assets/images/logoElmo.svg" alt="Elmo" class="logoApp" />
+  <!-- NAVEGAÇÃO (DESKTOP)  -->
+  <nav id="navegacaoLateral" class="navegacaoLateral d-none d-md-flex flex-column align-items-center" aria-label="Navegação principal">
+    <a href="/" class="marcaApp" aria-label="Página inicial">
+      <img src="../assets/img/logoElmo.svg" alt="Elmo" class="logoApp" />
     </a>
 
     <ul class="listaNavegacao list-unstyled d-flex flex-column align-items-center gap-3">
       <li>
-        <a href="#" class="itemNavegacao" aria-label="Agendamento">
+        <a href="/agendamento" class="itemNavegacao" aria-label="Agendamento">
           <span class="material-symbols-outlined" aria-hidden="true">search</span>
         </a>
       </li>
       <li>
-        <a href="#" class="itemNavegacao" aria-label="Mensagens">
+        <a href="/mensagens" class="itemNavegacao" aria-label="Mensagens">
           <span class="material-symbols-outlined" aria-hidden="true">chat</span>
         </a>
       </li>
       <li>
-        <a href="#" class="itemNavegacao" aria-label="Notificações">
+        <a href="/notificacoes" class="itemNavegacao" aria-label="Notificações">
           <span class="material-symbols-outlined" aria-hidden="true">notifications</span>
         </a>
       </li>
       <li>
-        <a href="index.php?uri=consultasCli" class="itemNavegacao itemNavegacaoAtivo" aria-current="page"
-          aria-label="Minhas consultas">
+        <a href="/minhas-consultas" class="itemNavegacao itemNavegacaoAtivo" aria-current="page" aria-label="Minhas consultas">
           <span class="material-symbols-outlined" aria-hidden="true">calendar_month</span>
         </a>
       </li>
       <li>
-        <a href="#" class="itemNavegacao" aria-label="Suporte">
+        <a href="/suporte" class="itemNavegacao" aria-label="Suporte">
           <span class="material-symbols-outlined" aria-hidden="true">support_agent</span>
         </a>
       </li>
       <li>
-        <a href="index.php?uri=perfil" class="itemNavegacao" aria-label="Perfil">
+        <a href="/perfil" class="itemNavegacao" aria-label="Perfil">
           <span class="material-symbols-outlined" aria-hidden="true">person</span>
         </a>
       </li>
@@ -60,77 +57,95 @@
 
   <div class="areaConteudo">
 
+    <!-- CABEÇALHO (MOBILE) -->
     <header id="cabecalhoMobile" class="cabecalhoMobile d-flex d-md-none align-items-center justify-content-between">
-      <a href="index.php?uri=home" class="marcaAppMobile d-flex align-items-center gap-2" aria-label="Página inicial">
-        <img src="public/assets/images/logoElmo.svg" alt="" class="logoAppMobile" />
+      <a href="/" class="marcaAppMobile d-flex align-items-center gap-2" aria-label="Página inicial">
+        <img src="../assets/img/logoElmo.svg" alt="" class="logoAppMobile" />
         <span class="nomeApp">Elmo</span>
       </a>
-      <button type="button" id="botaoMenuMobile" class="botaoMenuMobile btn" aria-label="Abrir menu"
-        aria-expanded="false">
+      <button type="button" id="botaoMenuMobile" class="botaoMenuMobile btn" aria-label="Abrir menu" aria-expanded="false">
         <span class="material-symbols-outlined" aria-hidden="true">menu</span>
       </button>
     </header>
 
+    <!-- CONTEÚDO PRINCIPAL -->
     <main id="conteudoConsultas" class="conteudoPagina conteudoConsultas container-fluid">
 
       <h1 class="tituloConsultas">Minhas consultas</h1>
+      <p id="mensagemStatusConsultas" class="visually-hidden" aria-live="polite" aria-atomic="true"></p>
 
-
-
-      <div id="gradeConsultas" class="gradeConsultas estadoCarregando" aria-live="polite">
+      <div id="gradeConsultas" class="gradeConsultas estadoCarregando">
         <article class="cartaoConsulta cartaoConsultaEsqueleto" aria-hidden="true">
-          <h2 class="tituloConsulta"></h2>
+          <h2 class="tituloConsulta">Tratamento de unha encravada</h2>
           <div class="linhaConsulta d-flex justify-content-between">
-            <p class="dataHoraConsulta"></p>
-            <p class="precoConsulta"></p>
+            <p class="dataHoraConsulta">17 de junho, 08:00</p>
+            <p class="precoConsulta">R$12,50</p>
           </div>
-          <p class="profissionalConsulta"><strong>Profissional:</strong> </p>
-          <p class="clinicaConsulta"><strong>Clínica:</strong></p>
+          <p class="profissionalConsulta"><strong>Profissional:</strong> Samanta Santos</p>
+          <p class="clinicaConsulta"><strong>Clínica:</strong> Girasol</p>
           <div class="rodapeConsulta d-flex justify-content-between align-items-center">
-            <!--<span class="botaoCancelar btn rounded-pill">Cancelar</span>
-            <span class="badgeStatus badgeStatusPendente">Pendente</span> -->
+            <span class="botaoCancelar btn rounded-pill">Cancelar</span>
+            <span class="badgeStatus badgeStatusPendente">Pendente</span>
+          </div>
+        </article>
+        <article class="cartaoConsulta cartaoConsultaEsqueleto" aria-hidden="true">
+          <h2 class="tituloConsulta">Pedicure</h2>
+          <div class="linhaConsulta d-flex justify-content-between">
+            <p class="dataHoraConsulta">26 de junho, 08:00</p>
+            <p class="precoConsulta">R$80,50</p>
+          </div>
+          <p class="profissionalConsulta"><strong>Profissional:</strong> Katarina</p>
+          <p class="clinicaConsulta"><strong>Clínica:</strong> Girasol</p>
+          <div class="rodapeConsulta d-flex justify-content-between align-items-center">
+            <span class="botaoCancelar btn rounded-pill">Cancelar</span>
+            <span class="badgeStatus badgeStatusAgendada">Agendada</span>
           </div>
         </article>
       </div>
 
-
+      <!-- Estado vazio -->
       <div id="estadoVazioConsultas" class="estadoVazioConsultas" hidden>
         <span class="material-symbols-outlined iconeEstadoVazio" aria-hidden="true">assignment_ind</span>
         <p class="textoEstadoVazio">
           Nenhuma consulta agendada.<br />
           Se estiver atrás de algum serviço, faça uma
-          <a href="#" class="linkTexto">busca</a>.
+          <a href="../infoServico/index.html" class="linkTexto">busca</a>.
         </p>
       </div>
 
     </main>
 
-
-    <nav id="navegacaoInferior" class="navegacaoInferior d-flex d-md-none align-items-center justify-content-around"
-      aria-label="Navegação principal">
-      <a href="#" class="itemNavegacaoInferior" aria-label="Notificações">
+    <!-- NAVEGAÇÃO INFERIOR  -->
+    <nav id="navegacaoInferior" class="navegacaoInferior d-flex d-md-none align-items-center justify-content-around" aria-label="Navegação principal">
+      <a href="/notificacoes" class="itemNavegacaoInferior" aria-label="Notificações">
         <span class="material-symbols-outlined" aria-hidden="true">notifications</span>
       </a>
-      <a href="#" class="itemNavegacaoInferior" aria-label="Mensagens">
+      <a href="/mensagens" class="itemNavegacaoInferior" aria-label="Mensagens">
         <span class="material-symbols-outlined" aria-hidden="true">chat</span>
       </a>
-      <a href="#" class="itemNavegacaoInferior" aria-label="Agendamento">
+      <a href="/agendamento" class="itemNavegacaoInferior" aria-label="Agendamento">
         <span class="material-symbols-outlined" aria-hidden="true">search</span>
       </a>
-      <a href="index.php?uri=consultasCli" class="itemNavegacaoInferior itemNavegacaoInferiorAtivo" aria-current="page"
-        aria-label="Minhas consultas">
+      <a href="/minhas-consultas" class="itemNavegacaoInferior itemNavegacaoInferiorAtivo" aria-current="page" aria-label="Minhas consultas">
         <span class="material-symbols-outlined" aria-hidden="true">calendar_month</span>
       </a>
-      <a href="index.php?uri=perfil" class="itemNavegacaoInferior" aria-label="Perfil">
+      <a href="/perfil" class="itemNavegacaoInferior" aria-label="Perfil">
         <span class="material-symbols-outlined" aria-hidden="true">person</span>
       </a>
     </nav>
 
   </div>
 
-
-  <div class="modal fade modalPadrao" id="modalSessaoExpirada" tabindex="-1" aria-labelledby="tituloModalSessaoExpirada"
-    aria-describedby="textoModalSessaoExpirada" aria-modal="true" role="dialog">
+  <!-- MODAL: SESSÃO EXPIRADA-->
+  <div
+    class="modal fade modalPadrao"
+    id="modalSessaoExpirada"
+    tabindex="-1"
+    aria-labelledby="tituloModalSessaoExpirada"
+    aria-describedby="textoModalSessaoExpirada"
+    aria-modal="true"
+    role="dialog"
+  >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-body text-center">
@@ -158,13 +173,24 @@
     </div>
   </div>
 
-
-  <div class="modal fade modalPadrao" id="modalConfirmarCancelamento" tabindex="-1"
-    aria-labelledby="tituloModalConfirmarCancelamento" aria-describedby="textoModalConfirmarCancelamento"
-    aria-modal="true" role="dialog">
+  <!-- MODAL: CONFIRMAR CANCELAMENTO -->
+  <div
+    class="modal fade modalPadrao"
+    id="modalConfirmarCancelamento"
+    tabindex="-1"
+    aria-labelledby="tituloModalConfirmarCancelamento"
+    aria-describedby="textoModalConfirmarCancelamento"
+    aria-modal="true"
+    role="dialog"
+  >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <button type="button" class="botaoFecharModal btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        <button
+          type="button"
+          class="botaoFecharModal btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Fechar"
+        ></button>
 
         <div class="modal-body text-center">
           <h2 id="tituloModalConfirmarCancelamento" class="tituloModal">Cuidado!</h2>
@@ -180,8 +206,7 @@
           </p>
 
           <div class="acoesModalConfirmacao d-flex flex-wrap justify-content-center gap-3">
-            <button type="button" id="botaoVoltarParaAgenda" class="botaoSecundario btn rounded-pill"
-              data-bs-dismiss="modal">
+            <button type="button" id="botaoVoltarParaAgenda" class="botaoSecundario btn rounded-pill" data-bs-dismiss="modal">
               <span class="material-symbols-outlined" aria-hidden="true">assignment_turned_in</span>
               Voltar para a agenda
             </button>
@@ -198,9 +223,9 @@
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-  <!-- Bootstrap 5 -->
+  <!-- Bootstrap 5 (bundle com Popper) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/ProjetoExemplo/public/assets/js/consultasCli.js" defer></script>
+  <script src="public/assets/js/utilitarios.js"></script>
+  <script src="public/assets/js/consultasCli.js" defer></script>
 </body>
-
 </html>

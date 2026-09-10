@@ -1,10 +1,16 @@
+/* ============================================================
+   PÁGINA: consultasCli (Minhas consultas)
+   Depende de: /site/assets/css/variaveis.css
+              /site/assets/css/componentes.css
+   (ambos devem ser carregados antes deste arquivo)
+   ============================================================ */
+
 .tituloConsultas {
   margin: 0 0 var(--espacamentoLg) 0;
   padding-bottom: var(--espacamentoMd);
   border-bottom: 1px solid var(--corBorda);
   font-weight: 700;
 }
-
 
 .gradeConsultas {
   display: grid;
